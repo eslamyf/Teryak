@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الأدوية - لوحة تحكم الإدارة منصة دوائي</title>
+  <script src="auth.js"></script>
+  <link rel="stylesheet" href="medicines.css">
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="header&footer.css">
+</head>
+<body>
+    <div class="btn-resp ">
+   <div>
+    <button class= "navbar-toggler btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+     <i class="bi bi-list"></i></button>
+          <span class="rightofHeader rightofHeaderResp">
+            <button class="btn btn2">AR</button>
+            <button class="btn btn2"><i class="bi bi-moon-stars"></i></button>
+             <i class="bi bi-cart-plus icon" data-bs-toggle="modal" href="#exampleModalToggle"></i>
+            <span id="counter">0</span>
+          </span>
+   </div>
+    <div class="leftofHeader leftofHeaderRes">
+            <a href="home.html">
+                <h1>تـريـاق</h1>
+                <img class="logo" src="../images/logo.png" alt="Logo">
+            </a>
+        </div>
+
+</div>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+      <ul>
+                <a href="home.html"><li>الرئيسية</li></a>
+                <a href="medicine.html"><li>الأدوية</li></a>
+                <a href="pharmacies.html"> <li>الصيدليات</li> </a>
+                <a href="donation.html"><li>التبرع</li></a> 
+                <a href="about.html"> <li>من نحن </li> </a>
+            </ul>
+    </div>
+    <div class="bottom">
+        <a href=""><button class="btn">  انشاء حساب</button></a><br>
+        <a href=""><button class="btn">تسجيل الدخول</button></a>
+    </div>
+
+</div>
+</div>
+
+       <div class="header">
+        <div class="rightofHeader">
+            <!-- -------------------- -->
+             <div class="d-flex" id="display">
+                <button class="logout hide" id="Logout">تسجيل خروج</button>
+                <i class="bi bi-person-circle hide" id="Icon"></i>
+            </div>
+             <!-- ------------------- -->
+
+            <a href="../htmlFiles/register.html"><button class="btn" id="SignUp">  انشاء حساب</button></a>
+            <a href="../htmlFiles/login.html" class="span" id="SignIn"><span>تسجيل الدخول</span></a>
+            <button class="btn btn2">AR</button>
+            <button class="btn btn2"><i class="bi bi-moon-stars"></i></button>
+            <i class="bi bi-cart-plus icon" data-bs-toggle="modal" href="#exampleModalToggle"></i>
+            <span id="count">0</span>
+        </div>
+        <div class="centerofHeader">
+             <ul>
+                <li><a href="../htmlFiles/home.html">الرئيسية</a></li>
+                <li><a href="../htmlFiles/medicine.html">الأدوية</a></li>
+                <li><a href="../htmlFiles/pharmacies.html"> الصيدليات </a></li>
+                <li><a href="../htmlFiles/donation.html">التبرع</a> </li>
+                <li><a href="../htmlFiles/about.html"> من نحن  </a></li>
+            </ul>
+        </div>
+        <div class="leftofHeader">
+            <a href="">
+                <h1>تـريـاق</h1>
+                <img class="logo" src="../images/logo.png" alt="Logo">
+            </a>
+        </div>
+
+    </div>
+  
+  <div class="app-container">
+
+    <!-- Top Header -->
+    <header class="top-header">
+      <div class="header-left">
+        <button class="mobile-toggle-btn" id="sidebarToggle" aria-label="قائمة التصفح">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="title-group">
+          <div class="title-row">
+            <span class="admin-badge">ADMIN</span>
+            <h1 class="main-title">لوحة تحكم الإدارة</h1>
+            <span class="shield-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e11d48" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+            </span>
+          </div>
+          <p class="sub-title">الإدارة العامة لمنصة ترياق</p>
+        </div>
+      </div>
+
+    </header>
+
+    <!-- Main Layout Wrapper: Sidebar + Content -->
+    <div class="main-wrapper">
+      
+      <!-- Overlay for mobile sidebar -->
+      <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+      <!-- Navigation Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section-title">الإدارة</div>
+        <nav class="sidebar-nav">
+          <a href="index.html" class="nav-item">
+            <span class="nav-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+                <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+                <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+                <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+              </svg>
+            </span>
+            <span class="nav-label">نظرة عامة</span>
+          </a>
+
+          <a href="pharmacies.html" class="nav-item">
+            <span class="nav-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 21h18"></path>
+                <path d="M5 21V7l8-4v18"></path>
+                <path d="M19 21V11l-6-3"></path>
+                <path d="M9 9h.01"></path>
+                <path d="M9 12h.01"></path>
+                <path d="M9 15h.01"></path>
+                <path d="M9 18h.01"></path>
+              </svg>
+            </span>
+            <span class="nav-label">الصيدليات</span>
+            <span class="count-badge">3</span>
+          </a>
+
+          <a href="users.html" class="nav-item">
+            <span class="nav-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </span>
+            <span class="nav-label">المستخدمون</span>
+          </a>
+
+          <a href="medicines.html" class="nav-item active">
+            <span class="nav-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+              </svg>
+            </span>
+            <span class="nav-label">الأدوية</span>
+          </a>
+
+          <a href="reports.html" class="nav-item">
+            <span class="nav-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="7" y1="17" x2="17" y2="7"></line>
+                <polyline points="7 7 17 7 17 17"></polyline>
+              </svg>
+            </span>
+            <span class="nav-label">التقارير</span>
+          </a>
+        </nav>
+      </aside>
+
+      <!-- Medicines Content Area -->
+      <main class="dashboard-content">
+        
+        <!-- Action Bar: Search Bar on Right, Add Button on Left -->
+        <div class="action-bar">
+          <div class="search-box">
+            <input type="text" id="medicineSearchInput" placeholder="...ابحث عن دواء">
+            <span class="search-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </span>
+          </div>
+
+          <button class="add-btn" id="openAddMedicineModalBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>إضافة دواء</span>
+          </button>
+        </div>
+
+        <!-- Medicines Cards Container -->
+        <div class="medicines-cards-container" id="medicinesList">
+          
+          <!-- Medicine Card 1: باراسيتامول 500 مجم -->
+          <div class="medicine-card">
+            <div class="medicine-right">
+              <div class="medicine-img-box colorful">
+<!--                 
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10.5 20.5l10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7z"></path>
+                  <line x1="8.5" y1="8.5" x2="15.5" y2="15.5"></line>
+                </svg> -->
+                <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=150&auto=format&fit=crop&q=60" alt="باراسيتامول 500 مجم" class="medicine-image">
+              </div>
+              <div class="medicine-details">
+                <h3 class="medicine-name">باراسيتامول 500 مجم</h3>
+                <div class="medicine-subtext">
+                  <span class="eng-name">Paracetamol</span>
+                  <span class="dot">•</span>
+                  <span class="category-name">مسكنات</span>
+                  <span class="dot">•</span>
+                  <span class="pharmacy-count">48 صيدلية</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="medicine-left">
+              <span class="status-badge status-active">نشط</span>
+              <div class="actions-group">
+                <button class="action-btn delete-btn" title="حذف">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                </button>
+                <button class="action-btn view-btn" title="معاينة">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Medicine Card 2: أموكسيسيلين 500 مجم -->
+          <div class="medicine-card">
+            <div class="medicine-right">
+              <div class="medicine-img-box blue">
+               <img src="https://images.unsplash.com/photo-1550572017-edd951b55104?w=150&auto=format&fit=crop&q=60" alt="أموكسيسيلين 500 مجم" class="medicine-image">
+              </div>
+              <div class="medicine-details">
+                <h3 class="medicine-name">أموكسيسيلين 500 مجم</h3>
+                <div class="medicine-subtext">
+                  <span class="eng-name">Amoxicillin</span>
+                  <span class="dot">•</span>
+                  <span class="category-name">مضادات حيوية</span>
+                  <span class="dot">•</span>
+                  <span class="pharmacy-count">32 صيدلية</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="medicine-left">
+              <span class="status-badge status-active">نشط</span>
+              <div class="actions-group">
+                <button class="action-btn delete-btn" title="حذف">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                </button>
+                <button class="action-btn view-btn" title="معاينة">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Medicine Card 3: فيتامين د 1000 وحدة -->
+          <div class="medicine-card">
+            <div class="medicine-right">
+              <div class="medicine-img-box cyan">
+                <img src="https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now00365/v/61.jpg" alt="فيتامين د 1000 وحدة" class="medicine-image">
+              </div>
+              <div class="medicine-details">
+                <h3 class="medicine-name">فيتامين د 1000 وحدة</h3>
+                <div class="medicine-subtext">
+                  <span class="eng-name">Vitamin D3</span>
+                  <span class="dot">•</span>
+                  <span class="category-name">فيتامينات</span>
+                  <span class="dot">•</span>
+                  <span class="pharmacy-count">55 صيدلية</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="medicine-left">
+              <span class="status-badge status-active">نشط</span>
+              <div class="actions-group">
+                <button class="action-btn delete-btn" title="حذف">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                </button>
+                <button class="action-btn view-btn" title="معاينة">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Medicine Card 4: دواء تجريبي -->
+          <div class="medicine-card">
+            <div class="medicine-right">
+              <div class="medicine-img-box blue">
+                <img src="data:image/webp;base64,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" alt="أوميجا 3" class="medicine-image">
+              </div>
+              <div class="medicine-details">
+                <h3 class="medicine-name">أوميجا 3</h3>
+                <div class="medicine-subtext">
+                  <span class="eng-name">المخزون 20 علبه </span>
+                  <span class="dot">•</span>
+                  <span class="category-name">أخرى</span>
+                  <span class="dot">•</span>
+                  <span class="pharmacy-count">0 صيدلية</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="medicine-left">
+              <span class="status-badge status-pending">قيد المراجعة</span>
+              <div class="actions-group">
+                <button class="action-btn delete-btn" title="حذف">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                </button>
+                <button class="action-btn view-btn" title="معاينة">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+
+    </div>
+
+  </div>
+   <footer>
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-3 left-col">
+                
+                <a href="">
+                    <div class="d-flex">
+                        <img class="IMG" src="../images/logo.png" alt="">
+                        <h1>تـريـاق</h1>
+                    </div>
+                    </a>
+                
+                <p>تـريـاق ليساعدك في البحث عن الدواء بسهولة ومعرفة اماكن توفره الآن</p>
+
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-3 margin">
+                <h3 >روابط سريعة</h3>
+                <ul class="links">
+                    <li><a href="../htmlFiles/home.html"><i class="bi bi-caret-left-fill"></i> الرئيسية</a></li>
+                    <li><a href="../htmlFiles/medicine.html"><i class="bi bi-caret-left-fill"></i> الأدوية</a></li>
+                    <li><a href="../htmlFiles/pharmacies.html"><i class="bi bi-caret-left-fill"></i> الصيدليات</a></li>
+                    <li><a href="../htmlFiles/donation.html"><i class="bi bi-caret-left-fill"></i> التبرع</a></li>
+                    <li><a href="../htmlFiles/about.html"><i class="bi bi-caret-left-fill"></i> من نحن</a></li>
+
+                </ul>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3 margin">
+                <h3>خدماتنا</h3>
+                <ul class="list">
+                    <li><a href=""><i class="icon2 bi bi-search"></i>البحث عن الأدوية </a></li>
+                    <li><a href=""><i class="icon2 bi bi-geo-alt"></i>أماكن توفر الأدوية </a></li>
+                    <li><a href=""><i class="icon2 bi bi-heart"></i>إمكانية التبرع بالأدوية </a></li>
+                    <li><a href=""><i class="icon2 bi bi-bag-plus-fill"></i>حجز وشراء ادوية اونلاين </a></li>
+
+                </ul>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-3 contact">
+                <h3>تواصل معنا</h3>
+                <p><i class="bi bi-telephone-plus-fill"></i> +20 1234567890</p>
+                <p><i class="bi bi-envelope"></i> info@teryak.com</p>
+                <div class="icon">
+                <a href="https://www.facebook.com/share/1HJUWBSGRq/" target="_blank"><i class="bi bi-facebook"></i></a>
+                <a href="https://www.instagram.com/salma2305mohamed?igsh=MTVxeXA4ZGZ4ODMyZw==" target="_blank"><i class="bi bi-instagram"></i></a>
+                <a href="https://wa.me/201110590993" target="_blank"><i class="bi bi-whatsapp"></i></a>
+                <a href="https://www.linkedin.com/in/salma-mohamed-718ab440a?utm_source=share_via&utm_content=profile&utm_medium=member_android" 
+                target="_blank"><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    
+        <div class="line"></div>
+        <div class="end">
+            <p class="parg">تـريـاق</p>
+            <p>جميع الحقوق محفوظة</p>
+        </div>
+    </footer>
+
+        
+<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered ">
+    <div class="modal-content">
+      <div class="modal-header">
+            <p class="modal-title" id="exampleModalToggleLabel">قائمة الطلبات</p>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <!-- <div class="d-flexMain modalDiv hidemodalDiv" >
+          <div class="right d-flex">
+            <img src="../images/parst.jpg" alt="">
+            <span><p class="NameOfMedicine">باراسيتامول 500 مجم</p><br>
+            <small class="PriceOfMedicine">24.50 ج.م</small></span>
+          </div>
+          <div class="modalIcon">
+            <i class="Plus bi bi-plus-square-fill"></i>
+            <small id="Counter" style="font-size: 20px; margin: 0 10px;">0</small>
+            <i class="Minus bi bi-dash-square-fill"></i>
+          </div>
+      </div> -->
+      </div>
+    
+    </div>
+  </div>
+</div>
+
+
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="../jsFiles/cart.js"></script>
+    <script src="../jsFiles/userIcon.js"></script>
+  
+        
+
+  <script src="medicines.js"></script>
+</body>
+</html>

@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teryak</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../cssFiles/patientDashboard.css">
+</head>
+
+<body>
+
+    
+<div class="btn-resp ">
+   <div>
+    <button class= "navbar-toggler btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+     <i class="bi bi-list"></i></button>
+          <span class="rightofHeader rightofHeaderResp">
+            <button class="btn btn2">AR</button>
+            <button class="btn btn2"><i class="bi bi-moon-stars"></i></button>
+             <i class="bi bi-cart-plus icon" data-bs-toggle="modal" href="#exampleModalToggle"></i>
+            <span id="counter">0</span>
+          </span>
+   </div>
+    <div class="leftofHeader leftofHeaderRes">
+            <a href="home.html">
+                <h1>تـريـاق</h1>
+                <img class="logo" src="../images/logo.png" alt="Logo">
+            </a>
+        </div>
+
+</div>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+      <ul>
+                <a href="home.html"><li>الرئيسية</li></a>
+                <a href="medicine.html"><li>الأدوية</li></a>
+                <a href="pharmacies.html"> <li>الصيدليات</li> </a>
+                <a href="donation.html"><li>التبرع</li></a> 
+                <a href="about.html"> <li>من نحن </li> </a>
+            </ul>
+    </div>
+    <div class="bottom">
+        <a href=""><button class="btn">  انشاء حساب</button></a><br>
+        <a href=""><button class="btn">تسجيل الدخول</button></a>
+    </div>
+
+</div>
+</div>
+
+       <div class="header">
+        <div class="rightofHeader">
+            <!-- -------------------- -->
+             <div class="d-flex" id="display">
+                <button class="logout hide" id="Logout">تسجيل خروج</button>
+                <i class="bi bi-person-circle hide" id="Icon"></i>
+            </div>
+             <!-- ------------------- -->
+
+            <a href="register.html"><button class="btn" id="SignUp">  انشاء حساب</button></a>
+            <a href="login.html" class="span" id="SignIn"><span>تسجيل الدخول</span></a>
+            <button class="btn btn2">AR</button>
+            <button class="btn btn2"><i class="bi bi-moon-stars"></i></button>
+            <i class="bi bi-cart-plus icon" data-bs-toggle="modal" href="#exampleModalToggle"></i>
+            <span id="count">0</span>
+        </div>
+        <div class="centerofHeader">
+             <ul>
+                <li><a href="home.html">الرئيسية</a></li>
+                <li><a href="medicine.html">الأدوية</a></li>
+                <li><a href="pharmacies.html"> الصيدليات </a></li>
+                <li><a href="donation.html">التبرع</a> </li>
+                <li><a href="about.html"> من نحن  </a></li>
+            </ul>
+        </div>
+        <div class="leftofHeader">
+            <a href="">
+                <h1>تـريـاق</h1>
+                <img class="logo" src="../images/logo.png" alt="Logo">
+            </a>
+        </div>
+
+    </div>
+  
+  
+    <!-- Container -->
+    <div class="container">
+        <div class="d-flex user">
+            <i class="bi bi-person" style="color: #3b82f6;"></i>
+            <!-- <i class="fa-regular fa-user" style="color: #3b82f6;"></i> -->
+            <div>
+                <p>مرحباً، <span id="userName"></span></p>
+                <small>آخر دخول: اليوم 10:30 ص</small>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-2  list">
+                <small>القائمة</small>
+                <ul>
+                    <li class="active" data-target="hidden1"><i class="bi bi-grid"></i> نظرة عامة</li>
+                    <li data-target="hidden2"><i class="bi bi-box"></i> حجوزاتي</li>
+                    <li data-target="hidden3"><i class="bi bi-bell"></i> قائمة المتابعة </li>
+                    <li data-target="hidden4"><i class="bi bi-heart"></i> تبرعاتي</li>
+                    <li data-target="hidden5"><i class="bi bi-credit-card-2-back"></i> مدفوعاتي</li>
+                    <li data-target="hidden6"><i class="bi bi-clock" style="color: rgb(155, 155, 155);"></i> السجل الطبي</li>
+                </ul>
+
+            </div>
+            <!--  نظرة عامة -->
+            <div class="col hidden1">
+                <section>
+                    <div class="sectionOne">
+                        <div class="dis-flex">
+                            <div class="DIV1">
+                                <i class="bi bi-box" style="color: #059669; "></i>
+                                <!-- <i class="fa-solid fa-cube" "></i> -->
+                                <p class="num">1</p>
+                                <small>حجوزات نشطه</small>
+                            </div>
+                            <div class="DIV2">
+                                <i class="bi bi-bell" style="color: #3b82f6;"></i>
+                                <!-- <i class="fa-regular fa-bell"></i> -->
+                                <p class="num">3</p>
+                                <small>في المتابعة</small>
+                            </div>
+                            <div class="DIV3">
+                                <i class="bi bi-heart" style="color: #8b5cf6;"></i>
+                                <!-- <i class="fa-regular fa-heart" ></i> -->
+                                <p class="num">3</p>
+                                <small>تبرعات</small>
+                            </div>
+                            <div class="DIV4">
+                                <i class="bi bi-star" style="color: #f59e0b;"></i>
+                                <!-- <i class="fa-regular fa-star"></i> -->
+                                <p class="num">308 ج.م</p>
+                                <small>اجمالي المصروف</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sectionTwo">
+                        <div class="color Active">
+                            <div class="sm">
+                                <i class="bi bi-check-circle-fill" style="color: rgb(16, 195, 140);"></i>
+                                <!-- <i class="fa-solid fa-circle-check" ></i> -->
+                                <small>حجز نشط</small>
+                            </div>
+
+                            <div>
+
+                                <div class="color2">
+                                    <div class="d-flex">
+                                        <img src="../images/Screenshot 2026-07-07 012859.png" alt="">
+                                        <div class="d-flex justify-content-around">
+                                            <div class="content">
+                                                <small> <b>باراسيتامول 500 مجم</b></small><br>
+                                                <small class="grey">  صيدلية الرحمة</small> <br>
+                                                <small class="grey">يُسلم قبل 6:00 م</small>
+                                            </div>
+                                            <p class="pargg">24.50 ج.م</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="color2 Active2">
+                            <p class="parg">الاشعارات</p>
+                            <div class="color">
+                               
+                                <p> <i class="bi bi-circle-fill" style="color: rgb(16, 195, 140);"></i>تم توفر
+                                    أموكسيسيلين في صيدلية الشفاء القريبة منك </p>
+                                <small>منذ 10 دقائق</small>
+                            </div>
+                            <div class="color">
+                                <p> <i class="bi bi-circle-fill" style="color: rgb(16, 195, 140);"></i> سينتهي حجزك في
+                                    صيدلية النهضة بعد 3 ساعات </p>
+                                <small>منذ ساعة</small>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+
+            </div>
+            <!--  نظرة عامة ==> Done -->
+              
+<!-- ------------------------------------------------------------------------ -->
+
+            <!-- حجوزاتي -->
+            <div class="col hidden2">
+                <section class="mainSection">
+                    <section class="secOne " >
+                        <div class="d-flex">
+                            <img src="../images/parst.jpg" alt="">
+                            <div class="content">
+                                <div class="d-flex">
+                                    <div>
+                                        <p class="parg">باراسيتامول 500 مجم</p>
+                                        <small><i class="bi bi-geo-alt" style="color: rgb(155, 155, 155);"></i>
+                                                    صيدلية الرحمة</small> <br>
+                                        <small>شارع الجامعة؛ المعادي</small>
+                                    </div>
+                                    <p class="parg22">نشط</p>
+                                </div>
+                                <div class="linee"></div>
+                                <small><i class="bi bi-clock" style="color: rgb(155, 155, 155);"></i> يُسلم قبل
+                                    6:00 م</small> <span>25.00 ج.م</span>
+                            </div>
+                        </div>
+                        <button class="btn">الغاء الحجز</button>
+                    </section>
+
+                    <section class="secOne Respp secTwo">
+                        <div class="d-flex">
+                            <img src="../images/vitamine.jpg" class="IMGVit">
+                            <div class="content">
+                                <div class="d-flex">
+                                    <div>
+                                        <p class="parg">فيتامين د 1000وحدة</p>
+                                        <small><i class="bi bi-geo-alt" style="color: rgb(155, 155, 155);"></i> صيدلية الشفاء</small><br>
+                                        <small>ميدان الحرية؛المعادي</small>
+                                    </div>
+                                    <p class="greyy">مكتمل</p>
+                                </div>
+                                <div class="linee"></div>
+                                <small><i class="bi bi-clock" style="color: rgb(155, 155, 155);"></i> تم
+                                    الاستلام</small> <span>85.00 ج.م</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="secOne Respp secThree" >
+                        <div class="d-flex">
+                            <img src="../images/omega.jpg" alt="">
+                            <div class="content">
+                                <div class="d-flex">
+                                    <div>
+                                        <p class="parg">أوميجا 3</p>
+                                        <small><i class="bi bi-geo-alt" style="color: rgb(155, 155, 155);"></i> صيدلية الحياة </small><br>
+                                        <small>شارع 9؛ المعادي</small>
+                                    </div>
+                                    <p class="red">منتهي</p>
+                                </div>
+                                <div class="linee"></div>
+                                <small class="SMLResp"><i class="bi bi-clock" style="color: rgb(155, 155, 155);"></i> انتهت
+                                    صلاحية الحجز </small> <span>120.00 ج.م</span>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+            </div>
+
+            <!-- حجوزاتي ==> Done -->
+
+
+            <!-- قائمة المتاببعة  -->
+            <div class="col hidden3">
+                <div class="top">
+                    <i class="bi bi-bell" style="color: #3b82f6;"></i>
+                    <small>ستصلك إشعار فوري عند توفر أي دواء في هذه القائمة</small>
+                </div>
+                <div class="mainSection">
+                    <div class="secOne one" id="Respp">
+                        <div class="d-flex">
+                            <img src="../images/amoc.jpg" alt="">
+                            <div class="content">
+                                <div class="d-flex">
+                                    <div class="DIV">
+                                        <p class="parg">أموكسيسيلين 500 مجم</p>
+                                        <small>غير متوفر — الإشعار فعال · 2026-06-05</small>
+                                    </div>
+                                    <div >
+                                        <p class="wait">انتظار</p>
+                                        <i class="bi bi-x-circle"></i>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                      <div class="secOne two" id="Respp">
+                        <div class="d-flex">
+                            <img src="../images/Screenshot 2026-07-07 012859.png" alt="">
+                            <div class="content">
+                                <div class="d-flex">
+                                    <div class="DIV">
+                                        <p class="parg">كونجستال سيرب</p>
+                                        <small class="smm">✓ متوفر في صيدلية الشفاء — 1.2 كم</small>
+                                    </div>
+                                    <div>
+                                        <p class="avail">متوفر</p>
+                                        <i class="bi bi-x-circle"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            <button class="btn">احجز الآن</button>
+
+                    </div>
+                    <div class="secOne three" id="Respp">
+                        <div class="d-flex">
+                            <img src="../images/zeto0.jpg" alt="">
+                            <div class="content">
+                                <div class="d-flex">
+                                    <div class="DIV">
+                                        <p class="parg">زيتروماكس 500 مجم</p>
+                                        <small>غير متوفر — الإشعار فعال · 2026-06-01</small>
+                                    </div>
+                                    <div>
+                                        <p class="wait">انتظار</p>
+                                       <i class="bi bi-x-circle"></i>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="Bot">+ إضافة دواء للمتالعه</div>
+            </div>
+            <!-- قائمة المتاببعة ==> Done -->
+  
+            <!-- تبرعاتي -->
+            <div class="col hidden4">
+                <div class="topDON">
+                     <i class="bi bi-heart" style="color: rgb(177, 151, 252);"></i> <br>
+                    <p>شكراً على تبرعاتك!</p>
+                    <small>ساعدت <span>3 مرضى </span> حتى الآن </small>
+                </div>
+                <div class="mainSection">
+                    <div class="secOne secOneDon secOneDonation one oneD">
+                        <div class="d-flex">
+                            <img src="../images/كونج.jpg" alt="">
+                            <div class="content">
+                                <div class="d-flex">
+                                    <div>
+                                        <p class="parg pargREDP"> كونجستال — علبة كاملة</p>
+                                        <small>1 علبة · 2026-06-07</small>
+                                    </div>
+                                        <small class="revDon">قيد المراجعة</small>                             
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="secOne secOneDon  twoDonation two twoD">
+                        <div class="d-flex">
+                            <img src="../images/كونج.jpg" alt="">
+                            <div class="content">
+                                <div class="d-flex">
+                                    <div>
+                                        <p class="parg"> فيتاسيتال 1000 مجم</p>
+                                        <small>2 علبة · 2026-06-01</small><br>
+                                        <small class="smm">✓ ساعدت مريضاً واحداً</small>
+                                    </div>
+                                        <small class="acceptDon">مقبول</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="secOne secOneDon secOneDonation secThreeDonation three threeD">
+                        <div class="d-flex">
+                            <img src="../images/اسبرين.jpg" alt="">
+                            <div class="content">
+                                <div class="d-flex">
+                                    <div>
+                                        <p class="parg"> أسبرين 100 مجم</p>
+                                        <small>1 علبة · 2026-05-20</small><br>
+                                        <small class="smm">✓ ساعدت 2 مرضى</small>
+                                    </div>
+                                        <small class="doneDon">تم التوزيع</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="BotD">+ تبرع بدواء جديد</div>
+            </div>
+            <!-- تبرعاتي ==> Done -->
+            
+            <!-- مدفوعاتي -->
+             <div class="col hidden5"> 
+                        
+                                <div class="total d-flex">
+                                    <div>
+                                        <small>إجمالي المصروف</small>
+                                        <p class="parg">307.50 ج.م</p>       
+                                    </div>
+                                        <small class="sml">4 معاملة</small>                             
+                                </div>
+
+                       
+               
+                <div class="mainSection">
+                    <div class="secOne one oneD pay">
+                        <div class="d-flex">
+                            <img src="../images/parst.jpg" alt="">
+                            <div class="content">
+                                <div class="d-flex">
+                                    <div>
+                                        <p class="parg pargResp"> باراسيتامول 500 مجم</p>
+                                        <small class="smlResp"> <i class="bi bi-geo-alt"
+                                                style="color: rgb(155, 155, 155);"></i> صيدلية النهضة · 2026-06-06</small>
+                                    </div>
+                                        <p class="price">24.50 ج.م </p>                             
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="secOne two twoD pay pay2">
+                        <div class="d-flex">
+                            <img src="../images/vitamine.jpg" alt="">
+                            <div class="content">
+                                <div class="d-flex">
+                                    <div>
+                                        <p class="parg pargResp">فيتامين د 1000 وحدة</p>
+                                        <small class="smlResp"><i class="bi bi-geo-alt"
+                                                style="color: rgb(155, 155, 155);"></i></i> صيدلية الشفاء · 2026-05-28</small>
+                                    </div>
+                                        <p class="pricee">85.00 ج.م</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="secOne three threeD pay">
+                        <div class="d-flex">
+                            <img src="../images/omega.jpg" alt="">
+                            <div class="content">
+                                <div class="d-flex">
+                                    <div>
+                                        <p class="parg pargResp">أوميجا 3</p>
+                                        <small  class="smlResp"><i class="bi bi-geo-alt"
+                                                style="color: rgb(155, 155, 155);"></i> صيدلية الحياة · 2026-05-15</small>
+                                        
+                                    </div>
+                                        <p class="price">120.00 ج.م </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="secOne three threeD pay">
+                        <div class="d-flex">
+                            <img src="../images/amoc.jpg" alt="">
+                            <div class="content">
+                                <div class="d-flex">
+                                    <div>
+                                        <p class="parg pargResp">موكسيسيلين 500 مجم</p>
+                                        <small  class="smlResp"><i class="bi bi-geo-alt"
+                                                style="color: rgb(155, 155, 155);"></i> صيدلية الشفاء · 2026-05-01</small>
+                                        
+                                    </div>
+                                        <p class="price">78.00 ج.م </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <!-- مدفوعاتي ==> Done -->
+
+              <!-- /* السجل الطبي*/ -->
+            <div class="col hidden6"> 
+                <div class="search">
+                    <i class="bi bi-search" style="color: rgb(177, 151, 252);"></i>
+                    <input type="search" placeholder="ابحث في سجلك الطبي... ">
+                </div>
+                <div class="mainSection">
+                    <div class="secOne one oneD pay">
+                        <div class="d-flex">
+                            <img src="../images/parst.jpg" alt="">
+                            <div class="content">
+                                <div class="d-flex">
+                                    <div>
+                                        <p class="parg pargResp"> باراسيتامول 500 مجم</p>
+                                        <small class="smlResp smlResp2"> <i class="bi bi-geo-alt"
+                                                style="color: rgb(155, 155, 155);"></i> صيدلية النهضة · 2026-06-06</small>
+                                    </div>
+                                        <p class="price priceResp2">24.50 ج.م </p>                             
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="secOne two twoD pay2 pay">
+                        <div class="d-flex">
+                            <img src="../images/vitamine.jpg" alt="">
+                            <div class="content">
+                                <div class="d-flex">
+                                    <div>
+                                        <p class="parg pargResp">فيتامين د 1000 وحدة</p>
+                                        <small class="smlResp smlResp2"><i class="bi bi-geo-alt"
+                                                style="color: rgb(155, 155, 155);"></i> صيدلية الشفاء · 2026-05-28</small>
+                                    </div>
+                                        <p class="pricee priceResp">85.00 ج.م</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="secOne three threeD pay">
+                        <div class="d-flex">
+                            <img src="../images/omega.jpg" alt="">
+                            <div class="content">
+                                <div class="d-flex">
+                                    <div>
+                                        <p class="parg pargResp">أوميجا 3</p>
+                                        <small class="smlResp smlResp2"><i class="bi bi-geo-alt"
+                                                style="color: rgb(155, 155, 155);"></i> صيدلية الحياة · 2026-05-15</small>
+                                        
+                                    </div>
+                                        <p class="price priceResp2">120.00 ج.م </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="secOne three threeD pay">
+                        <div class="d-flex">
+                            <img src="../images/amoc.jpg" alt="">
+                            <div class="content">
+                                <div class="d-flex">
+                                    <div>
+                                        <p class="parg pargResp">موكسيسيلين 500 مجم</p>
+                                        <small class="smlResp smlResp2"><i class="bi bi-geo-alt"
+                                                style="color: rgb(155, 155, 155);"></i> صيدلية الشفاء · 2026-05-01</small>
+                                        
+                                    </div>
+                                        <p class="price priceResp2">78.00 ج.م </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+    <!-- /*  السجل الطبي ==> Done */ -->
+
+
+
+
+
+        </div>
+
+         
+    </div>
+
+
+
+      <footer>
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-3 left-col">
+                
+                <a href="">
+                    <div class="d-flex">
+                        <img class="IMG" src="../images/logo.png" alt="">
+                        <h1>تـريـاق</h1>
+                    </div>
+                    </a>
+                
+                <p>تـريـاق ليساعدك في البحث عن الدواء بسهولة ومعرفة اماكن توفره الآن</p>
+
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-3 margin">
+                <h3 >روابط سريعة</h3>
+                <ul class="links">
+                    <li><a href="home.html"><i class="bi bi-caret-left-fill"></i> الرئيسية</a></li>
+                    <li><a href="medicine.html"><i class="bi bi-caret-left-fill"></i> الأدوية</a></li>
+                    <li><a href="pharmacies.html"><i class="bi bi-caret-left-fill"></i> الصيدليات</a></li>
+                    <li><a href="donation.html"><i class="bi bi-caret-left-fill"></i> التبرع</a></li>
+                    <li><a href="about.html"><i class="bi bi-caret-left-fill"></i> من نحن</a></li>
+
+                </ul>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3 margin">
+                <h3>خدماتنا</h3>
+                <ul class="list">
+                    <li><a href=""><i class="icon2 bi bi-search"></i>البحث عن الأدوية </a></li>
+                    <li><a href=""><i class="icon2 bi bi-geo-alt"></i>أماكن توفر الأدوية </a></li>
+                    <li><a href=""><i class="icon2 bi bi-heart"></i>إمكانية التبرع بالأدوية </a></li>
+                    <li><a href=""><i class="icon2 bi bi-bag-plus-fill"></i>حجز وشراء ادوية اونلاين </a></li>
+
+                </ul>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-3 contact">
+                <h3>تواصل معنا</h3>
+                <p><i class="bi bi-telephone-plus-fill"></i> +20 1234567890</p>
+                <p><i class="bi bi-envelope"></i> info@teryak.com</p>
+                <div class="icon">
+                <a href="https://www.facebook.com/share/1HJUWBSGRq/" target="_blank"><i class="bi bi-facebook"></i></a>
+                <a href="https://www.instagram.com/salma2305mohamed?igsh=MTVxeXA4ZGZ4ODMyZw==" target="_blank"><i class="bi bi-instagram"></i></a>
+                <a href="https://wa.me/20110590993" target="_blank"><i class="bi bi-whatsapp"></i></a>
+                <a href="https://www.linkedin.com/in/salma-mohamed-718ab440a?utm_source=share_via&utm_content=profile&utm_medium=member_android" 
+                target="_blank"><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    
+        <div class="line"></div>
+        <div class="end">
+            <p class="parg">تـريـاق</p>
+            <p>جميع الحقوق محفوظة</p>
+        </div>
+    </footer>
+
+
+    <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered ">
+    <div class="modal-content">
+      <div class="modal-header">
+            <p class="modal-title" id="exampleModalToggleLabel">قائمة الطلبات</p>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <!-- <div class="d-flexMain modalDiv hidemodalDiv" >
+          <div class="right d-flex">
+            <img src="../images/parst.jpg" alt="">
+            <span><p class="NameOfMedicine">باراسيتامول 500 مجم</p><br>
+            <small class="PriceOfMedicine">24.50 ج.م</small></span>
+          </div>
+          <div class="modalIcon">
+            <i class="Plus bi bi-plus-square-fill"></i>
+            <small id="Counter" style="font-size: 20px; margin: 0 10px;">0</small>
+            <i class="Minus bi bi-dash-square-fill"></i>
+          </div>
+      </div> -->
+      </div>
+    
+    </div>
+  </div>
+</div>
+
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="../jsFiles/patientDash.js"></script>
+    <script src="../jsFiles/cart.js"></script>
+    <script src="../jsFiles/userIcon.js"></script>
+</body>
+
+</html>

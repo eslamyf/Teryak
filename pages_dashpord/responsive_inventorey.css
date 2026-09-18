@@ -1,0 +1,684 @@
+/*Overlay */
+.overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    opacity:0;
+    visibility:hidden;
+    transition:.35s;
+    z-index:998;
+}
+
+.overlay.show{
+    opacity:1;
+    visibility:visible;
+}
+
+/*Large Screens */
+
+@media (min-width:1400px){
+
+    .dashboard-container{
+        max-width:1600px;
+        margin:auto;
+    }
+
+}
+
+/*Tablet */
+
+@media (max-width:992px){
+
+    body{
+        overflow-x:hidden;
+    }
+
+    .dashboard-container{
+
+        display:block;
+
+        padding:18px;
+
+    }
+
+    .menu-btn{
+
+        display:flex;
+
+        justify-content:center;
+
+        align-items:center;
+
+    }
+
+    .sidebar{
+
+        position:fixed;
+
+        top:0;
+
+        right:-320px;
+
+        width:280px;
+
+        height:100vh;
+
+        border-radius:0;
+
+        overflow-y:auto;
+
+        transition:.35s;
+
+        z-index:999;
+
+    }
+
+    .sidebar.active{
+
+        right:0;
+
+    }
+
+    header{
+
+        justify-content:space-between;
+
+        margin-bottom:20px;
+
+    }
+
+    .top-bar{
+
+        flex-direction:column-reverse;
+
+        align-items:stretch;
+
+        gap:15px;
+
+    }
+
+    .search{
+
+        width:100%;
+
+    }
+
+    .add-btn{
+
+        width:100%;
+
+        justify-content:center;
+
+    }
+
+}
+
+/*Mobile */
+
+@media (max-width:768px){
+
+    .medicine-card{
+
+        flex-direction:column;
+
+        align-items:center;
+
+        text-align:center;
+
+        gap:18px;
+
+        padding:20px;
+
+    }
+
+    .medicine-card img{
+
+        margin:0;
+
+        width:95px;
+
+        height:95px;
+
+    }
+
+    .details{
+
+        align-items:center;
+
+    }
+
+    .details h3{
+
+        font-size:20px;
+
+    }
+
+    .details p{
+
+        font-size:14px;
+
+        line-height:2;
+
+    }
+
+    .actions{
+
+        width:100%;
+
+        margin:0;
+
+        justify-content:center;
+
+        flex-wrap:wrap;
+
+        gap:12px;
+
+    }
+
+    .badge{
+
+        width:100px;
+
+        text-align:center;
+
+    }
+
+    .add-new-card{
+
+        font-size:16px;
+
+        text-align:center;
+
+        padding:15px;
+
+    }
+
+}
+
+/*Small Phones */
+
+@media (max-width:480px){
+
+    .dashboard-container{
+
+        padding:12px;
+
+    }
+
+    .status{
+
+        width:100%;
+
+        justify-content:center;
+
+        font-size:14px;
+
+    }
+
+    .search input{
+
+        height:50px;
+
+        font-size:14px;
+
+    }
+
+    .add-btn{
+
+        height:50px;
+
+        padding:0;
+
+        font-size:15px;
+
+    }
+
+    .medicine-card{
+
+        border-radius:18px;
+
+    }
+
+    .details h3{
+
+        font-size:18px;
+
+    }
+
+    .details p{
+
+        font-size:13px;
+
+    }
+
+    .badge{
+
+        font-size:12px;
+
+        padding:7px 12px;
+
+    }
+
+}
+@media (max-width: 768px){
+
+    .status{
+        margin: 0 auto;      /* يخليها في النص */
+        justify-content: center;
+    }
+
+}
+
+
+
+/*RESPONSIVE SIDEBAR - ALL PAGES */
+
+@media (max-width: 1000px) {
+
+    body {
+        overflow-x: hidden;
+    }
+
+    /* Dashboard becomes vertical */
+    .dashboard-container {
+        display: flex !important;
+        flex-direction: column !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        padding: 12px !important;
+        gap: 14px !important;
+    }
+
+    /*SIDEBAR */
+
+    .sidebar {
+        position: relative !important;
+
+        top: auto !important;
+        right: auto !important;
+        left: auto !important;
+        bottom: auto !important;
+
+        display: block !important;
+
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        transform: none !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        height: auto !important;
+        min-height: 0 !important;
+
+        margin: 0 !important;
+
+        padding: 16px !important;
+
+        border-radius: 20px !important;
+
+        overflow: hidden !important;
+
+        z-index: 10 !important;
+    }
+
+    /* Sidebar information */
+
+    .pharmacy-info {
+        width: 100%;
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 10px;
+
+        margin-bottom: 14px;
+    }
+
+    /* Navigation */
+
+    .sidebar nav {
+        width: 100% !important;
+
+        display: flex !important;
+
+        flex-direction: row !important;
+
+        align-items: center;
+
+        gap: 7px;
+
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+
+        padding-bottom: 3px;
+
+        scrollbar-width: none;
+    }
+
+    .sidebar nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .sidebar nav a {
+        display: block !important;
+
+        flex: 0 0 auto !important;
+
+        width: auto !important;
+
+        white-space: nowrap;
+
+        padding: 9px 13px;
+
+        font-size: 12px;
+
+        border-radius: 11px;
+    }
+
+    /*MAIN */
+
+    .main-content {
+        display: block !important;
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+    }
+
+    /* منع أي زر Menu من الظهور */
+
+    .menu-btn {
+        display: none !important;
+    }
+
+    .overlay {
+        display: none !important;
+    }
+}
+
+
+
+/*RESPONSIVE CONTENT CONTAINER*/
+
+@media (max-width: 1100px) {
+
+    .main-content {
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+
+    .main-content > *,
+    .cards,
+    .chart-card,
+    .alerts,
+    .medicine-list,
+    .add-new-card,
+    .top-bar {
+        width: 100%;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        box-sizing: border-box;
+    }
+}
+
+
+/*TABLET*/
+
+@media (max-width: 768px) {
+
+    .dashboard-container {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    .main-content {
+        width: 100%;
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 0 8px;
+        box-sizing: border-box;
+    }
+
+    .cards,
+    .chart-card,
+    .alerts,
+    .medicine-list,
+    .add-new-card,
+    .top-bar {
+        width: 100%;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+
+/*MOBILE*/
+
+@media (max-width: 600px) {
+
+    .dashboard-container {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+
+    .main-content {
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+        padding: 0 8px;
+        box-sizing: border-box;
+    }
+
+    .cards,
+    .chart-card,
+    .alerts,
+    .medicine-list,
+    .add-new-card,
+    .top-bar {
+        width: 100%;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .card,
+    .medicine-card,
+    .alert-item {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+
+/*VERY SMALL PHONES */
+
+@media (max-width: 400px) {
+
+    .dashboard-container {
+        padding: 6px;
+    }
+
+    .main-content {
+        max-width: 380px;
+        padding: 0 6px;
+        margin: 0 auto;
+    }
+
+    .cards,
+    .chart-card,
+    .alerts,
+    .medicine-list,
+    .add-new-card,
+    .top-bar {
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+
+/*STATISTICS PAGE CONTAINER */
+
+.stats-page-container {
+    width: 100%;
+    max-width: 1250px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    padding-left: 10px;
+    padding-right: 10px;
+
+    min-width: 0;
+}
+
+
+/*TABLET */
+
+@media (max-width: 1000px) {
+
+    .stats-page-container {
+        width: 100%;
+        max-width: 900px;
+
+        margin-left: auto;
+        margin-right: auto;
+
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .cards {
+        width: 100%;
+        max-width: 100%;
+
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .chart-card,
+    .alerts {
+        width: 100%;
+        max-width: 100%;
+
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+
+/*MOBILE */
+
+@media (max-width: 768px) {
+
+    .stats-page-container {
+        width: calc(100% - 24px);
+        max-width: 650px;
+
+        margin-left: auto;
+        margin-right: auto;
+
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .cards {
+        width: 100%;
+
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        gap: 12px;
+
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .card {
+        width: 100%;
+        min-width: 0;
+
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .chart-card,
+    .alerts {
+        width: 100%;
+
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+
+/*SMALL MOBILE */
+
+@media (max-width: 480px) {
+
+    .stats-page-container {
+        width: calc(100% - 20px);
+
+        max-width: 430px;
+
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+
+        width: 100%;
+
+        gap: 10px;
+    }
+
+    .card {
+        width: 100%;
+
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .chart-card,
+    .alerts {
+        width: 100%;
+
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+
+/*VERY SMALL*/
+
+@media (max-width: 360px) {
+
+    .stats-page-container {
+        width: calc(100% - 16px);
+
+        max-width: 350px;
+    }
+
+    .cards {
+        gap: 8px;
+    }
+}

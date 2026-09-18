@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الإشعارات</title>
+<!-- 
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet"> -->
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<link rel="stylesheet" href="header&footer.css">
+    <link rel="stylesheet" href="notifications.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    
+    
+</head>
+
+<body>
+<div class="btn-resp ">
+   <div>
+    <button class= "navbar-toggler btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+     <i class="bi bi-list"></i></button>
+          <span class="rightofHeader rightofHeaderResp">
+            <button class="btn btn2">AR</button>
+            <button class="btn btn2"><i class="bi bi-moon-stars"></i></button>
+             <i class="bi bi-cart-plus icon" data-bs-toggle="modal" href="#exampleModalToggle"></i>
+            <span id="counter">0</span>
+          </span>
+   </div>
+    <div class="leftofHeader leftofHeaderRes">
+            <a href="home.html">
+                <h1>تـريـاق</h1>
+                <img class="logo" src="../images/logo.png" alt="Logo">
+            </a>
+        </div>
+
+</div>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+      <ul>
+                <a href="../htmlFiles/home.html"><li>الرئيسية</li></a>
+                <a href="../htmlFiles/medicine.html"><li>الأدوية</li></a>
+                <a href="../htmlFiles/pharmacies.html"> <li>الصيدليات</li> </a>
+                <a href="../htmlFiles/donation.html"><li>التبرع</li></a> 
+                <a href="../htmlFiles/about.html"> <li>من نحن </li> </a>
+            </ul>
+    </div>
+    <div class="bottom">
+        <a href=""><button class="btn">  انشاء حساب</button></a><br>
+        <a href=""><button class="btn">تسجيل الدخول</button></a>
+    </div>
+
+</div>
+</div>
+
+       <div class="header">
+        <div class="rightofHeader">
+            <!-- -------------------- -->
+             <div class="d-flex" id="display">
+                <button class="logout hide" id="Logout">تسجيل خروج</button>
+                <i class="bi bi-person-circle hide" id="Icon"></i>
+            </div>
+             <!-- ------------------- -->
+
+            <a href="../htmlFiles/register.html"><button class="btn" id="SignUp">  انشاء حساب</button></a>
+            <a href="../htmlFiles/login.html" class="span" id="SignIn"><span>تسجيل الدخول</span></a>
+            <button class="btn btn2">AR</button>
+            <button class="btn btn2"><i class="bi bi-moon-stars"></i></button>
+            <i class="bi bi-cart-plus icon" data-bs-toggle="modal" href="#exampleModalToggle"></i>
+            <span id="count">0</span>
+        </div>
+        <div class="centerofHeader">
+             <ul>
+                <li><a href="../htmlFiles/home.html">الرئيسية</a></li>
+                <li><a href="../htmlFiles/medicine.html">الأدوية</a></li>
+                <li><a href="../htmlFiles/pharmacies.html"> الصيدليات </a></li>
+                <li><a href="../htmlFiles/donation.html">التبرع</a> </li>
+                <li><a href="../htmlFiles/about.html"> من نحن  </a></li>
+            </ul>
+        </div>
+        <div class="leftofHeader">
+            <a href="">
+                <h1>تـريـاق</h1>
+                <img class="logo" src="../images/logo.png" alt="Logo">
+            </a>
+        </div>
+
+    </div>
+  
+  
+    <div class="dashboard-container">
+
+        <!-- Sidebar -->
+
+        <aside class="sidebar">
+
+            <div class="pharmacy-info">
+
+                <div class="logo-box">
+                    💊
+                </div>
+
+                <div>
+                    <h2 id="pharmacyName">صيدلية النهضة</h2>
+                    <p id="pharmacyAddress">شارع الجامعة</p>
+                </div>
+
+            </div>
+
+            <nav>
+
+                <a href="index.html">
+                    📊 الإحصائيات
+                </a>
+
+                <a href="inventory.html">
+                    📦 المخزون
+                </a>
+
+                <a href="order.html">
+                    📝 الطلبات
+                </a>
+
+                <a href="exchange.html">
+                    🔄 تبادل المخزون
+                </a>
+
+                <a class="active" href="notification.html">
+                    🔔 الإشعارات
+                </a>
+
+            </nav>
+
+        </aside>
+
+        <!-- Main -->
+
+        <main class="main-content">
+
+        
+
+            <div class="container">
+
+    <!-- إشعار 1 -->
+
+    <div class="notification warning unread">
+
+        <div class="dot"></div>
+
+        <div class="content">
+
+            <h3>مخزون أموكسيسيلين منخفض جداً (3 علب متبقية)</h3>
+
+            <p>منذ 30 دقيقة</p>
+
+        </div>
+
+        <div class="icon warning-icon">
+
+            <i class="fa-solid fa-circle-exclamation"></i>
+
+        </div>
+
+    </div>
+
+    <!-- إشعار 2 -->
+
+    <div class="notification info unread">
+
+        <div class="dot"></div>
+
+        <div class="content">
+
+            <h3>طلب حجز جديد من أحمد محمد</h3>
+
+            <p>منذ ساعة</p>
+
+        </div>
+
+        <div class="icon info-icon">
+
+            <i class="fa-regular fa-bell"></i>
+
+        </div>
+
+    </div>
+
+    <!-- إشعار 3 -->
+
+    <div class="notification success">
+
+        <div class="content">
+
+            <h3>تمت الموافقة على طلب تبادل المخزون مع صيدلية الشفاء</h3>
+
+            <p>منذ 3 ساعات</p>
+
+        </div>
+
+        <div class="icon success-icon">
+
+            <i class="fa-solid fa-circle-check"></i>
+
+        </div>
+
+    </div>
+
+    <!-- إشعار 4 -->
+
+    <div class="notification danger">
+
+        <div class="content">
+
+            <h3>انتهت صلاحية حجز فيتامين C لمريض لم يستلمه</h3>
+
+            <p>أمس</p>
+
+        </div>
+
+        <div class="icon danger-icon">
+
+            <i class="fa-regular fa-circle-xmark"></i>
+
+        </div>
+
+    </div>
+
+</div>
+</div>
+  <footer>
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-3 left-col">
+                
+                <a href="../htmlFiles/home.html">
+                    <div class="d-flex">
+                        <img class="IMG" src="../images/logo.png" alt="">
+                        <h1>تـريـاق</h1>
+                    </div>
+                    </a>
+                
+                <p>تـريـاق ليساعدك في البحث عن الدواء بسهولة ومعرفة اماكن توفره الآن</p>
+
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-3 margin">
+                <h3 >روابط سريعة</h3>
+                <ul class="links">
+                    <li><a href="../htmlFiles/medicine.html"><i class="bi bi-caret-left-fill"></i> الأدوية</a></li>
+                    <li><a href="../htmlFiles/home.html"><i class="bi bi-caret-left-fill"></i> الرئيسية</a></li>
+                    <li><a href="../htmlFiles/pharmacies.html"><i class="bi bi-caret-left-fill"></i> الصيدليات</a></li>
+                    <li><a href="../htmlFiles/donation.html"><i class="bi bi-caret-left-fill"></i> التبرع</a></li>
+                    <li><a href="../htmlFiles/about.html"><i class="bi bi-caret-left-fill"></i> من نحن</a></li>
+
+                </ul>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3 margin">
+                <h3>خدماتنا</h3>
+                <ul class="list">
+                    <li><a href=""><i class="icon2 bi bi-search"></i>البحث عن الأدوية </a></li>
+                    <li><a href=""><i class="icon2 bi bi-geo-alt"></i>أماكن توفر الأدوية </a></li>
+                    <li><a href=""><i class="icon2 bi bi-heart"></i>إمكانية التبرع بالأدوية </a></li>
+                    <li><a href=""><i class="icon2 bi bi-bag-plus-fill"></i>حجز وشراء ادوية اونلاين </a></li>
+
+                </ul>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-3 contact">
+                <h3>تواصل معنا</h3>
+                <p><i class="bi bi-telephone-plus-fill"></i> +20 1234567890</p>
+                <p><i class="bi bi-envelope"></i> info@teryak.com</p>
+                <div class="icon">
+                <a href="https://www.facebook.com/share/1HJUWBSGRq/" target="_blank"><i class="bi bi-facebook"></i></a>
+                <a href="https://www.instagram.com/salma2305mohamed?igsh=MTVxeXA4ZGZ4ODMyZw==" target="_blank"><i class="bi bi-instagram"></i></a>
+                <a href="https://wa.me/201110590993" target="_blank"><i class="bi bi-whatsapp"></i></a>
+                <a href="https://www.linkedin.com/in/salma-mohamed-718ab440a?utm_source=share_via&utm_content=profile&utm_medium=member_android" 
+                target="_blank"><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    
+        <div class="line"></div>
+        <div class="end">
+            <p class="parg">تـريـاق</p>
+            <p>جميع الحقوق محفوظة</p>
+        </div>
+    </footer>
+
+        
+<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered ">
+    <div class="modal-content">
+      <div class="modal-header">
+            <p class="modal-title" id="exampleModalToggleLabel">قائمة الطلبات</p>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <!-- <div class="d-flexMain modalDiv hidemodalDiv" >
+          <div class="right d-flex">
+            <img src="../images/parst.jpg" alt="">
+            <span><p class="NameOfMedicine">باراسيتامول 500 مجم</p><br>
+            <small class="PriceOfMedicine">24.50 ج.م</small></span>
+          </div>
+          <div class="modalIcon">
+            <i class="Plus bi bi-plus-square-fill"></i>
+            <small id="Counter" style="font-size: 20px; margin: 0 10px;">0</small>
+            <i class="Minus bi bi-dash-square-fill"></i>
+          </div>
+      </div> -->
+      </div>
+    
+    </div>
+  </div>
+</div>
+
+
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="../jsFiles/cart.js"></script>
+    <script src="../jsFiles/userIcon.js"></script>
+<script src="notifications.js"></script>
+
+</body>
+
+</html>

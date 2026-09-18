@@ -1,0 +1,1580 @@
+/* RESET*/
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Cairo',sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:#f5f7fb;
+    min-height:100vh;
+    direction:rtl;
+    color:#222;
+    overflow-x:hidden;
+}
+
+
+/*DASHBOARD LAYOUT */
+
+.dashboard-container{
+
+    display:grid;
+
+    grid-template-columns:280px minmax(0,1fr);
+
+    gap:12px;
+
+    padding:12px;
+
+    min-height:100vh;
+
+    width:100%;
+
+}
+
+.main-content{
+
+    width:100%;
+    margin-top: -28px;
+    min-width:0;
+
+}
+/*SIDEBAR */
+.sidebar{
+
+    background:#fff;
+
+    border-radius:24px;
+
+    padding:25px;
+
+    box-shadow:0 5px 20px rgba(0,0,0,.05);
+
+    position:sticky;
+
+    top:20px;
+
+    height:fit-content;
+
+    transition:.4s ease;
+
+    z-index:999;
+
+}
+
+
+/* Mobile Menu Button */
+
+.menu-btn{
+
+    display:none;
+
+    width:45px;
+
+    height:45px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#10B981;
+
+    color:#fff;
+
+    font-size:24px;
+
+    cursor:pointer;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+
+/* Pharmacy */
+
+.pharmacy-info{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    margin-bottom:35px;
+
+}
+
+.logo-box{
+
+    width:60px;
+
+    height:60px;
+
+    border-radius:18px;
+
+    background:#ECFDF5;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:28px;
+
+    flex-shrink:0;
+
+}
+
+.pharmacy-info h2{
+
+    font-size:22px;
+
+    color:#111827;
+
+}
+
+.pharmacy-info p{
+
+    font-size:14px;
+
+    color:#6B7280;
+
+}
+
+
+/* Navigation */
+
+.sidebar nav{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+
+}
+
+.sidebar nav a{
+
+    text-decoration:none;
+
+    color:#374151;
+
+    padding:15px 18px;
+
+    border-radius:16px;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.sidebar nav a:hover{
+
+    background:#F3F4F6;
+
+}
+
+.sidebar nav a.active{
+
+    background:#10B981;
+
+    color:#fff;
+
+}
+
+
+/*TOP BAR */
+
+.top-bar{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+}
+
+
+/*STATUS */
+
+.status{
+
+    background:#ECFDF5;
+
+    color:#10B981;
+
+    padding:8px 14px;
+
+    border-radius:25px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:7px;
+
+    font-weight:500;
+
+    font-size:14px;
+
+}
+
+.dot{
+
+    width:10px;
+
+    height:10px;
+
+    background:#13C56B;
+
+    border-radius:50%;
+
+    flex-shrink:0;
+
+}
+
+
+/*CONTAINER */
+
+.container{
+
+    width:100%;
+
+    max-width:1250px;
+
+    margin:30px auto;
+
+}
+
+
+/*ORDER LIST */
+
+.orders-list{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+
+/*ORDER CARD*/
+
+.order-card{
+    background:#fff;
+    border:1px solid #e8e8e8;
+    border-radius:24px;
+    padding:18px 24px;
+
+    margin-bottom:15px; /* زوّد المسافة بين الكروت */
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    transition:.3s;
+    box-shadow:0 4px 18px rgba(0,0,0,.04);
+}
+.order-card:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+
+}
+
+
+/*MEDICINE */
+
+.medicine{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    flex:1;
+
+    min-width:0;
+
+}
+
+
+/* Image */
+
+.medicine img{
+
+    width:78px;
+
+    height:78px;
+
+    object-fit:cover;
+
+    border-radius:18px;
+
+    flex-shrink:0;
+
+    transition:.3s;
+
+}
+
+.order-card:hover .medicine img{
+
+    transform:scale(1.04);
+
+}
+
+
+/*INFO */
+
+.info{
+
+    min-width:0;
+
+    flex:1;
+
+    text-align:right;
+
+}
+
+.info h2{
+
+    font-size:20px;
+
+    font-weight:550;
+
+    color:#111;
+
+    margin-bottom:6px;
+
+    line-height:1.5;
+
+}
+
+.info h2 span{
+
+    font-weight:550;
+
+}
+
+.info p{
+
+    color:#777;
+
+    font-size:16px;
+
+    margin-bottom:6px;
+
+    line-height:1.7;
+
+}
+
+
+/*DETAILS */
+
+.details{
+
+    display:flex;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:18px;
+
+    color:#8c8c8c;
+
+    font-size:15px;
+
+}
+
+.details span{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:5px;
+
+}
+
+.details i{
+
+    margin-left:2px;
+
+}
+
+
+/*ACTIONS */
+
+.actions{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+    justify-content:center;
+
+    gap:15px;
+
+    min-width:150px;
+
+    flex-shrink:0;
+
+}
+
+
+/*BADGES */
+
+.badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:8px 18px;
+
+    min-width:82px;
+
+    border-radius:30px;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    white-space:nowrap;
+    margin-right:500px;
+
+}
+
+
+/* Preparing */
+
+.preparing{
+
+    background:#FFF4DF;
+
+    color:#E79A12;
+
+}
+
+
+/* Ready */
+
+.ready{
+
+    background:#DDF6EE;
+
+    color:#009966;
+
+}
+
+
+/* Completed */
+
+.completed{
+
+    background:#F1F1F1;
+
+    color:#555;
+
+}
+
+
+/* Cancelled */
+
+.cancelled{
+
+    background:#FFEAEA;
+
+    color:#E53935;
+
+}
+
+
+/*BUTTONS*/
+
+.buttons{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+button{
+
+    border:none;
+
+    cursor:pointer;
+
+    font-family:'Cairo',sans-serif;
+
+    transition:.3s ease;
+
+    padding:10px 20px;
+
+    border-radius:12px;
+
+    font-size:14px;
+
+    font-weight:700;
+
+}
+
+
+/* Ready */
+
+.ready-btn{
+
+    background:#009966;
+
+    color:#fff;
+
+}
+
+.ready-btn:hover{
+
+    background:#008457;
+
+    transform:translateY(-2px);
+
+}
+
+
+/* Cancel */
+
+.cancel-btn{
+
+    background:#FFECEC;
+
+    color:#F44336;
+
+}
+
+.cancel-btn:hover{
+
+    background:#ffdcdc;
+
+    transform:translateY(-2px);
+
+}
+
+
+/* Confirm */
+
+.confirm-btn{
+
+    background:#DDF6EE;
+
+    color:#008b63;
+
+}
+
+.confirm-btn:hover{
+
+    background:#c8f0e2;
+
+    transform:translateY(-2px);
+
+}
+
+
+/*OVERLAY */
+
+.overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.45);
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:.3s;
+
+    z-index:998;
+
+}
+
+.overlay.show{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+
+/*  TABLET*/
+/* RESPONSIVE*/
+
+/*
+   LAPTOP / MEDIUM DESKTOP
+   1200px → 1100px
+ */
+
+@media (max-width: 1200px) {
+
+    .dashboard-container {
+        grid-template-columns: 240px minmax(0, 1fr);
+        gap: 16px;
+        padding: 16px;
+    }
+
+    .sidebar {
+        padding: 20px;
+    }
+
+    .pharmacy-info {
+        gap: 10px;
+        margin-bottom: 25px;
+    }
+
+    .logo-box {
+        width: 52px;
+        height: 52px;
+        font-size: 24px;
+        border-radius: 15px;
+    }
+
+    .pharmacy-info h2 {
+        font-size: 19px;
+    }
+
+    .pharmacy-info p {
+        font-size: 13px;
+    }
+
+    .sidebar nav {
+        gap: 8px;
+    }
+
+    .sidebar nav a {
+        padding: 13px 14px;
+        font-size: 14px;
+    }
+
+    .container {
+        max-width: 100%;
+        margin: 20px auto;
+    }
+
+    .order-card {
+        padding: 16px 18px;
+        gap: 15px;
+    }
+
+    .medicine {
+        gap: 12px;
+    }
+
+    .medicine img {
+        width: 65px;
+        height: 65px;
+    }
+
+    .info h2 {
+        font-size: 19px;
+        line-height: 1.5;
+    }
+
+    .info p {
+        font-size: 13px;
+    }
+
+    .details {
+        font-size: 13px;
+        gap: 8px 12px;
+    }
+
+    .actions {
+        min-width: 120px;
+        gap: 10px;
+    }
+
+    .badge {
+        margin-right: 0;
+        min-width: 75px;
+        padding: 7px 13px;
+        font-size: 12px;
+    }
+
+    button {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+
+
+/*
+   SMALL LAPTOP
+   1100px → 993px
+ */
+
+@media (max-width: 1100px) and (min-width: 993px) {
+
+    .dashboard-container {
+        grid-template-columns: 210px minmax(0, 1fr);
+        gap: 14px;
+        padding: 14px;
+    }
+
+    .sidebar {
+        padding: 18px;
+        border-radius: 20px;
+    }
+
+    .pharmacy-info {
+        gap: 9px;
+        margin-bottom: 22px;
+    }
+
+    .logo-box {
+        width: 48px;
+        height: 48px;
+        font-size: 22px;
+    }
+
+    .pharmacy-info h2 {
+        font-size: 17px;
+    }
+
+    .pharmacy-info p {
+        font-size: 12px;
+    }
+
+    .sidebar nav {
+        gap: 7px;
+    }
+
+    .sidebar nav a {
+        padding: 12px 10px;
+        font-size: 13px;
+        border-radius: 13px;
+    }
+
+    .top-bar {
+        margin-bottom: 18px;
+    }
+
+    .status {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    .order-card {
+        padding: 14px 16px;
+        gap: 12px;
+        border-radius: 20px;
+    }
+
+    .medicine {
+        gap: 10px;
+    }
+
+    .medicine img {
+        width: 58px;
+        height: 58px;
+        border-radius: 14px;
+    }
+
+    .info h2 {
+        font-size: 17px;
+        margin-bottom: 3px;
+    }
+
+    .info p {
+        font-size: 12px;
+        margin-bottom: 3px;
+    }
+
+    .details {
+        font-size: 12px;
+        gap: 6px 9px;
+    }
+
+    .actions {
+        min-width: 105px;
+        gap: 8px;
+    }
+
+    .badge {
+        margin-right: 0;
+        min-width: 70px;
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+
+    button {
+        padding: 7px 10px;
+        font-size: 11px;
+        border-radius: 9px;
+    }
+}
+
+
+/*
+   TABLET
+   992px */
+
+@media (max-width: 992px) {
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .dashboard-container {
+        display: block;
+        padding: 15px;
+    }
+
+    /* Sidebar Drawer */
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        right: -300px;
+
+        width: 280px;
+        height: 100vh;
+
+        border-radius: 0;
+        padding: 25px;
+
+        overflow-y: auto;
+
+        transition: right .35s ease;
+
+        z-index: 1000;
+    }
+
+    .sidebar.active {
+        right: 0;
+    }
+
+    /* Menu */
+
+    .menu-btn {
+        display: flex;
+
+        position: fixed;
+
+        top: 15px;
+        right: 15px;
+
+        z-index: 1100;
+    }
+
+    /* Main */
+
+    .main-content {
+        width: 100%;
+    }
+
+    .top-bar {
+        width: 100%;
+        margin-bottom: 20px;
+        padding-right: 60px;
+    }
+
+    .container {
+        width: 100%;
+        max-width: none;
+        margin: 15px auto;
+    }
+
+    /* Card */
+
+    .order-card {
+        padding: 18px;
+        gap: 15px;
+    }
+
+    .medicine img {
+        width: 65px;
+        height: 65px;
+    }
+
+    .info h2 {
+        font-size: 19px;
+    }
+
+    .info p {
+        font-size: 13px;
+    }
+
+    .details {
+        font-size: 13px;
+    }
+
+    .actions {
+        min-width: 120px;
+    }
+
+    .badge {
+        margin-right: 0;
+    }
+}
+/*MOBILE 768px */
+@media (max-width: 768px) {
+
+    .dashboard-container {
+        display: block;
+        padding: 12px;
+    }
+
+    /* Sidebar */
+
+    .sidebar {
+        width: 280px;
+        right: -300px;
+    }
+
+    .sidebar.active {
+        right: 0;
+    }
+
+    /* Menu */
+
+    .menu-btn {
+        width: 44px;
+        height: 44px;
+
+        top: 12px;
+        right: 12px;
+    }
+
+    /* Header */
+
+    .top-bar {
+        margin-bottom: 18px;
+        padding-right: 55px;
+    }
+
+    .status {
+        font-size: 13px;
+        padding: 7px 12px;
+    }
+
+    /* Container */
+
+    .container {
+        width: 100%;
+        margin: 15px auto;
+    }
+
+    /* Order Card */
+
+    .order-card {
+        width: 100%;
+
+        flex-direction: column;
+        align-items: stretch;
+
+        gap: 15px;
+
+        padding: 18px;
+
+        border-radius: 20px;
+    }
+
+    /* Medicine */
+
+    .medicine {
+        width: 100%;
+        gap: 12px;
+    }
+
+    .medicine img {
+        width: 65px;
+        height: 65px;
+        border-radius: 15px;
+    }
+
+    /* Info */
+
+    .info {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .info h2 {
+        font-size: 18px;
+        line-height: 1.6;
+
+        margin-bottom: 4px;
+    }
+
+    .info p {
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    /* Details */
+
+    .details {
+        width: 100%;
+
+        display: flex;
+        flex-wrap: wrap;
+
+        gap: 7px 12px;
+
+        font-size: 12px;
+    }
+
+    /* Actions */
+
+    .actions {
+        width: 100%;
+
+        min-width: 0;
+
+        align-items: stretch;
+
+        gap: 10px;
+    }
+
+    /* Badge */
+
+    .badge {
+        margin-right: 0;
+
+        width: fit-content;
+        min-width: 75px;
+
+        padding: 7px 13px;
+
+        font-size: 12px;
+    }
+
+    /* Buttons */
+
+    .buttons {
+        width: 100%;
+        display: flex;
+        gap: 8px;
+    }
+
+    button {
+        flex: 1;
+        width: auto;
+
+        padding: 10px 8px;
+
+        font-size: 12px;
+    }
+}
+
+
+/*SMALL MOBILE 576px */
+
+@media (max-width: 576px) {
+
+    .dashboard-container {
+        padding: 10px;
+    }
+
+    .sidebar {
+        width: 270px;
+    }
+
+    .top-bar {
+        padding-right: 52px;
+    }
+
+    .container {
+        margin-top: 12px;
+    }
+
+    /* Card */
+
+    .order-card {
+        padding: 16px;
+        gap: 14px;
+        border-radius: 18px;
+    }
+
+    /* Medicine */
+
+    .medicine {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+
+        gap: 10px;
+    }
+
+    .medicine img {
+        width: 65px;
+        height: 65px;
+    }
+
+    /* Info */
+
+    .info {
+        text-align: center;
+    }
+
+    .info h2 {
+        font-size: 17px;
+    }
+
+    .info p {
+        font-size: 12px;
+    }
+
+    /* Details */
+
+    .details {
+        justify-content: center;
+        font-size: 11px;
+        gap: 6px 10px;
+    }
+
+    /* Actions */
+
+    .actions {
+        align-items: center;
+    }
+
+    .badge {
+        font-size: 11px;
+        padding: 6px 12px;
+    }
+
+    /* Buttons */
+
+    .buttons {
+        flex-direction: column;
+        width: 100%;
+        gap: 8px;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        font-size: 12px;
+    }
+}
+
+
+/*VERY SMALL PHONES 400px */
+
+@media (max-width: 400px) {
+
+    .dashboard-container {
+        padding: 8px;
+    }
+
+    .sidebar {
+        width: 260px;
+    }
+
+    .menu-btn {
+        width: 42px;
+        height: 42px;
+
+        top: 10px;
+        right: 10px;
+    }
+
+    .top-bar {
+        padding-right: 48px;
+    }
+
+    .order-card {
+        padding: 14px;
+        border-radius: 16px;
+    }
+
+    .medicine img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .info h2 {
+        font-size: 16px;
+    }
+
+    .info p {
+        font-size: 11px;
+    }
+
+    .details {
+        font-size: 10px;
+    }
+
+    .badge {
+        font-size: 10px;
+    }
+
+    button {
+        font-size: 11px;
+    }
+}
+
+
+/*LARGE SCREENS */
+
+@media (min-width: 1400px) {
+
+    .dashboard-container {
+        max-width: 1600px;
+        margin: auto;
+    }
+
+    .container {
+        max-width: 1400px;
+    }
+}
+/* LAPTOP / TABLET Sidebar فوق المحتو */
+@media (max-width: 1100px) {
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .dashboard-container {
+        display: flex;
+        flex-direction: column;
+
+        gap: 12px;
+        padding: 12px;
+    }
+
+    /*SIDEBAR */
+
+    .sidebar {
+        position: relative;
+
+        top: auto;
+        right: auto;
+
+        width: 100%;
+        height: auto;
+        min-height: auto;
+
+        padding: 18px 20px;
+
+        border-radius: 20px;
+
+        overflow: visible;
+    }
+
+    /* Pharmacy info */
+
+    .pharmacy-info {
+        display: flex;
+        align-items: center;
+
+        gap: 12px;
+
+        margin-bottom: 16px;
+    }
+
+    .logo-box {
+        width: 50px;
+        height: 50px;
+
+        border-radius: 15px;
+
+        font-size: 23px;
+    }
+
+    .pharmacy-info h2 {
+        font-size: 19px;
+    }
+
+    .pharmacy-info p {
+        font-size: 13px;
+    }
+    /*NAVIGATION */
+    .sidebar nav {
+        display: flex;
+
+        flex-direction: row;
+
+        gap: 8px;
+
+        width: 100%;
+
+        overflow-x: auto;
+
+        padding-bottom: 2px;
+
+        scrollbar-width: none;
+    }
+
+    .sidebar nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .sidebar nav a {
+        flex-shrink: 0;
+
+        padding: 10px 14px;
+
+        border-radius: 12px;
+
+        font-size: 14px;
+
+        white-space: nowrap;
+    }
+
+    /*MAIN CONTENT */
+    .main-content {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* منع زرار القائمة */
+
+    .menu-btn {
+        display: none !important;
+    }
+
+    .overlay {
+        display: none !important;
+    }
+}
+/*SMALL LAPTOP / TABLET */
+@media (max-width: 900px) {
+
+    .dashboard-container {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .sidebar {
+        padding: 16px;
+        border-radius: 18px;
+    }
+
+    .pharmacy-info {
+        margin-bottom: 13px;
+    }
+
+    .logo-box {
+        width: 46px;
+        height: 46px;
+
+        border-radius: 14px;
+
+        font-size: 21px;
+    }
+
+    .pharmacy-info h2 {
+        font-size: 18px;
+    }
+
+    .pharmacy-info p {
+        font-size: 12px;
+    }
+
+    .sidebar nav {
+        gap: 6px;
+    }
+
+    .sidebar nav a {
+        padding: 9px 12px;
+
+        font-size: 13px;
+
+        border-radius: 11px;
+    }
+}
+
+
+/*MOBILE */
+@media (max-width: 600px) {
+
+    .dashboard-container {
+        padding: 8px;
+
+        gap: 10px;
+    }
+
+    .sidebar {
+        padding: 14px;
+
+        border-radius: 16px;
+    }
+
+    .pharmacy-info {
+        gap: 9px;
+
+        margin-bottom: 12px;
+    }
+
+    .logo-box {
+        width: 42px;
+        height: 42px;
+
+        border-radius: 12px;
+
+        font-size: 19px;
+    }
+
+    .pharmacy-info h2 {
+        font-size: 16px;
+    }
+
+    .pharmacy-info p {
+        font-size: 11px;
+    }
+
+    .sidebar nav {
+        gap: 5px;
+    }
+
+    .sidebar nav a {
+        padding: 8px 11px;
+
+        font-size: 12px;
+
+        border-radius: 10px;
+    }
+}
+/*RESPONSIVE CONTENT CONTAINER */
+@media (max-width: 1100px) {
+
+    .main-content {
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+
+    .main-content > *,
+    .cards,
+    .chart-card,
+    .alerts,
+    .medicine-list,
+    .add-new-card,
+    .top-bar {
+        width: 100%;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        box-sizing: border-box;
+    }
+}
+/*TABLET */
+@media (max-width: 768px) {
+
+    .dashboard-container {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    .main-content {
+        width: 100%;
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 0 8px;
+        box-sizing: border-box;
+    }
+
+    .cards,
+    .chart-card,
+    .alerts,
+    .medicine-list,
+    .add-new-card,
+    .top-bar {
+        width: 100%;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+/*MOBILE */
+@media (max-width: 600px) {
+
+    .dashboard-container {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+
+    .main-content {
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+        padding: 0 8px;
+        box-sizing: border-box;
+    }
+
+    .cards,
+    .chart-card,
+    .alerts,
+    .medicine-list,
+    .add-new-card,
+    .top-bar {
+        width: 100%;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .card,
+    .medicine-card,
+    .alert-item {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+}
+/* VERY SMALL PHONES */
+@media (max-width: 400px) {
+
+    .dashboard-container {
+        padding: 6px;
+    }
+
+    .main-content {
+        max-width: 380px;
+        padding: 0 6px;
+        margin: 0 auto;
+    }
+
+    .cards,
+    .chart-card,
+    .alerts,
+    .medicine-list,
+    .add-new-card,
+    .top-bar {
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}

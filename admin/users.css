@@ -1,0 +1,926 @@
+
+/* =========================================================
+   Google Arabic Font
+========================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+
+
+/* =========================================================
+   Root Variables
+========================================================= */
+:root {
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+
+  --text-main: #111827;
+  --text-muted: #6b7280;
+
+  --border-color: #e2e8f0;
+
+  --primary-green: #059669;
+  --primary-green-dark: #047857;
+
+  --blue-color: #2563eb;
+  --teal-color: #0d9488;
+  --purple-color: #7c3aed;
+  --orange-color: #d97706;
+
+  --font-family:
+    'Tajawal',
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+}
+
+
+/* =========================================================
+   Reset
+========================================================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+}
+
+html {
+  width: 100%;
+  min-height: 0;
+}
+
+body {
+  width: 100%;
+  min-height: 0;
+
+  margin: 0;
+  padding: 0;
+
+  background-color: var(--bg-color);
+  color: var(--text-main);
+
+  direction: rtl;
+  text-align: right;
+
+  overflow-x: hidden;
+
+  -webkit-font-smoothing: antialiased;
+}
+
+
+/* =========================================================
+   Main App Container
+========================================================= */
+.app-container {
+  width: 100%;
+  max-width: 100%;
+
+  margin: 0;
+  padding: 16px 20px 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+
+/* =========================================================
+   Header
+========================================================= */
+.top-header {
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 4px 0;
+}
+
+.header-right,
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-right {
+  gap: 12px;
+}
+
+.header-left {
+  gap: 16px;
+}
+
+.mobile-toggle-btn {
+  display: none;
+  width: 38px;
+  height: 38px;
+  padding: 7px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 9px;
+  color: var(--text-main);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 60;
+}
+
+.title-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.main-title {
+  font-size: 22px;
+  line-height: 1.3;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.admin-badge {
+  background-color: #ffe4e6;
+  color: #e11d48;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  padding: 3px 8px;
+
+  border-radius: 6px;
+}
+
+.sub-title {
+  margin-top: 3px;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  color: var(--text-muted);
+}
+
+
+/* =========================================================
+   Notification
+========================================================= */
+.notification-badge {
+  position: absolute;
+
+  top: 6px;
+  right: 6px;
+
+  width: 8px;
+  height: 8px;
+
+  background-color: #ef4444;
+  border-radius: 50%;
+}
+
+
+/* =========================================================
+   Main Layout
+========================================================= */
+.main-wrapper {
+  width: 100%;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 24px;
+}
+
+
+/* =========================================================
+   Sidebar
+========================================================= */
+.sidebar {
+  width: 240px;
+  min-width: 240px;
+
+  background-color: var(--card-bg);
+
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+
+  padding: 20px 16px;
+
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+
+  flex-shrink: 0;
+}
+
+.sidebar-section-title {
+  margin-bottom: 14px;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  color: #9ca3af;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.nav-item {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 10px 14px;
+
+  border-radius: 10px;
+
+  text-decoration: none;
+
+  color: #4b5563;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.nav-item:hover {
+  background-color: #f0fdf4;
+  color: var(--primary-green);
+}
+
+.nav-item.active {
+  background-color: var(--primary-green);
+  color: #ffffff;
+
+  font-weight: 700;
+}
+
+.nav-item.active:hover {
+  background-color: var(--primary-green-dark);
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   Count Badge
+========================================================= */
+.count-badge {
+  width: 20px;
+  height: 20px;
+
+  margin-right: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #f97316;
+  color: #ffffff;
+
+  border-radius: 50%;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   Dashboard Content
+========================================================= */
+.dashboard-content {
+  flex: 1;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+
+/* =========================================================
+   Action Bar
+========================================================= */
+.action-bar {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+}
+
+.search-box {
+  position: relative;
+
+  flex: 1;
+  min-width: 0;
+  max-width: 600px;
+}
+
+.search-box input {
+  width: 100%;
+
+  padding: 10px 42px 10px 16px;
+
+  background-color: var(--card-bg);
+
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+
+  outline: none;
+
+  color: var(--text-main);
+
+  font-size: 14px;
+
+  transition: border-color 0.2s ease;
+}
+
+.search-box input:focus {
+  border-color: var(--primary-green);
+}
+
+.search-box .search-icon {
+  position: absolute;
+
+  top: 50%;
+  right: 14px;
+
+  transform: translateY(-50%);
+
+  display: flex;
+  align-items: center;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   Buttons
+========================================================= */
+.add-btn {
+  min-height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 10px 22px;
+
+  background-color: var(--primary-green);
+  color: #ffffff;
+
+  border: none;
+  border-radius: 10px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  transition: background-color 0.2s ease;
+}
+
+.add-btn:hover {
+  background-color: var(--primary-green-dark);
+}
+
+.filter-btn {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: var(--card-bg);
+
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.filter-btn:hover {
+  border-color: var(--primary-green);
+  background-color: #f0fdf4;
+}
+
+
+/* =========================================================
+   Table Card
+========================================================= */
+.table-card {
+  width: 100%;
+
+  background-color: var(--card-bg);
+
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+
+  overflow: hidden;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+.pharmacies-table {
+  width: 100%;
+  min-width: 700px;
+
+  border-collapse: collapse;
+
+  text-align: right;
+}
+
+.pharmacies-table th,
+.pharmacies-table td {
+  padding: 16px 20px;
+
+  border-bottom: 1px solid var(--border-color);
+
+  font-size: 14px;
+  color: var(--text-main);
+
+  white-space: nowrap;
+}
+
+.pharmacies-table th {
+  background-color: #fafafa;
+
+  color: var(--text-muted);
+
+  font-weight: 600;
+}
+
+.pharmacies-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+/* =========================================================
+   Actions
+========================================================= */
+.actions-group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 6px;
+
+  background: none;
+  border: none;
+  border-radius: 6px;
+
+  cursor: pointer;
+
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.action-btn:hover {
+  background-color: #f1f5f9;
+}
+
+.block-btn:hover svg {
+  stroke: #f59e0b;
+}
+
+.view-btn:hover svg {
+  stroke: #3b82f6;
+}
+
+
+/* =========================================================
+   Status Badges
+========================================================= */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 4px 14px;
+
+  border-radius: 20px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.status-active {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.status-pending {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.status-suspended {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.status-inactive {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+
+/* =========================================================
+   Tablet
+========================================================= */
+@media (max-width: 900px) {
+
+  .app-container {
+    padding: 14px 16px 0;
+  }
+
+  .main-wrapper {
+    display: block;
+  }
+
+  .mobile-toggle-btn {
+    display: flex;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    right: -280px;
+    bottom: 0;
+    width: 260px;
+    min-width: 260px;
+    height: 100vh;
+    z-index: 50;
+    padding: 24px 16px;
+    border-radius: 0;
+    overflow-y: auto;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .sidebar.active {
+    right: 0;
+  }
+
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 40;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  .sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .nav-item {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .dashboard-content {
+    gap: 16px;
+  }
+
+  .pharmacies-table th,
+  .pharmacies-table td {
+    padding: 14px 16px;
+  }
+}
+
+
+/* =========================================================
+   Mobile
+========================================================= */
+@media (max-width: 700px) {
+
+  .app-container {
+    padding: 12px 12px 0;
+    gap: 16px;
+  }
+
+  /* Header */
+  .top-header {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .main-title {
+    font-size: 19px;
+  }
+
+  .sub-title {
+    font-size: 12px;
+  }
+
+  .admin-badge {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+
+  /* Main Layout */
+  .main-wrapper {
+    display: block;
+  }
+
+  .sidebar {
+    width: 260px;
+    min-width: 260px;
+    padding: 24px 16px;
+    border-radius: 0;
+  }
+
+  .nav-item {
+    padding: 9px 10px;
+    font-size: 13px;
+  }
+
+  /* Content */
+  .dashboard-content {
+    width: 100%;
+  }
+
+  /* Action Bar */
+  .action-bar {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .search-box {
+    order: 1;
+    flex-basis: 100%;
+    max-width: none;
+  }
+
+  .add-btn {
+    flex: 1;
+  }
+
+  .filter-btn {
+    flex-shrink: 0;
+  }
+
+  /* Table */
+  .table-card {
+    border-radius: 14px;
+  }
+
+  .pharmacies-table {
+    min-width: 650px;
+  }
+
+  .pharmacies-table th,
+  .pharmacies-table td {
+    padding: 12px 14px;
+
+    font-size: 13px;
+  }
+}
+
+
+/* =========================================================
+   Small Mobile
+========================================================= */
+@media (max-width: 450px) {
+
+  .app-container {
+    padding: 10px 10px 0;
+  }
+
+  .top-header {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .header-left {
+    justify-content: flex-start;
+  }
+
+  .main-title {
+    font-size: 18px;
+  }
+
+  .title-row {
+    gap: 6px;
+  }
+
+  .sidebar-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-item {
+    padding: 10px 12px;
+  }
+
+  .action-bar {
+    gap: 8px;
+  }
+
+  .add-btn {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  .filter-btn {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+
+/* =========================================================
+   Very Small Screens
+========================================================= */
+@media (max-width: 350px) {
+
+  .app-container {
+    padding: 8px 8px 0;
+  }
+
+  .main-title {
+    font-size: 16px;
+  }
+
+  .admin-badge {
+    display: none;
+  }
+
+  .add-btn {
+    font-size: 12px;
+    padding: 9px 10px;
+  }
+}
+
+html,
+body,
+.app-container,
+.main-wrapper,
+.dashboard-content {
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+.app-container {
+  padding-bottom: 0 !important;
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    right: -280px !important;
+  }
+
+  .sidebar.active {
+    right: 0 !important;
+  }
+}
+
+.mobile-toggle-btn.menu-open {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .mobile-toggle-btn,
+  .mobile-toggle-btn.menu-open {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  .main-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  .sidebar {
+    position: static !important;
+    inset: auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    padding: 10px 8px !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    box-shadow: none;
+  }
+
+  .sidebar-section-title {
+    display: none;
+  }
+
+  .sidebar-nav {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .sidebar-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-item {
+    flex: 0 0 auto;
+    width: auto !important;
+    white-space: nowrap;
+  }
+
+  .sidebar-overlay,
+  .sidebar-overlay.active {
+    display: none !important;
+    pointer-events: none !important;
+  }
+}
+
+@media (min-width: 901px) {
+  .app-container { padding-top: 52px; }
+  .top-header { margin-top: 16px; }
+  .main-wrapper {
+    align-items: stretch !important;
+    margin-top: 20px;
+  }
+
+  .sidebar {
+    height: auto !important;
+    align-self: stretch;
+  }
+}
+
+@media (min-width: 701px) {
+  body { font-size: 16px; }
+  .main-title { font-size: 24px; }
+  .sub-title,
+  .nav-item,
+  .search-box input,
+  .pharmacies-table th,
+  .pharmacies-table td { font-size: 16px; }
+}
+
+@media (max-width: 900px) {
+  .nav-item,
+  .search-box input,
+  .pharmacies-table th,
+  .pharmacies-table td,
+  .add-btn { font-size: 15px; }
+}
+
+@media (min-width: 901px) {
+  .nav-item,
+  .search-box input,
+  .pharmacies-table th,
+  .pharmacies-table td,
+  .add-btn { font-size: 18px; }
+}
