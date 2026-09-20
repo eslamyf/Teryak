@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ترياق | لوحة تحكم الإدارة - إدارة المستخدمين</title>
+
+  <!-- Vendor CSS -->
+  <link rel="stylesheet" href="../../css/vendor/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../../css/vendor/fontawesome/all.min.css">
+
+  <!-- Base & Component CSS -->
+  <link rel="stylesheet" href="../../css/base/variables.css">
+  <link rel="stylesheet" href="../../css/base/global.css">
+  <link rel="stylesheet" href="../../css/components/navbar.css">
+  <link rel="stylesheet" href="../../css/components/footer.css">
+  <link rel="stylesheet" href="../../css/components/modal.css">
+
+  <!-- Page Custom CSS -->
+  <link rel="stylesheet" href="../../css/pages/admin/users.css">
+</head>
+<body>
+
+  <!-- Reusable App Navbar -->
+  <app-navbar></app-navbar>
+
+  <div class="app-container pt-5">
+    <!-- Header Section -->
+    <header class="top-header d-flex justify-content-between align-items-center mb-4">
+      <div class="title-group">
+        <div class="title-row d-flex align-items-center gap-2">
+          <span class="admin-badge badge bg-danger">ADMIN</span>
+          <h1 class="main-title font-bold mb-0">إدارة حسابات المستخدمين</h1>
+        </div>
+        <p class="sub-title text-muted mb-0">متابعة حسابات المرضى، النشاط، وحالة التسجيل</p>
+      </div>
+    </header>
+
+    <div class="main-wrapper d-flex gap-4">
+      <!-- Reusable Admin Sidebar -->
+      <admin-sidebar></admin-sidebar>
+
+      <!-- Main Content -->
+      <main class="dashboard-content flex-grow-1">
+        <!-- Action Bar -->
+        <div class="action-bar d-flex justify-content-between align-items-center mb-4">
+          <div class="search-box flex-grow-1">
+            <input type="text" id="userSearchInput" placeholder="ابحث باسم المستخدم، البريد الإلكتروني أو الهاتف..." class="form-control">
+            <span class="search-icon">
+              <i class="bi bi-search"></i>
+            </span>
+          </div>
+        </div>
+
+        <!-- Table Container Card -->
+        <div class="table-card bg-white border rounded shadow-sm p-3">
+          <div class="table-responsive">
+            <table class="pharmacies-table table table-hover align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>المستخدم</th>
+                  <th>رقم الهاتف</th>
+                  <th>عدد الحجوزات</th>
+                  <th>تاريخ التسجيل</th>
+                  <th>الحالة</th>
+                  <th class="text-center">إجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                
+                <!-- Row 1: أحمد محمد -->
+                <tr>
+                  <td>
+                    <div class="pharmacy-info d-flex align-items-center gap-3">
+                      <div class="user-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
+                        أ
+                      </div>
+                      <div>
+                        <span class="pharmacy-name font-bold d-block">أحمد محمد</span>
+                        <span class="doctor-name text-muted" style="font-size: 13px;">ahmed@email.com</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="date-text font-monospace">01012345678</td>
+                  <td class="bold-text font-bold">12 حجز</td>
+                  <td class="date-text text-muted">2025-06-01</td>
+                  <td>
+                    <span class="status-badge status-active">نشط</span>
+                  </td>
+                  <td>
+                    <div class="actions-group d-flex justify-content-center gap-2">
+                      <button class="action-btn block-btn btn btn-sm btn-outline-warning" title="حظر / إيقاف">
+                        <i class="bi bi-slash-circle"></i>
+                      </button>
+                      <button class="action-btn delete-btn btn btn-sm btn-outline-danger" title="حذف الحساب">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Row 2: سارة علي -->
+                <tr>
+                  <td>
+                    <div class="pharmacy-info d-flex align-items-center gap-3">
+                      <div class="user-avatar bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
+                        س
+                      </div>
+                      <div>
+                        <span class="pharmacy-name font-bold d-block">سارة علي</span>
+                        <span class="doctor-name text-muted" style="font-size: 13px;">sara@email.com</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="date-text font-monospace">01198765432</td>
+                  <td class="bold-text font-bold">4 حجوزات</td>
+                  <td class="date-text text-muted">2026-01-15</td>
+                  <td>
+                    <span class="status-badge status-active">نشط</span>
+                  </td>
+                  <td>
+                    <div class="actions-group d-flex justify-content-center gap-2">
+                      <button class="action-btn block-btn btn btn-sm btn-outline-warning" title="حظر / إيقاف">
+                        <i class="bi bi-slash-circle"></i>
+                      </button>
+                      <button class="action-btn delete-btn btn btn-sm btn-outline-danger" title="حذف الحساب">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Row 3: محمد حسن -->
+                <tr>
+                  <td>
+                    <div class="pharmacy-info d-flex align-items-center gap-3">
+                      <div class="user-avatar bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
+                        م
+                      </div>
+                      <div>
+                        <span class="pharmacy-name font-bold d-block">محمد حسن</span>
+                        <span class="doctor-name text-muted" style="font-size: 13px;">moh@email.com</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="date-text font-monospace">01234567890</td>
+                  <td class="bold-text font-bold">0</td>
+                  <td class="date-text text-muted">2026-05-20</td>
+                  <td>
+                    <span class="status-badge status-inactive">غير نشط</span>
+                  </td>
+                  <td>
+                    <div class="actions-group d-flex justify-content-center gap-2">
+                      <button class="action-btn block-btn btn btn-sm btn-outline-warning" title="تفعيل / إيقاف">
+                        <i class="bi bi-slash-circle"></i>
+                      </button>
+                      <button class="action-btn delete-btn btn btn-sm btn-outline-danger" title="حذف الحساب">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Row 4: مريم عادل -->
+                <tr>
+                  <td>
+                    <div class="pharmacy-info d-flex align-items-center gap-3">
+                      <div class="user-avatar bg-info text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
+                        م
+                      </div>
+                      <div>
+                        <span class="pharmacy-name font-bold d-block">مريم عادل</span>
+                        <span class="doctor-name text-muted" style="font-size: 13px;">mariam@email.com</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="date-text font-monospace">01555544433</td>
+                  <td class="bold-text font-bold">7 حجوزات</td>
+                  <td class="date-text text-muted">2025-11-04</td>
+                  <td>
+                    <span class="status-badge status-active">نشط</span>
+                  </td>
+                  <td>
+                    <div class="actions-group d-flex justify-content-center gap-2">
+                      <button class="action-btn block-btn btn btn-sm btn-outline-warning" title="حظر / إيقاف">
+                        <i class="bi bi-slash-circle"></i>
+                      </button>
+                      <button class="action-btn delete-btn btn btn-sm btn-outline-danger" title="حذف الحساب">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Reusable App Footer -->
+  <app-footer></app-footer>
+
+  <!-- Reusable Cart Modal -->
+  <app-cart-modal></app-cart-modal>
+
+  <!-- Vendor Scripts -->
+  <script src="../../js/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+
+  <!-- Core & Component Scripts -->
+  <script src="../../js/core/auth.js"></script>
+  <script src="../../js/core/cart.js"></script>
+  <script src="../../js/components/app-navbar.js"></script>
+  <script src="../../js/components/admin-sidebar.js"></script>
+  <script src="../../js/components/app-footer.js"></script>
+  <script src="../../js/components/app-cart-modal.js"></script>
+
+  <!-- Page Script -->
+  <script src="../../js/pages/admin/users.js"></script>
+</body>
+</html>

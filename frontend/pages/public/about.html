@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ترياق | من نحن - رؤيتنا ورسالتنا</title>
+
+  <!-- Vendor CSS -->
+  <link rel="stylesheet" href="../../css/vendor/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../../css/vendor/fontawesome/all.min.css">
+
+  <!-- Base & Component CSS -->
+  <link rel="stylesheet" href="../../css/base/variables.css">
+  <link rel="stylesheet" href="../../css/base/global.css">
+  <link rel="stylesheet" href="../../css/components/navbar.css">
+  <link rel="stylesheet" href="../../css/components/footer.css">
+  <link rel="stylesheet" href="../../css/components/modal.css">
+
+  <!-- Page Custom CSS -->
+  <link rel="stylesheet" href="../../css/pages/public/about.css">
+</head>
+<body>
+
+  <!-- Reusable App Navbar -->
+  <app-navbar></app-navbar>
+
+  <main class="about-page">
+    <div class="container">
+      <section class="hero">
+        <span class="badge-about">⭐ منصة الصحة الرقمية رقم 1 في مصر</span>
+        <h1 class="hero-title">
+          تِرْيَاق — نربط المرضى بالدواء
+          <span class="highlight">في الوقت الصحيح</span>
+        </h1>
+        <p class="hero-desc">
+          منصة رقمية متكاملة تحل مشكلة نقص الأدوية وصعوبة إيجادها، عن طريق ربط المرضى بالصيدليات القريبة منهم فوراً وبذكاء.
+        </p>
+      </section>
+
+      <section class="stats-section">
+        <div class="stats-grid">
+          <div class="stat-card stat-green">
+            <span class="stat-num">+245</span>
+            <span class="stat-label">صيدلية شريكة</span>
+          </div>
+          <div class="stat-card stat-blue">
+            <span class="stat-num">+12K</span>
+            <span class="stat-label">دواء في قاعدة البيانات</span>
+          </div>
+          <div class="stat-card stat-purple">
+            <span class="stat-num">+50K</span>
+            <span class="stat-label">مستخدم نشط</span>
+          </div>
+          <div class="stat-card stat-amber">
+            <span class="stat-num">98%</span>
+            <span class="stat-label">نسبة رضا المستخدمين</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="mission-card">
+        <h2>مهمتنا</h2>
+        <p>
+          نحن نؤمن بأن الوصول للدواء حق أساسي لكل إنسان، لذلك أطلقنا منصة ترياق لتكون الجسر الذكي بين المرضى والصيدليات، بتوفير الوقت والمجهود وضمان وصول الدواء المناسب في وقته.
+        </p>
+        <p>
+          نعمل مع شبكة واسعة من الصيدليات المعتمدة لضمان دقة البيانات وسرعة التحديث، مع تجربة استخدام سلسة وآمنة تراعي كل الفئات.
+        </p>
+      </section>
+
+      <section class="features-section">
+        <h2 class="section-title">ما الذي يميزنا؟</h2>
+        <div class="features-grid">
+          <article class="feature-card">
+            <div class="icon-box icon-green">
+              <i class="bi bi-search"></i>
+            </div>
+            <h3>البحث الذكي عن الأدوية</h3>
+            <p>ابحث عن دوائك بالاسم التجاري أو المادة الفعالة، وسنعرض لك أقرب صيدلية متوفر فيها الدواء مع السعر والكمية والبدائل المتاحة.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="icon-box icon-blue">
+              <i class="bi bi-bell"></i>
+            </div>
+            <h3>نظام الإشعارات الفوري</h3>
+            <p>فعّل الإشعارات لأي دواء غير متوفر لتصلك رسالة فورية بمجرد توفره في أقرب صيدلية إليك.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="icon-box icon-amber">
+              <i class="bi bi-calendar-check"></i>
+            </div>
+            <h3>الحجز المسبق</h3>
+            <p>احجز دواءك قبل الذهاب لضمان توفره وقت وصولك، مع تأكيد فوري وميعاد استلام محدد.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="icon-box icon-purple">
+              <i class="bi bi-heart-fill"></i>
+            </div>
+            <h3>التبرع والاستبدال</h3>
+            <p>تبرع بالأدوية الصالحة التي لا تحتاجها، أو استبدلها بأدوية تحتاجها بأسعار رمزية لمساعدة غير القادرين.</p>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Reusable App Footer -->
+  <app-footer></app-footer>
+
+  <!-- Reusable Cart Modal -->
+  <app-cart-modal></app-cart-modal>
+
+  <!-- Vendor Scripts -->
+  <script src="../../js/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+
+  <!-- Core & Component Scripts -->
+  <script src="../../js/core/auth.js"></script>
+  <script src="../../js/core/cart.js"></script>
+  <script src="../../js/components/app-navbar.js"></script>
+  <script src="../../js/components/app-footer.js"></script>
+  <script src="../../js/components/app-cart-modal.js"></script>
+</body>
+</html>

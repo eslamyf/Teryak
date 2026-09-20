@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ترياق | لوحة تحكم الصيدلي - الإحصائيات</title>
+
+  <!-- Vendor CSS -->
+  <link rel="stylesheet" href="../../css/vendor/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../../css/vendor/fontawesome/all.min.css">
+
+  <!-- Base & Component CSS -->
+  <link rel="stylesheet" href="../../css/base/variables.css">
+  <link rel="stylesheet" href="../../css/base/global.css">
+  <link rel="stylesheet" href="../../css/components/navbar.css">
+  <link rel="stylesheet" href="../../css/components/footer.css">
+  <link rel="stylesheet" href="../../css/components/modal.css">
+
+  <!-- Page Custom CSS -->
+  <link rel="stylesheet" href="../../css/pages/pharmacist/dashboard.css">
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Reusable App Navbar -->
+  <app-navbar></app-navbar>
+
+  <div class="dashboard-container">
+    <!-- Reusable Pharmacist Sidebar -->
+    <pharmacist-sidebar></pharmacist-sidebar>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main Dashboard Content -->
+    <main class="main-content">
+      <!-- Metric Cards Grid -->
+      <section class="cards">
+        <div class="card revenue">
+          <h3 id="todayRevenue">2,450 ج.م</h3>
+          <p>إيرادات اليوم</p>
+        </div>
+
+        <div class="card orders">
+          <h3 id="todayOrders">4</h3>
+          <p>طلبات اليوم</p>
+        </div>
+
+        <div class="card low-stock">
+          <h3 id="lowStockCount">3</h3>
+          <p>أدوية منخفضة / نافذة</p>
+        </div>
+
+        <div class="card medicines">
+          <h3 id="medicineCount">5</h3>
+          <p>إجمالي الأدوية بالمخزون</p>
+        </div>
+      </section>
+
+      <!-- Sales Performance Chart Card -->
+      <section class="chart-card mt-4">
+        <h2>المبيعات الأسبوعية (ج.م)</h2>
+        <div style="position: relative; height: 350px;">
+          <canvas id="salesChart"></canvas>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Reusable App Footer -->
+  <app-footer></app-footer>
+
+  <!-- Reusable Cart Modal -->
+  <app-cart-modal></app-cart-modal>
+
+  <!-- Vendor Scripts -->
+  <script src="../../js/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+
+  <!-- Core & Component Scripts -->
+  <script src="../../js/core/auth.js"></script>
+  <script src="../../js/core/cart.js"></script>
+  <script src="../../js/components/app-navbar.js"></script>
+  <script src="../../js/components/pharmacist-sidebar.js"></script>
+  <script src="../../js/components/app-footer.js"></script>
+  <script src="../../js/components/app-cart-modal.js"></script>
+
+  <!-- Page Script -->
+  <script src="../../js/pages/pharmacist/dashboard.js"></script>
+</body>
+</html>

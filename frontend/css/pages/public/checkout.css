@@ -1,0 +1,167 @@
+/* ==========================================================================
+   Teryak Platform - Checkout Page Styles
+   ========================================================================== */
+
+body {
+  background-color: #f8fafc;
+  padding-top: 75px;
+  direction: rtl;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #1e293b;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 30px auto 60px;
+  padding: 0 15px;
+}
+
+.d-flexResp {
+  display: flex;
+  gap: 30px;
+  align-items: start;
+}
+
+/* Shipping Details Card */
+.form {
+  background-color: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+.form h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary-color, #008b5e);
+  margin-bottom: 24px;
+}
+
+.form label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #334155;
+  margin-bottom: 8px;
+}
+
+.form .form-control {
+  padding: 12px 14px;
+  background-color: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 15px;
+  direction: rtl;
+  color: #1e293b;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.form .form-control:focus {
+  background-color: #ffffff;
+  border-color: var(--primary-color, #008b5e);
+  box-shadow: 0 0 0 3px rgba(0, 139, 94, 0.1);
+}
+
+.form button.button {
+  background-color: var(--primary-color, #008b5e);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(0, 139, 94, 0.25);
+}
+
+.form button.button:hover {
+  background-color: var(--primary-hover, #059669);
+  transform: translateY(-1px);
+}
+
+/* Order Summary Card */
+.DIV {
+  background-color: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  position: sticky;
+  top: 95px;
+}
+
+.DIV .parg {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.d-flex1 {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.IMGG {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid #e2e8f0;
+}
+
+.Name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.line {
+  width: 100%;
+  height: 1px;
+  background-color: #f1f5f9;
+  margin: 14px 0;
+}
+
+.d-flex2, .d-flex3 {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.sml {
+  color: #64748b;
+}
+
+.blk {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.d-flex4 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+}
+
+.grn {
+  color: var(--primary-color, #008b5e);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+@media (max-width: 860px) {
+  .d-flexResp {
+    flex-direction: column;
+  }
+  .DIV {
+    width: 100%;
+    position: static;
+  }
+}

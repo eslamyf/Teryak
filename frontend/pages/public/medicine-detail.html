@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ترياق | تفاصيل الدواء والصيدليات المتوفرة</title>
+
+  <!-- Vendor CSS -->
+  <link rel="stylesheet" href="../../css/vendor/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../../css/vendor/fontawesome/all.min.css">
+
+  <!-- Base & Component CSS -->
+  <link rel="stylesheet" href="../../css/base/variables.css">
+  <link rel="stylesheet" href="../../css/base/global.css">
+  <link rel="stylesheet" href="../../css/components/navbar.css">
+  <link rel="stylesheet" href="../../css/components/footer.css">
+  <link rel="stylesheet" href="../../css/components/modal.css">
+
+  <!-- Page Custom CSS -->
+  <link rel="stylesheet" href="../../css/pages/public/medicine-detail.css">
+</head>
+<body>
+
+  <!-- Reusable App Navbar -->
+  <app-navbar></app-navbar>
+
+  <main class="container">
+    <div class="top">
+      <h1 class="font" id="medicineDetailTitle">نتائج البحث عن: باراسيتامول</h1>
+      <p class="grey">المادة الفعالة: <b id="medicineActiveIng">باراسيتامول 500 مجم</b></p>
+    </div>
+
+    <div class="d-flex d-flexMain">
+      <div class="mainDIV">
+        <!-- Pharmacy 1 -->
+        <div class="DIV1">
+          <p class="parg parg2">الصيدليات القريبة منك</p>
+          <div class="DIV">
+            <div class="d-flex1">
+              <p class="parg">صيدلية النهضة</p>
+              <p class="available d-rtl"><i class="bi bi-check2"></i> متوفر</p>
+            </div>
+            <div class="mtop">
+              <p class="grey">
+                <i class="bi bi-geo-alt"></i>
+                <small>شارع الجامعة، المعادي</small>
+              </p>
+              <p>
+                <small class="grey pLeft">0.8 كم</small>
+                <i class="icon bi bi-clock" style="color: rgb(16, 195, 140);"></i>
+                <small style="color: rgb(16, 195, 140);">مفتوحة الآن</small>
+              </p>
+            </div>
+            <div class="line"></div>
+
+            <div class="d-flex2">
+              <div class="d-flex gap-3">
+                <div>
+                  <small class="grey">السعر</small><br>
+                  <p class="parg" id="pharmacyPrice1">24.50 ج.م</p>
+                </div>
+                <div>
+                  <small class="grey">الكمية المتاحة</small><br>
+                  <p class="parg">15 علبة</p>
+                </div>
+                <div>
+                  <small class="grey">وقت الوصول</small><br>
+                  <p class="parg">~15 دقيقة</p>
+                </div>
+              </div>
+              <button class="btn" id="show">احجز الآن</button>
+            </div>
+            <div id="DONE" class="hide">
+              <small class="bold"><b>✓ تم الحجز بنجاح</b></small><br>
+              <small>يرجى استلام الدواء خلال 24 ساعة من الصيدلية</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pharmacy 2 -->
+        <div class="DIV2">
+          <div class="DIV">
+            <div class="d-flex1">
+              <p class="parg">صيدلية الشفاء</p>
+              <p class="limited"><i class="bi bi-info-circle" style="color: rgb(226, 186, 3); font-size: 13px;"></i> كمية محدودة</p>
+            </div>
+            <div class="mtop">
+              <p class="grey">
+                <i class="bi bi-geo-alt"></i>
+                <small>ميدان الحرية، المعادي</small>
+              </p>
+              <p>
+                <small class="grey pLeft">1.2 كم</small>
+                <i class="icon bi bi-clock" style="color: rgb(16, 195, 140);"></i>
+                <small style="color: rgb(16, 195, 140);">مفتوحة الآن</small>
+              </p>
+            </div>
+            <div class="line"></div>
+
+            <div class="d-flex2">
+              <div class="d-flex gap-3">
+                <div>
+                  <span class="grey">السعر</span><br>
+                  <p class="parg">23.00 ج.م</p>
+                </div>
+                <div>
+                  <span class="grey">الكمية المتاحة</span><br>
+                  <p class="parg">3 علب</p>
+                </div>
+                <div>
+                  <span class="grey">وقت الوصول</span><br>
+                  <p class="parg">~20 دقيقة</p>
+                </div>
+              </div>
+              <button class="btn" id="show2">احجز الآن</button>
+            </div>
+            <div id="DONE2" class="hide">
+              <small class="bold"><b>✓ تم الحجز بنجاح</b></small><br>
+              <small>يرجى استلام الدواء خلال 24 ساعة</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pharmacy 3 -->
+        <div class="DIV3">
+          <div class="DIV">
+            <div class="d-flex1">
+              <p class="parg">صيدلية الحياة</p>
+              <p class="unAvailable"><i class="bi bi-info-circle" style="color: rgb(246, 83, 80); font-size: 13px;"></i> غير متوفر</p>
+            </div>
+            <div class="mtop">
+              <p class="grey">
+                <i class="bi bi-geo-alt"></i>
+                <small>شارع 9، المعادي</small>
+              </p>
+              <p>
+                <small class="grey pLeft">2.1 كم</small>
+                <i class="icon bi bi-clock" style="color: rgb(195, 37, 16);"></i>
+                <small style="color: rgb(195, 37, 16);">مغلقة</small>
+              </p>
+            </div>
+            <div class="line"></div>
+
+            <div class="d-flex2">
+              <div class="d-flex gap-3">
+                <div>
+                  <small class="grey">السعر</small><br>
+                  <p class="parg">25.00 ج.م</p>
+                </div>
+                <div>
+                  <small class="grey">وقت الوصول</small><br>
+                  <p class="parg">~30 دقيقة</p>
+                </div>
+              </div>
+              <button class="btn" id="BTN2"><i class="bi bi-bell" style="margin-left: 5px;"></i> إشعار عند التوفر</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alternatives Sidebar -->
+      <div class="left">
+        <div class="firstDiv">
+          <p class="parg">البدائل المتاحة</p>
+          <button class="replace" id="showHiddenDiv">عرض البدائل</button>
+      
+          <div class="hiddenDiv hiddenDiv2" id="hiddenDiv2">
+            <div>
+              <p>بانادول أزرق</p>
+              <small style="color: gray;">باراسيتامول 500 مجم</small>
+              <p class="d-flex justify-content-between">
+                <small style="font-weight: 400;">20-28 ج.م</small>
+                <small style="color: #008b5e; font-weight: 400;">متوفر في 12 صيدلية</small>
+              </p>
+            </div>
+            <div>
+              <p>أدول 500</p>
+              <small style="color: gray;">باراسيتامول 500 مجم</small>
+              <p class="d-flex justify-content-between">
+                <small style="font-weight: 400;">18-25 ج.م</small>
+                <small style="color: #008b5e; font-weight: 400;">متوفر في 8 صيدليات</small>
+              </p>
+            </div>
+            <div>
+              <p>سيتال أقراص</p>
+              <small style="color: gray;">باراسيتامول 500 مجم</small>
+              <p class="d-flex justify-content-between">
+                <small style="font-weight: 400;">15-22 ج.م</small>
+                <small style="color: #008b5e; font-weight: 400;">متوفر في 15 صيدلية</small>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Reusable App Footer -->
+  <app-footer></app-footer>
+
+  <!-- Reusable Cart Modal -->
+  <app-cart-modal></app-cart-modal>
+
+  <!-- Vendor Scripts -->
+  <script src="../../js/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+
+  <!-- Core & Component Scripts -->
+  <script src="../../js/core/auth.js"></script>
+  <script src="../../js/core/cart.js"></script>
+  <script src="../../js/components/app-navbar.js"></script>
+  <script src="../../js/components/app-footer.js"></script>
+  <script src="../../js/components/app-cart-modal.js"></script>
+
+  <!-- Page Script -->
+  <script src="../../js/pages/public/medicine-detail.js"></script>
+</body>
+</html>

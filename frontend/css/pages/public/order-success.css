@@ -1,0 +1,66 @@
+/* ==========================================================================
+   Teryak Platform - Order Success Styles
+   ========================================================================== */
+
+body {
+  background-color: #f8fafc;
+  padding-top: 75px;
+  direction: rtl;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #1e293b;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 700px;
+  margin: 40px auto 60px;
+  padding: 0 15px;
+  text-align: center;
+}
+
+.success-card {
+  background-color: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.success-card h2 {
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.parg {
+  margin-bottom: 6px;
+}
+
+.main {
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0;
+}
+
+.first p {
+  font-size: 15px;
+  color: #0f172a;
+}
+
+.grn {
+  color: var(--primary-color, #008b5e);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.btn-success {
+  background-color: var(--primary-color, #008b5e);
+  border: none;
+  border-radius: 10px;
+  transition: all 0.2s;
+}
+
+.btn-success:hover {
+  background-color: var(--primary-hover, #059669);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 139, 94, 0.25);
+}

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ترياق | إتمام الطلب - بيانات الاستلام</title>
+
+  <!-- Vendor CSS -->
+  <link rel="stylesheet" href="../../css/vendor/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../../css/vendor/fontawesome/all.min.css">
+
+  <!-- Base & Component CSS -->
+  <link rel="stylesheet" href="../../css/base/variables.css">
+  <link rel="stylesheet" href="../../css/base/global.css">
+  <link rel="stylesheet" href="../../css/components/navbar.css">
+  <link rel="stylesheet" href="../../css/components/footer.css">
+  <link rel="stylesheet" href="../../css/components/modal.css">
+
+  <!-- Page Custom CSS -->
+  <link rel="stylesheet" href="../../css/pages/public/checkout.css">
+</head>
+<body>
+
+  <!-- Reusable App Navbar -->
+  <app-navbar></app-navbar>
+
+  <main class="container my-5 pt-4">
+    <div class="d-flex d-flexResp gap-4 justify-content-between">
+      <!-- Shipping Details Form -->
+      <div class="form flex-grow-1">
+        <form action="payment.html" id="shippingForm">
+          <h3 class="mb-4 font-bold text-success"><i class="bi bi-truck me-2"></i> بيانات الاستلام والتوصيل</h3>
+          
+          <div class="mb-3">
+            <label for="name" class="form-label">الاسم الكامل</label>
+            <input type="text" id="name" class="form-control" placeholder="أدخل اسمك الكامل" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="phone" class="form-label">رقم الهاتف</label>
+            <input type="tel" id="phone" class="form-control" placeholder="01xxxxxxxxx" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="address" class="form-label"><i class="bi bi-geo-alt"></i> العنوان بالتفصيل</label>
+            <input type="text" id="address" class="form-control" placeholder="الشارع، الحي، المدينة، رقم العمارة..." required>
+          </div>
+
+          <div class="mb-4">
+            <label for="addInfo" class="form-label">ملاحظات إضافية للتوصيل (اختياري)</label>
+            <input type="text" id="addInfo" class="form-control" placeholder="أي تعليمات للمندوب أو الصيدلية...">
+          </div>
+
+          <button class="button btn btn-success w-100 py-2 font-bold" type="submit" id="saveData" style="background-color: var(--primary-color);">
+            التالي: اختر طريقة الدفع <i class="bi bi-arrow-left ms-2"></i>
+          </button>
+        </form>
+      </div>
+
+      <!-- Order Summary Card -->
+      <div class="DIV" style="min-width: 320px;">
+        <p class="parg font-bold mb-3">ملخص الطلب</p>
+        <div class="d-flex1 d-flex align-items-center gap-3 mb-3">
+          <img class="IMGG" src="../../assets/images/parst.jpg" alt="Medicine" style="width: 60px; height: 60px; border-radius: 8px;">
+          <div>
+            <p class="Name font-bold mb-0">باراسيتامول 500 مجم</p>
+            <small class="text-muted">صيدلية النهضة</small><br>
+            <small class="text-muted">الكمية: 1</small>
+          </div>
+        </div>
+
+        <div class="line my-3"></div>
+
+        <div class="d-flex2 d-flex justify-content-between mb-2">
+          <small class="sml text-muted">المجموع الفرعي</small>
+          <small class="blk font-bold">24.50 ج.م</small>
+        </div>
+
+        <div class="d-flex3 d-flex justify-content-between mb-3">
+          <small class="sml text-muted">رسوم التوصيل</small>
+          <small class="blk font-bold">15.00 ج.م</small>
+        </div>
+
+        <div class="line my-3"></div>
+
+        <div class="d-flex4 d-flex justify-content-between align-items-center">
+          <p class="font-bold mb-0">الإجمالي النهائي</p>
+          <p class="grn font-bold text-success fs-5 mb-0">39.50 ج.م</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Reusable App Footer -->
+  <app-footer></app-footer>
+
+  <!-- Reusable Cart Modal -->
+  <app-cart-modal></app-cart-modal>
+
+  <!-- Vendor Scripts -->
+  <script src="../../js/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+
+  <!-- Core & Component Scripts -->
+  <script src="../../js/core/auth.js"></script>
+  <script src="../../js/core/cart.js"></script>
+  <script src="../../js/components/app-navbar.js"></script>
+  <script src="../../js/components/app-footer.js"></script>
+  <script src="../../js/components/app-cart-modal.js"></script>
+
+  <!-- Page Script -->
+  <script src="../../js/pages/public/checkout.js"></script>
+</body>
+</html>

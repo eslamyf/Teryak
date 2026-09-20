@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ترياق | الرئيسية - ابحث عن دوائك بسهولة</title>
+  
+  <!-- Vendor CSS -->
+  <link rel="stylesheet" href="css/vendor/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/vendor/fontawesome/all.min.css">
+  
+  <!-- Base & Component CSS -->
+  <link rel="stylesheet" href="css/base/variables.css">
+  <link rel="stylesheet" href="css/base/global.css">
+  <link rel="stylesheet" href="css/components/navbar.css">
+  <link rel="stylesheet" href="css/components/footer.css">
+  <link rel="stylesheet" href="css/components/modal.css">
+  
+  <!-- Page Custom CSS -->
+  <link rel="stylesheet" href="css/pages/public/home.css">
+</head>
+<body>
+
+  <!-- Reusable App Navbar -->
+  <app-navbar></app-navbar>
+
+  <a href="#" id="arow" aria-label="العودة لأعلى الصفحة"><i class="fa-solid fa-arrow-up"></i></a>
+
+  <main class="container">
+    <!-- Hero Section -->
+    <section class="sectionOne">
+      <div class="hero-wrapper">
+        <div class="content">
+          <h1>ابحث عن دوائـك بسهولة</h1>
+          <p>اعثر على أقرب صيدلية متوفر فيها الدواء، احجزه، واحصل على البدائل المتاحة فوراً.</p>
+          <div class="search-bar-box">
+            <input type="text" placeholder="اكتب اسم الدواء أو المادة الفعالة..." id="heroSearchInput">
+            <button class="search-btn" id="heroSearchBtn">بحـث</button>
+          </div>
+          
+          <div class="secDIV">
+            <small>الأدوية الأكثر بحثاً:</small>
+            <a href="pages/public/medicine-detail.html?med=paracetamol"><button>باراسيتامول</button></a>
+            <a href="pages/public/medicine-detail.html?med=amoxicillin"><button>أموكسيسيلين</button></a>
+            <a href="pages/public/medicine-detail.html?med=vitamind"><button>فيتامين د</button></a>
+            <a href="pages/public/medicine-detail.html?med=omega3"><button>أوميجا 3</button></a>
+          </div>
+        </div>
+        
+        <div class="hero-image-box">
+          <img src="assets/images/BG2.jpeg" alt="Teryak Medical Banner">
+        </div>
+      </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="sectionTwo">
+      <div class="services-grid">
+        <a href="pages/public/pharmacies.html" class="service-card">
+          <div class="icon-box green">
+            <i class="bi bi-geo-alt-fill"></i>
+          </div>
+          <h2 class="mainParg">أقرب صيدلية</h2>
+          <p class="color">اعثر على أقرب صيدلية متوفر فيها الدواء مع عرض المسافة والسعر</p>
+        </a>
+        
+        <a href="pages/public/medicines.html" class="service-card">
+          <div class="icon-box blue">
+            <i class="bi bi-clock-fill"></i>
+          </div>
+          <h2 class="mainParg">احجز دوائك</h2>
+          <p class="color">احجز الدواء قبل الذهاب لضمان توفره عند وصولك</p>
+        </a>
+        
+        <a href="pages/public/medicines.html" class="service-card">
+          <div class="icon-box purple">
+            <i class="bi bi-capsule-pill"></i>
+          </div>
+          <h2 class="mainParg">البدائل المتاحة</h2>
+          <p class="color">اعرض البدائل المتاحة إذا لم يكن الدواء متوفراً</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- Donation Callout Section -->
+    <section class="sectionThree">
+      <div class="d-flex">
+        <div class="content">
+          <h1>تبرع بأدويتك غير المستخدمة</h1>
+          <p>ساعد الآخرين بالأدوية التي لا تحتاجها، أو استبدلها بأدوية أخرى.</p>
+          <ul>
+            <li><i class="bi bi-check-circle-fill text-success"></i> تبرع بأدوية جديدة غير مستخدمة</li>
+            <li><i class="bi bi-check-circle-fill text-success"></i> استبدل الأدوية بخصم قد يصل إلى 40%</li>
+            <li><i class="bi bi-check-circle-fill text-success"></i> ساعد من يحتاج إلى دواء غير متوفر</li>
+          </ul>
+        </div>
+
+        <div class="DIVS">
+          <div class="DIV">
+            <p class="nums">12,450</p>
+            <p class="color">دواء تم التبرع به</p>
+          </div>
+          <div class="DIV">
+            <p class="nums">8,320</p>
+            <p class="color">مريض تم مساعدته</p>
+          </div>
+          <div class="DIV">
+            <p class="nums">245</p>
+            <p class="color">صيدلية مشاركة</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Reusable App Footer -->
+  <app-footer></app-footer>
+
+  <!-- Reusable Cart Modal -->
+  <app-cart-modal></app-cart-modal>
+
+  <!-- Vendor Scripts -->
+  <script src="js/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+
+  <!-- Core & Component Scripts -->
+  <script src="js/core/auth.js"></script>
+  <script src="js/core/cart.js"></script>
+  <script src="js/components/app-navbar.js"></script>
+  <script src="js/components/app-footer.js"></script>
+  <script src="js/components/app-cart-modal.js"></script>
+
+  <!-- Page Script -->
+  <script src="js/pages/public/home.js"></script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ترياق | التبرع والاستبدال - ساعد من يحتاج</title>
+
+  <!-- Vendor CSS -->
+  <link rel="stylesheet" href="../../css/vendor/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../../css/vendor/fontawesome/all.min.css">
+
+  <!-- Base & Component CSS -->
+  <link rel="stylesheet" href="../../css/base/variables.css">
+  <link rel="stylesheet" href="../../css/base/global.css">
+  <link rel="stylesheet" href="../../css/components/navbar.css">
+  <link rel="stylesheet" href="../../css/components/footer.css">
+  <link rel="stylesheet" href="../../css/components/modal.css">
+
+  <!-- Page Custom CSS -->
+  <link rel="stylesheet" href="../../css/pages/public/donation.css">
+</head>
+<body>
+
+  <!-- Reusable App Navbar -->
+  <app-navbar></app-navbar>
+
+  <div class="con pt-5">
+    <div class="app-container">
+      <header class="main-header">
+        <div class="header-icon" aria-hidden="true">💜</div>
+        <h1 class="header-title">التبرع والاستبدال</h1>
+        <p class="header-subtitle">ساعد الآخرين من خلال التبرع بالأدوية غير المستخدمة أو استبدالها بأدوية تحتاجها</p>
+      </header>
+
+      <nav class="tabs-nav" aria-label="أقسام المنصة الرئيسية">
+        <button type="button" class="nav-tab active" id="tabBrowseBtn" data-tab="browse" role="tab" aria-selected="true" aria-controls="browseTabContent">
+          🔍 تصفح الأدوية المتاحة
+        </button>
+        <button type="button" class="nav-tab" id="tabDonateBtn" data-tab="donate" role="tab" aria-selected="false" aria-controls="donateTabContent">
+          💜 تبرع بدواء
+        </button>
+      </nav>
+
+      <main class="main-content">
+        <!-- Tab 1: Browse Available Donations -->
+        <section id="browseTabContent" class="tab-panel active" role="tabpanel" aria-labelledby="tabBrowseBtn">
+          <div class="cards-grid" id="mainMedicinesGrid">
+            <article class="medicine-card">
+              <span class="card-badge badge-donation">📦 تبرع</span>
+              <div class="med-header">
+                <h2 class="med-name">أوميجا 3</h2>
+                <p class="med-scientific">زيت السمك 1000 مجم</p>
+              </div>
+              <div class="med-details">
+                <div class="info-row">
+                  <span class="info-label">الكمية المتاحة</span>
+                  <span class="info-value">1 علبة</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">تاريخ الانتهاء</span>
+                  <span class="info-value"><time datetime="2026-08-10">2026-08-10</time> 📅</span>
+                </div>
+                <hr class="divider">
+                <div class="med-meta">
+                  <div class="location">📍 الزمالك، القاهرة</div>
+                  <div class="donor-info">
+                    <span>من: أحمد حسن</span>
+                    <span>منذ 3 أيام</span>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn-action" onclick="alert('تم إرسال طلب استلام الدواء بنجاح!')">اطلب الآن</button>
+            </article>
+
+            <article class="medicine-card">
+              <span class="card-badge badge-donation">📦 تبرع</span>
+              <div class="med-header">
+                <h2 class="med-name">بانادول إكسترا</h2>
+                <p class="med-scientific">باراسيتامول + كافيين</p>
+              </div>
+              <div class="med-details">
+                <div class="info-row">
+                  <span class="info-label">الكمية المتاحة</span>
+                  <span class="info-value">2 شريط</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">تاريخ الانتهاء</span>
+                  <span class="info-value"><time datetime="2026-11-15">2026-11-15</time> 📅</span>
+                </div>
+                <hr class="divider">
+                <div class="med-meta">
+                  <div class="location">📍 المعادي، القاهرة</div>
+                  <div class="donor-info">
+                    <span>من: سارة علي</span>
+                    <span>منذ يومين</span>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn-action" onclick="alert('تم إرسال طلب استلام الدواء بنجاح!')">اطلب الآن</button>
+            </article>
+
+            <article class="medicine-card">
+              <span class="card-badge badge-exchange" style="background:#7c3aed; color:white; padding:4px 8px; border-radius:8px; font-size:12px;">🔄 استبدال</span>
+              <div class="med-header">
+                <h2 class="med-name">كونجستال أقراص</h2>
+                <p class="med-scientific">علاج أعراض البرد</p>
+              </div>
+              <div class="med-details">
+                <div class="info-row">
+                  <span class="info-label">الكمية المتاحة</span>
+                  <span class="info-value">1 علبة جديدة</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">تاريخ الانتهاء</span>
+                  <span class="info-value"><time datetime="2026-12-01">2026-12-01</time> 📅</span>
+                </div>
+                <hr class="divider">
+                <div class="med-meta">
+                  <div class="location">📍 الدقي، الجيزة</div>
+                  <div class="donor-info">
+                    <span>طلب استبدال بـ: فيتامين سي</span>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn-action" style="background:#7c3aed;" onclick="alert('تم إرسال طلب استبدال الدواء!')">طلب استبدال</button>
+            </article>
+          </div>
+        </section>
+
+        <!-- Tab 2: Donate / Exchange Form -->
+        <section id="donateTabContent" class="tab-panel" role="tabpanel" aria-labelledby="tabDonateBtn">
+          <div class="donation-form-wrapper">
+            <h2 id="formHeading" class="mb-4">تبرع بدواء</h2>
+            <form id="donationForm">
+              <div class="form-group mb-3">
+                <label for="formMedName">اسم الدواء</label>
+                <input type="text" id="formMedName" class="form-control" placeholder="اكتب اسم الدواء التجاري أو العلمي" required>
+              </div>
+
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label for="formQuantity">الكمية المتوفرة</label>
+                  <input type="text" id="formQuantity" class="form-control" placeholder="مثال: علبة واحدة أو شريطين" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="formExpiry">تاريخ الصلاحية</label>
+                  <input type="date" id="formExpiry" class="form-control" required>
+                </div>
+              </div>
+
+              <div class="form-group mb-3">
+                <label for="formLocation">المحافظة والمنطقة</label>
+                <input type="text" id="formLocation" class="form-control" placeholder="مثال: المعادي، القاهرة" required>
+              </div>
+
+              <div class="form-group mb-3">
+                <label>نوع العملية</label>
+                <div class="d-flex gap-2">
+                  <button type="button" class="op-btn active-donate" id="btnOpDonate" data-op="donate" role="radio" aria-checked="true">
+                    🎁 تبرع مجاناً
+                  </button>
+                  <button type="button" class="op-btn" id="btnOpExchange" data-op="exchange" role="radio" aria-checked="false">
+                    🔄 استبدال
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-group exchange-field-wrapper mb-3" id="exchangeField">
+                <label for="exchangeTargetInput">أرغب في استبداله بـ (اختياري)</label>
+                <input type="text" id="exchangeTargetInput" class="form-control" placeholder="اسم الدواء الذي تريد استبداله">
+              </div>
+
+              <button type="submit" class="btn-submit" id="btnSubmitForm">إرسال طلب التبرع</button>
+            </form>
+          </div>
+
+          <aside class="stats-grid mt-4" aria-label="إحصائيات المنصة">
+            <div class="stat-card">
+              <span class="stat-number color-emerald">12,450</span>
+              <span class="stat-label">دواء تم التبرع به</span>
+            </div>
+            <div class="stat-card stat-purple">
+              <span class="stat-number color-violet">8,320</span>
+              <span class="stat-label">مريض تم مساعدته</span>
+            </div>
+            <div class="stat-card stat-blue">
+              <span class="stat-number color-blue">245</span>
+              <span class="stat-label">صيدلية مشاركة</span>
+            </div>
+          </aside>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Reusable App Footer -->
+  <app-footer></app-footer>
+
+  <!-- Reusable Cart Modal -->
+  <app-cart-modal></app-cart-modal>
+
+  <!-- Vendor Scripts -->
+  <script src="../../js/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+
+  <!-- Core & Component Scripts -->
+  <script src="../../js/core/auth.js"></script>
+  <script src="../../js/core/cart.js"></script>
+  <script src="../../js/components/app-navbar.js"></script>
+  <script src="../../js/components/app-footer.js"></script>
+  <script src="../../js/components/app-cart-modal.js"></script>
+
+  <!-- Page Script -->
+  <script src="../../js/pages/public/donation.js"></script>
+</body>
+</html>

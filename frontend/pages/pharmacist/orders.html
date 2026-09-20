@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ترياق | لوحة تحكم الصيدلي - إدارة الطلبات</title>
+
+  <!-- Vendor CSS -->
+  <link rel="stylesheet" href="../../css/vendor/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../../css/vendor/fontawesome/all.min.css">
+
+  <!-- Base & Component CSS -->
+  <link rel="stylesheet" href="../../css/base/variables.css">
+  <link rel="stylesheet" href="../../css/base/global.css">
+  <link rel="stylesheet" href="../../css/components/navbar.css">
+  <link rel="stylesheet" href="../../css/components/footer.css">
+  <link rel="stylesheet" href="../../css/components/modal.css">
+
+  <!-- Page Custom CSS -->
+  <link rel="stylesheet" href="../../css/pages/pharmacist/dashboard.css">
+  <link rel="stylesheet" href="../../css/pages/pharmacist/orders.css">
+</head>
+<body>
+
+  <!-- Reusable App Navbar -->
+  <app-navbar></app-navbar>
+
+  <div class="dashboard-container">
+    <!-- Reusable Pharmacist Sidebar -->
+    <pharmacist-sidebar></pharmacist-sidebar>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <div class="container">
+        <h3 class="font-bold mb-4">طلبات المرضى الواردة</h3>
+
+        <!-- Order 1 -->
+        <div class="order-card p-3 bg-white border rounded mb-3 shadow-sm d-flex justify-content-between align-items-center">
+          <div class="medicine d-flex align-items-center gap-3">
+            <img src="../../assets/images/parst.jpg" alt="Paracetamol" style="width: 60px; height: 60px; border-radius: 8px;">
+            <div class="info">
+              <h4 class="font-bold mb-1">باراسيتامول 500 مجم <span class="badge bg-secondary">× 2</span></h4>
+              <p class="text-muted mb-1">أحمد محمد - 01012345678</p>
+              <div class="details text-muted" style="font-size: 12px;">
+                <span class="me-2">#ORD-001</span>
+                <span><i class="fa-regular fa-clock me-1"></i> اليوم 10:30 ص</span>
+              </div>
+            </div>
+          </div>
+          <div class="actions">
+            <div class="buttons d-flex gap-2">
+              <button class="ready-btn btn btn-success btn-sm">جاهز للتسليم</button>
+              <button class="cancel-btn btn btn-outline-danger btn-sm">إلغاء</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order 2 -->
+        <div class="order-card p-3 bg-white border rounded mb-3 shadow-sm d-flex justify-content-between align-items-center">
+          <div class="medicine d-flex align-items-center gap-3">
+            <img src="../../assets/images/amoc.jpg" alt="Amoxicillin" style="width: 60px; height: 60px; border-radius: 8px;">
+            <div class="info">
+              <h4 class="font-bold mb-1">أموكسيسيلين 500 مجم <span class="badge bg-secondary">× 1</span></h4>
+              <p class="text-muted mb-1">سارة علي - 01198765432</p>
+              <div class="details text-muted" style="font-size: 12px;">
+                <span class="me-2">#ORD-002</span>
+                <span><i class="fa-regular fa-clock me-1"></i> اليوم 09:15 ص</span>
+              </div>
+            </div>
+          </div>
+          <div class="actions">
+            <span class="badge ready bg-success p-2">جاهز للاستلام</span>
+          </div>
+        </div>
+
+        <!-- Order 3 -->
+        <div class="order-card p-3 bg-white border rounded mb-3 shadow-sm d-flex justify-content-between align-items-center">
+          <div class="medicine d-flex align-items-center gap-3">
+            <img src="../../assets/images/omega.jpg" alt="Omega 3" style="width: 60px; height: 60px; border-radius: 8px;">
+            <div class="info">
+              <h4 class="font-bold mb-1">أوميجا 3 بلس <span class="badge bg-secondary">× 1</span></h4>
+              <p class="text-muted mb-1">محمد حسن - 01234567890</p>
+              <div class="details text-muted" style="font-size: 12px;">
+                <span class="me-2">#ORD-003</span>
+                <span><i class="fa-regular fa-clock me-1"></i> أمس 5:00 م</span>
+              </div>
+            </div>
+          </div>
+          <div class="actions">
+            <span class="badge completed bg-primary p-2">مكتمل ومُسلّم</span>
+          </div>
+        </div>
+
+        <!-- Order 4 -->
+        <div class="order-card p-3 bg-white border rounded mb-3 shadow-sm d-flex justify-content-between align-items-center">
+          <div class="medicine d-flex align-items-center gap-3">
+            <img src="../../assets/images/congestal.jpg" alt="Congestal" style="width: 60px; height: 60px; border-radius: 8px;">
+            <div class="info">
+              <h4 class="font-bold mb-1">كونجستال أقراص <span class="badge bg-secondary">× 1</span></h4>
+              <p class="text-muted mb-1">نورا أحمد - 01122334455</p>
+              <div class="details text-muted" style="font-size: 12px;">
+                <span class="me-2">#ORD-004</span>
+                <span><i class="fa-regular fa-clock me-1"></i> أمس 2:00 م</span>
+              </div>
+            </div>
+          </div>
+          <div class="actions">
+            <span class="badge cancelled bg-danger p-2">ملغي</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Reusable App Footer -->
+  <app-footer></app-footer>
+
+  <!-- Reusable Cart Modal -->
+  <app-cart-modal></app-cart-modal>
+
+  <!-- Vendor Scripts -->
+  <script src="../../js/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+
+  <!-- Core & Component Scripts -->
+  <script src="../../js/core/auth.js"></script>
+  <script src="../../js/core/cart.js"></script>
+  <script src="../../js/components/app-navbar.js"></script>
+  <script src="../../js/components/pharmacist-sidebar.js"></script>
+  <script src="../../js/components/app-footer.js"></script>
+  <script src="../../js/components/app-cart-modal.js"></script>
+
+  <!-- Page Script -->
+  <script src="../../js/pages/pharmacist/orders.js"></script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+/* ==========================================================================
+   Teryak Platform - Donation Page Styles
+   ========================================================================== */
+
+body {
+  background-color: #f8fafc;
+  padding-top: 75px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-container {
+  max-width: 1140px;
+  width: 100%;
+  margin: 30px auto 60px;
+  padding: 0 15px;
+  text-align: center;
+  direction: rtl;
+}
+
+.main-header {
+  margin-bottom: 35px;
+}
+
+.header-icon {
+  width: 56px;
+  height: 56px;
+  background-color: #f3e8ff;
+  color: #7c3aed;
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 10px rgba(124, 58, 237, 0.1);
+}
+
+.header-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 10px;
+}
+
+.header-subtitle {
+  font-size: 1rem;
+  color: #64748b;
+}
+
+.tabs-nav {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.nav-tab {
+  padding: 10px 24px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #334155;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-tab:hover {
+  transform: translateY(-2px);
+  border-color: #cbd5e1;
+}
+
+.nav-tab.active[data-tab="browse"] {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+.nav-tab.active[data-tab="donate"] {
+  background-color: #a78bfa;
+  color: #ffffff;
+  border-color: #a78bfa;
+  box-shadow: 0 4px 15px rgba(167, 139, 250, 0.25);
+}
+
+.tab-panel {
+  display: none;
+  width: 100%;
+  animation: fadeIn 0.35s ease-out;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  width: 100%;
+}
+
+.cards-grid.more-medicines {
+  margin-top: 24px;
+}
+
+.cards-grid[hidden] {
+  display: none;
+}
+
+.medicine-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.medicine-card:hover {
+  transform: translateY(-8px);
+  border-color: #00a870;
+  box-shadow: 0 15px 35px rgba(0, 168, 112, 0.08);
+}
+
+.card-badge {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.badge-donation { background-color: #e6f6f0; color: #00a870; }
+.badge-exchange { background-color: #f3e8ff; color: #7c3aed; }
+
+.med-header { margin-bottom: 20px; padding-left: 75px; }
+.med-name { font-size: 1.25rem; font-weight: 700; color: #111827; }
+.med-scientific { font-size: 0.825rem; color: #888888; margin-top: 2px; }
+
+.info-row { display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 12px; }
+.info-label { color: #666666; }
+.info-value { font-weight: 700; color: #111827; }
+
+.price-old { color: #aaa; margin-left: 6px; text-decoration: line-through; }
+.price-new { color: #7c3aed; font-weight: 700; text-decoration: none; }
+
+.divider { border: 0; border-top: 1px solid #f3f4f6; margin: 12px 0; width: 100%; }
+
+.med-meta { font-size: 0.825rem; color: #666666; margin-bottom: 20px; }
+.donor-info { display: flex; justify-content: space-between; color: #888888; margin-top: 4px; }
+
+.btn-action {
+  width: 100%; padding: 12px; border: none; border-radius: 10px;
+  font-size: 0.95rem; font-weight: 700;
+  cursor: pointer; color: #ffffff; background-color: #00a870;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-action:hover { background-color: #008f5f; }
+
+.load-more-wrapper { margin-top: 40px; display: flex; justify-content: center; }
+.btn-outline {
+  background-color: transparent; border: 2px solid #00a870; color: #00a870;
+  padding: 11px 35px; font-size: 0.95rem; font-weight: 700;
+  border-radius: 10px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-outline:hover { background-color: #00a870; color: #ffffff; }
+
+.form-wrapper { max-width: 650px; width: 100%; margin: 0 auto; }
+.donation-form {
+  background-color: #ffffff; border: 1px solid #eaeaea;
+  border-radius: 16px; padding: 35px; text-align: right; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+.form-title { font-size: 1.375rem; font-weight: 800; color: #111827; margin-bottom: 24px; }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-size: 0.875rem; font-weight: 700; color: #333333; margin-bottom: 8px; }
+.required { color: #ef4444; }
+
+.form-control {
+  width: 100%; padding: 12px 16px; border: 1px solid #e5e5e5;
+  border-radius: 10px; font-size: 0.95rem;
+  outline: none; background-color: #ffffff; transition: border-color 0.25s ease;
+}
+.form-control:focus { border-color: #00a870; box-shadow: 0 0 0 3px rgba(0, 168, 112, 0.1); }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.op-type-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
+.op-btn {
+  padding: 12px; border: 1px solid #e5e5e5; border-radius: 10px;
+  font-size: 0.95rem; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background-color: #f4f4f5; color: #18181b;
+}
+.op-btn.active-donate { background-color: #00a870; color: #ffffff; border-color: #00a870; }
+.op-btn.active-exchange { background-color: #a78bfa; color: #ffffff; border-color: #a78bfa; }
+
+.exchange-field-wrapper { display: none; animation: fadeIn 0.3s ease-in-out; }
+.exchange-field-wrapper.show { display: block; }
+
+.btn-submit {
+  width: 100%; background-color: #00a870; color: #ffffff; border: none; padding: 14px;
+  font-size: 1rem; font-weight: 700; border-radius: 10px;
+  cursor: pointer; margin-top: 20px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-submit:hover { background-color: #008f5f; transform: translateY(-2px); }
+.btn-submit.btn-purple { background-color: #7c3aed; }
+.btn-submit.btn-purple:hover { background-color: #6d28d9; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 650px; margin: 30px auto 0 auto; }
+.stat-card {
+  border: 1px solid #eaeaea; border-radius: 10px; padding: 20px 16px;
+  text-align: center; background-color: #ffffff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: default;
+}
+.stat-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+.stat-card.stat-purple { border-color: #f3e8ff; }
+.stat-card.stat-purple:hover { border-color: #a78bfa; box-shadow: 0 12px 28px rgba(124, 58, 237, 0.15); }
+.stat-card.stat-blue { border-color: #e0f2fe; }
+.stat-card.stat-blue:hover { border-color: #2563eb; box-shadow: 0 12px 28px rgba(37, 99, 235, 0.15); }
+.stat-card:not(.stat-purple):not(.stat-blue):hover { border-color: #00a870; }
+.stat-number { display: block; font-size: 1.75rem; font-weight: 800; margin-bottom: 4px; }
+.stat-label { font-size: 0.825rem; color: #666666; font-weight: 600; }
+.color-emerald { color: #00a870; }
+.color-violet { color: #7c3aed; }
+.color-blue { color: #2563eb; }
+
+@media (max-width: 1024px) {
+  .cards-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .cards-grid, .form-row, .stats-grid { grid-template-columns: 1fr; }
+  .tabs-nav { flex-direction: column; align-items: center; }
+  .nav-tab { width: 100%; max-width: 320px; justify-content: center; }
+}

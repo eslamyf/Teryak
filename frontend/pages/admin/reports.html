@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ترياق | لوحة تحكم الإدارة - التقارير والإحصائيات</title>
+
+  <!-- Vendor CSS -->
+  <link rel="stylesheet" href="../../css/vendor/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../../css/vendor/fontawesome/all.min.css">
+
+  <!-- Base & Component CSS -->
+  <link rel="stylesheet" href="../../css/base/variables.css">
+  <link rel="stylesheet" href="../../css/base/global.css">
+  <link rel="stylesheet" href="../../css/components/navbar.css">
+  <link rel="stylesheet" href="../../css/components/footer.css">
+  <link rel="stylesheet" href="../../css/components/modal.css">
+
+  <!-- Page Custom CSS -->
+  <link rel="stylesheet" href="../../css/pages/admin/reports.css">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Reusable App Navbar -->
+  <app-navbar></app-navbar>
+
+  <div class="app-container pt-5">
+    <!-- Header Section -->
+    <header class="top-header d-flex justify-content-between align-items-center mb-4">
+      <div class="title-group">
+        <div class="title-row d-flex align-items-center gap-2">
+          <span class="admin-badge badge bg-danger">ADMIN</span>
+          <h1 class="main-title font-bold mb-0">تقارير وإحصائيات المنصة</h1>
+        </div>
+        <p class="sub-title text-muted mb-0">تحليلات الأداء الشاملة للأدوية، الحجوزات ونشاط الصيدليات</p>
+      </div>
+    </header>
+
+    <div class="main-wrapper d-flex gap-4">
+      <!-- Reusable Admin Sidebar -->
+      <admin-sidebar></admin-sidebar>
+
+      <!-- Main Content -->
+      <main class="dashboard-content flex-grow-1">
+        
+        <!-- Report Quick Cards -->
+        <section class="report-cards d-grid gap-3 mb-4" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));" aria-label="ملخص التقارير">
+          
+          <article class="report-card report-card-green p-4 bg-white border rounded shadow-sm d-flex align-items-center gap-3">
+            <div class="report-icon bg-success bg-opacity-10 text-success p-3 rounded-circle fs-3">
+              <i class="bi bi-calendar-check-fill"></i>
+            </div>
+            <div class="report-copy flex-grow-1">
+              <h2 class="h5 font-bold mb-1">تقرير الحجوزات الشهري</h2>
+              <p class="text-muted mb-2">28,430 حجز في مايو 2026</p>
+              <a href="javascript:void(0)" class="text-success text-decoration-none font-bold" onclick="alert('جاري تجهيز وتحميل تقرير الحجوزات...');">تحميل التقرير (PDF) &larr;</a>
+            </div>
+          </article>
+
+          <article class="report-card report-card-blue p-4 bg-white border rounded shadow-sm d-flex align-items-center gap-3">
+            <div class="report-icon bg-primary bg-opacity-10 text-primary p-3 rounded-circle fs-3">
+              <i class="bi bi-hospital-fill"></i>
+            </div>
+            <div class="report-copy flex-grow-1">
+              <h2 class="h5 font-bold mb-1">تقرير نشاط الصيدليات</h2>
+              <p class="text-muted mb-2">245 صيدلية في آخر مراجعة</p>
+              <a href="javascript:void(0)" class="text-primary text-decoration-none font-bold" onclick="alert('جاري تحميل تقرير أداء الصيدليات...');">تحميل التقرير (Excel) &larr;</a>
+            </div>
+          </article>
+
+          <article class="report-card report-card-danger p-4 bg-white border rounded shadow-sm d-flex align-items-center gap-3">
+            <div class="report-icon bg-danger bg-opacity-10 text-danger p-3 rounded-circle fs-3">
+              <i class="bi bi-exclamation-octagon-fill"></i>
+            </div>
+            <div class="report-copy flex-grow-1">
+              <h2 class="h5 font-bold mb-1">تقرير الأدوية الناقصة</h2>
+              <p class="text-muted mb-2">12 دواء يحتاج لتوفير عاجل</p>
+              <a href="javascript:void(0)" class="text-danger text-decoration-none font-bold" onclick="alert('جاري تصدير قائمة الأدوية الشحيحة...');">تحميل التقرير (CSV) &larr;</a>
+            </div>
+          </article>
+
+        </section>
+
+        <!-- Analytics Chart -->
+        <section class="chart-card bg-white border rounded shadow-sm p-4">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="chart-title h5 font-bold mb-0">أكثر الأدوية طلبًا وبحثًا</h2>
+            <span class="badge bg-light text-dark border">إحصائيات آخر 30 يوم</span>
+          </div>
+          <div class="chart-container" style="position: relative; height: 320px;">
+            <canvas id="topMedicinesChart"></canvas>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Reusable App Footer -->
+  <app-footer></app-footer>
+
+  <!-- Reusable Cart Modal -->
+  <app-cart-modal></app-cart-modal>
+
+  <!-- Vendor Scripts -->
+  <script src="../../js/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+
+  <!-- Core & Component Scripts -->
+  <script src="../../js/core/auth.js"></script>
+  <script src="../../js/core/cart.js"></script>
+  <script src="../../js/components/app-navbar.js"></script>
+  <script src="../../js/components/admin-sidebar.js"></script>
+  <script src="../../js/components/app-footer.js"></script>
+  <script src="../../js/components/app-cart-modal.js"></script>
+
+  <!-- Page Script -->
+  <script src="../../js/pages/admin/reports.js"></script>
+</body>
+</html>

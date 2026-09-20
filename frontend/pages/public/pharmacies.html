@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ترياق | دليل الصيدليات المشاركة</title>
+
+  <!-- Vendor CSS -->
+  <link rel="stylesheet" href="../../css/vendor/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../../css/vendor/fontawesome/all.min.css">
+
+  <!-- Base & Component CSS -->
+  <link rel="stylesheet" href="../../css/base/variables.css">
+  <link rel="stylesheet" href="../../css/base/global.css">
+  <link rel="stylesheet" href="../../css/components/navbar.css">
+  <link rel="stylesheet" href="../../css/components/footer.css">
+  <link rel="stylesheet" href="../../css/components/modal.css">
+
+  <!-- Page Custom CSS -->
+  <link rel="stylesheet" href="../../css/pages/public/pharmacies.css">
+</head>
+<body>
+
+  <!-- Reusable App Navbar -->
+  <app-navbar></app-navbar>
+
+  <main class="page container my-4">
+    <div class="header2 text-center mb-4">
+      <h1>دليل الصيدليات</h1>
+      <p class="text-muted">دليل شامل بجميع الصيدليات المشاركة في شبكة ترياق في جميع المحافظات</p>
+    </div>
+
+    <div class="toolbar">
+      <button class="toolbar-btn" id="filterBtn">
+        <i class="bi bi-funnel"></i>
+        فلترة
+        <i class="bi bi-chevron-down chevron"></i>
+      </button>
+
+      <div class="dropdown-wrap">
+        <button class="toolbar-btn" id="sortBtn">
+          <span id="sortLabel">الأقرب أولاً</span>
+          <i class="bi bi-chevron-down chevron"></i>
+        </button>
+        <div class="dropdown-menu" id="sortMenu">
+          <div class="dropdown-item selected" data-sort="distance">الأقرب أولاً</div>
+          <div class="dropdown-item" data-sort="rating">الأعلى تقييماً</div>
+          <div class="dropdown-item" data-sort="meds">الأكثر أدوية</div>
+        </div>
+      </div>
+
+      <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input type="text" id="searchInput" placeholder="ابحث باسم الصيدلية أو العنوان...">
+      </div>
+    </div>
+
+    <div class="open-filter-row" id="openFilterRow">
+      <span>المفتوحة الآن فقط</span>
+      <div class="switch" id="openSwitch"><div class="knob"></div></div>
+    </div>
+
+    <p class="result-count" id="resultCount">يُعرض 6 صيدليات</p>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="panel" id="topPanel"></div>
+        <div class="panel">
+          <p class="open-now-title"><span class="dot"></span> مفتوحة الآن</p>
+          <div id="openNowList"></div>
+        </div>
+      </aside>
+
+      <section class="list" id="pharmacyList"></section>
+    </div>
+  </main>
+
+  <!-- Reusable App Footer -->
+  <app-footer></app-footer>
+
+  <!-- Reusable Cart Modal -->
+  <app-cart-modal></app-cart-modal>
+
+  <!-- Vendor Scripts -->
+  <script src="../../js/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+
+  <!-- Core & Component Scripts -->
+  <script src="../../js/core/auth.js"></script>
+  <script src="../../js/core/cart.js"></script>
+  <script src="../../js/components/app-navbar.js"></script>
+  <script src="../../js/components/app-footer.js"></script>
+  <script src="../../js/components/app-cart-modal.js"></script>
+
+  <!-- Page Script -->
+  <script src="../../js/pages/public/pharmacies.js"></script>
+</body>
+</html>

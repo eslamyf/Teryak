@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ترياق | تسجيل الدخول</title>
+
+  <!-- Vendor CSS -->
+  <link rel="stylesheet" href="../../css/vendor/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../../css/vendor/fontawesome/all.min.css">
+
+  <!-- Base & Component CSS -->
+  <link rel="stylesheet" href="../../css/base/variables.css">
+  <link rel="stylesheet" href="../../css/base/global.css">
+  <link rel="stylesheet" href="../../css/components/navbar.css">
+  <link rel="stylesheet" href="../../css/components/footer.css">
+  <link rel="stylesheet" href="../../css/components/modal.css">
+
+  <!-- Page Custom CSS -->
+  <link rel="stylesheet" href="../../css/pages/public/login.css">
+</head>
+<body>
+
+  <!-- Reusable App Navbar -->
+  <app-navbar></app-navbar>
+
+  <main class="container my-5 pt-4">
+    <section class="hero text-center mb-4">
+      <h1>تسجيل الدخول</h1>
+      <p class="text-muted">أهلاً بعودتك إلى منصة ترياق</p>
+    </section>
+
+    <!-- Login Card -->
+    <section class="auth-card mx-auto" style="max-width: 480px;">
+      <!-- User Type Tabs -->
+      <div class="tabs mb-4">
+        <button class="tab active" type="button">مريض</button>
+        <button class="tab" type="button">صيدلي</button>
+        <button class="tab" type="button">إدارة</button>
+      </div>
+
+      <form id="loginForm">
+        <!-- Email -->
+        <div class="form-group mb-3">
+          <label class="form-label">البريد الإلكتروني</label>
+          <div class="input-box">
+            <i class="fa-regular fa-envelope"></i>
+            <input type="email" class="form-control" placeholder="example@teryak.com" required>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group mb-3">
+          <label class="form-label">كلمة المرور</label>
+          <div class="input-box password-box">
+            <i class="fa-solid fa-lock"></i>
+            <input id="password" type="password" class="form-control" placeholder="••••••••" required>
+            <i class="fa-solid fa-eye eye" style="cursor: pointer;"></i>
+          </div>
+        </div>
+
+        <!-- Quick Credentials Hint -->
+        <div class="alert alert-light border p-2 mb-3" style="font-size: 13px;">
+          <small class="d-block text-muted"><strong>حسابات تجريبية سريعة (كلمة المرور: 123):</strong></small>
+          <small class="d-block">مريض: <code>patient@teryak.com</code></small>
+          <small class="d-block">صيدلي: <code>pharmacist@teryak.com</code></small>
+          <small class="d-block">إدارة: <code>admin@teryak.com</code></small>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100 py-2 font-bold mb-3" style="background-color: var(--primary-color);">
+          تسجيل الدخول
+        </button>
+
+        <button type="button" class="google-btn w-100" id="loginWithG">
+          <i class="fa-brands fa-google text-danger me-2"></i> الدخول باستخدام Google
+        </button>
+      </form>
+
+      <div class="text-center mt-4 pt-3 border-top">
+        <span class="text-muted">ليس لديك حساب؟</span>
+        <a href="register.html" class="text-success font-bold me-1">إنشاء حساب جديد</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Reusable App Footer -->
+  <app-footer></app-footer>
+
+  <!-- Reusable Cart Modal -->
+  <app-cart-modal></app-cart-modal>
+
+  <!-- Vendor Scripts -->
+  <script src="../../js/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+
+  <!-- Core & Component Scripts -->
+  <script src="../../js/core/auth.js"></script>
+  <script src="../../js/core/cart.js"></script>
+  <script src="../../js/components/app-navbar.js"></script>
+  <script src="../../js/components/app-footer.js"></script>
+  <script src="../../js/components/app-cart-modal.js"></script>
+
+  <!-- Page Script -->
+  <script src="../../js/pages/public/login.js"></script>
+</body>
+</html>

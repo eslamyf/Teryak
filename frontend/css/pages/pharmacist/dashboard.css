@@ -1,0 +1,1853 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Cairo',sans-serif;
+}
+
+body{
+    background:#f5f7fb;
+    min-height:100vh;
+    direction: rtl;
+}
+
+/* Layout */
+
+.dashboard-container{
+    display:grid;
+    grid-template-columns: 280px 1fr;
+    gap:24px;
+    padding:24px;
+    min-height:100vh;
+}
+
+/* Sidebar */
+
+.sidebar{
+    background:#fff;
+    border-radius:24px;
+    padding:25px;
+    box-shadow:0 5px 20px rgba(0,0,0,.05);
+
+    position:sticky;
+    top:20px;
+    height:fit-content;
+     transition:.4s ease;
+    z-index:999;
+}
+.menu-btn{
+    display:none;
+    width:45px;
+    height:45px;
+    border:none;
+    border-radius:12px;
+    background:#10B981;
+    color:#fff;
+    font-size:24px;
+    cursor:pointer;
+}
+
+.pharmacy-info{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:35px;
+}
+
+.logo-box{
+    width:60px;
+    height:60px;
+    border-radius:18px;
+    background:#ECFDF5;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:28px;
+}
+
+.pharmacy-info h2{
+    font-size:22px;
+    color:#111827;
+}
+
+.pharmacy-info p{
+    font-size:14px;
+    color:#6B7280;
+}
+
+.sidebar nav{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.sidebar nav a{
+    text-decoration:none;
+    color:#374151;
+    padding:15px 18px;
+    border-radius:16px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.sidebar nav a:hover{
+    background:#F3F4F6;
+}
+
+.sidebar nav a.active{
+    background:#10B981;
+    color:#fff;
+}
+
+/* Main Content */
+
+.main-content{
+    width:100%;
+}
+
+.top-bar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.status{
+    background:#ECFDF5;
+    color:#10B981;
+    padding:12px 20px;
+    border-radius:40px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:700;
+}
+
+.dot{
+    width:10px;
+    height:10px;
+    background:#10B981;
+    border-radius:50%;
+}
+
+.notification{
+    font-size:24px;
+    cursor:pointer;
+}
+
+/* Cards */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+    margin-bottom:25px;
+}
+
+.card{
+    border-radius:22px;
+    padding:24px;
+    min-height:140px;
+}
+
+.card h3{
+    font-size:32px;
+    margin-bottom:8px;
+    font-weight:800;
+}
+
+.card p{
+    color:#6B7280;
+    font-weight:600;
+}
+
+.medicines{
+    background:#ECFDF5;
+}
+
+.medicines h3{
+    color:#10B981;
+}
+
+.low-stock{
+    background:#FEF2F2;
+}
+
+.low-stock h3{
+    color:#EF4444;
+}
+
+.orders{
+    background:#EFF6FF;
+}
+
+.orders h3{
+    color:#2563EB;
+}
+
+.revenue{
+    background:#FFFBEB;
+}
+
+.revenue h3{
+    color:#F59E0B;
+}
+
+/* Chart */
+
+.chart-card{
+    background:#fff;
+    border-radius:24px;
+    padding:30px;
+    margin-bottom:25px;
+    box-shadow:0 5px 20px rgba(0,0,0,.04);
+}
+
+.chart-card h2{
+    margin-bottom:20px;
+}
+
+#salesChart{
+    width:100%;
+    height:350px !important;
+}
+
+/* Alerts */
+
+.alerts{
+    background:#fff;
+    border-radius:24px;
+    padding:30px;
+    box-shadow:0 5px 20px rgba(0,0,0,.04);
+}
+
+.alerts h2{
+    margin-bottom:20px;
+}
+
+.alert-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px;
+    border:1px solid #eee;
+    border-radius:16px;
+    margin-bottom:15px;
+}
+
+.alert-info{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.alert-image{
+    width:55px;
+    height:55px;
+    border-radius:12px;
+    object-fit:cover;
+}
+
+.alert-text h4{
+    margin-bottom:5px;
+}
+
+.alert-text p{
+    color:#6B7280;
+}
+
+.update-btn{
+    border:none;
+    background:#10B981;
+    color:white;
+    padding:10px 18px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+
+/* Overlay */
+
+
+.overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    opacity:0;
+    visibility:hidden;
+    transition:.3s;
+    z-index:998;
+}
+
+.overlay.show{
+    opacity:1;
+    visibility:visible;
+}
+
+
+/* Large Screens */
+
+/* RESET */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Cairo', sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #f5f7fb;
+    min-height: 100vh;
+    direction: rtl;
+    overflow-x: hidden;
+    color: #111827;
+}
+
+
+/* DASHBOARD LAYOUT */
+
+.dashboard-container {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 16px;
+    padding: 20px;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    min-height: 100vh;
+}
+
+
+/*SIDEBAR */
+
+.sidebar {
+    background: #fff;
+    border-radius: 22px;
+    padding: 22px;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, .05);
+
+    position: sticky;
+    top: 20px;
+
+    height: fit-content;
+    min-height: 300px;
+
+    transition: right .35s ease, transform .35s ease;
+
+    z-index: 1000;
+}
+
+.pharmacy-info {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 28px;
+}
+
+.logo-box {
+    width: 55px;
+    height: 55px;
+
+    border-radius: 16px;
+    background: #ECFDF5;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 26px;
+    flex-shrink: 0;
+}
+
+.pharmacy-info h2 {
+    font-size: 20px;
+    color: #111827;
+    white-space: nowrap;
+}
+
+.pharmacy-info p {
+    font-size: 13px;
+    color: #6B7280;
+}
+
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.sidebar nav a {
+    text-decoration: none;
+    color: #374151;
+
+    padding: 13px 16px;
+
+    border-radius: 14px;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    transition: .25s;
+
+    display: block;
+}
+
+.sidebar nav a:hover {
+    background: #F3F4F6;
+}
+
+.sidebar nav a.active {
+    background: #10B981;
+    color: #fff;
+}
+
+
+
+/*OVERLAY */
+
+.overlay {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0, 0, 0, .45);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: .3s;
+
+    z-index: 999;
+}
+
+.overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/*MAIN CONTENT */
+
+.main-content {
+    width: 100%;
+    min-width: 0;
+}
+
+
+/*TOP BAR */
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 16px;
+
+    min-height: 45px;
+}
+
+
+/*STATUS */
+
+.status {
+    background: #ECFDF5;
+    color: #10B981;
+
+    padding: 8px 14px;
+
+    border-radius: 999px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    width: fit-content;
+}
+
+.dot {
+    width: 9px;
+    height: 9px;
+
+    background: #10B981;
+
+    border-radius: 50%;
+
+    flex-shrink: 0;
+}
+
+
+/*NOTIFICATION */
+
+.notification {
+    font-size: 23px;
+    cursor: pointer;
+}
+
+
+/*STATISTICS CARDS */
+
+.cards {
+    display: grid;
+
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+
+    gap: 16px;
+
+    margin-bottom: 18px;
+
+    width: 100%;
+}
+
+.card {
+    border-radius: 20px;
+
+    padding: 22px;
+
+    min-height: 130px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    min-width: 0;
+}
+
+.card h3 {
+    font-size: 30px;
+
+    margin-bottom: 6px;
+
+    font-weight: 800;
+
+    line-height: 1.2;
+}
+
+.card p {
+    color: #6B7280;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    line-height: 1.6;
+}
+
+
+/* CARD COLORS */
+
+.medicines {
+    background: #ECFDF5;
+}
+
+.medicines h3 {
+    color: #10B981;
+}
+
+.low-stock {
+    background: #FEF2F2;
+}
+
+.low-stock h3 {
+    color: #EF4444;
+}
+
+.orders {
+    background: #EFF6FF;
+}
+
+.orders h3 {
+    color: #2563EB;
+}
+
+.revenue {
+    background: #FFFBEB;
+}
+
+.revenue h3 {
+    color: #F59E0B;
+}
+
+
+/*CHART */
+
+.chart-card {
+    background: #fff;
+
+    border-radius: 20px;
+
+    padding: 24px;
+
+    margin-bottom: 18px;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, .04);
+
+    width: 100%;
+
+    min-width: 0;
+}
+
+.chart-card h2 {
+    margin-bottom: 16px;
+
+    font-size: 21px;
+}
+
+#salesChart {
+    width: 100% !important;
+    max-width: 100%;
+
+    height: 320px !important;
+}
+
+
+/*ALERTS*/
+
+.alerts {
+    background: #fff;
+
+    border-radius: 20px;
+
+    padding: 24px;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, .04);
+
+    width: 100%;
+
+    min-width: 0;
+}
+
+.alerts h2 {
+    margin-bottom: 16px;
+
+    font-size: 21px;
+}
+
+
+/* ALERT ITEM */
+
+.alert-item {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 15px;
+
+    border: 1px solid #eee;
+
+    border-radius: 15px;
+
+    margin-bottom: 12px;
+
+    width: 100%;
+
+    min-width: 0;
+}
+
+.alert-item:last-child {
+    margin-bottom: 0;
+}
+
+.alert-info {
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    min-width: 0;
+}
+
+.alert-image {
+    width: 52px;
+    height: 52px;
+
+    border-radius: 12px;
+
+    object-fit: cover;
+
+    flex-shrink: 0;
+}
+
+.alert-text {
+    min-width: 0;
+}
+
+.alert-text h4 {
+    margin-bottom: 4px;
+
+    font-size: 15px;
+}
+
+.alert-text p {
+    color: #6B7280;
+
+    font-size: 13px;
+}
+
+.update-btn {
+    border: none;
+
+    background: #10B981;
+
+    color: white;
+
+    padding: 9px 16px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-family: 'Cairo', sans-serif;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    flex-shrink: 0;
+
+    transition: .25s;
+}
+
+.update-btn:hover {
+    background: #07885d;
+}
+
+
+/*LARGE LAPTOP*/
+
+@media (max-width: 1399px) {
+
+    .dashboard-container {
+        grid-template-columns: 250px minmax(0, 1fr);
+        gap: 15px;
+
+        padding: 18px;
+    }
+
+    .sidebar {
+        padding: 20px;
+    }
+
+    .cards {
+        gap: 14px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .card h3 {
+        font-size: 28px;
+    }
+
+}
+
+
+/*LAPTOP / SMALL DESKTOP*/
+
+@media (max-width: 1100px) and (min-width: 993px) {
+
+    .dashboard-container {
+        grid-template-columns: 220px minmax(0, 1fr);
+
+        gap: 14px;
+
+        padding: 16px;
+    }
+
+    .sidebar {
+        padding: 18px;
+    }
+
+    .pharmacy-info {
+        gap: 10px;
+    }
+
+    .logo-box {
+        width: 50px;
+        height: 50px;
+
+        font-size: 23px;
+    }
+
+    .pharmacy-info h2 {
+        font-size: 18px;
+    }
+
+    .pharmacy-info p {
+        font-size: 12px;
+    }
+
+    .sidebar nav a {
+        padding: 12px 13px;
+        font-size: 14px;
+    }
+
+    .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        gap: 14px;
+    }
+
+    .card {
+        min-height: 120px;
+    }
+
+}
+
+
+/*TABLET*/
+
+@media (max-width: 992px) {
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .dashboard-container {
+        display: block;
+
+        width: 100%;
+
+        padding: 16px;
+    }
+
+    /* Sidebar Drawer */
+
+    .sidebar {
+        position: fixed;
+
+        top: 0;
+        right: -300px;
+
+        width: 280px;
+        height: 100vh;
+
+        min-height: 100vh;
+
+        border-radius: 0;
+
+        overflow-y: auto;
+
+        padding: 24px;
+
+        transition: right .35s ease;
+
+        z-index: 1000;
+    }
+
+    .sidebar.active,
+    .sidebar.show {
+        right: 0;
+    }
+
+    /* Menu */
+
+    .menu-btn {
+        display: flex;
+
+        position: fixed;
+
+        top: 15px;
+        right: 15px;
+    }
+
+    /* Main */
+
+    .main-content {
+        width: 100%;
+    }
+
+    .top-bar {
+        margin-bottom: 18px;
+
+        padding-right: 58px;
+    }
+
+    .status {
+        margin-right: auto;
+    }
+
+    /* Cards */
+
+    .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        gap: 14px;
+
+        margin-bottom: 18px;
+    }
+
+    .card {
+        min-height: 125px;
+
+        padding: 20px;
+    }
+
+    .card h3 {
+        font-size: 28px;
+    }
+
+    /* Chart */
+
+    .chart-card {
+        padding: 22px;
+    }
+
+    #salesChart {
+        height: 300px !important;
+    }
+
+    /* Alerts */
+
+    .alerts {
+        padding: 22px;
+    }
+
+}
+
+
+/*MOBILE*/
+
+@media (max-width: 768px) {
+
+    .dashboard-container {
+        padding: 12px;
+    }
+
+    /* Menu */
+
+    .menu-btn {
+        width: 42px;
+        height: 42px;
+
+        top: 12px;
+        right: 12px;
+
+        font-size: 22px;
+    }
+
+    /* Top */
+
+    .top-bar {
+        padding-right: 52px;
+
+        min-height: 42px;
+
+        margin-bottom: 16px;
+    }
+
+    .status {
+        font-size: 13px;
+
+        padding: 7px 12px;
+
+        margin-right: auto;
+    }
+
+    .notification {
+        font-size: 21px;
+    }
+
+    /* Cards */
+
+    .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        gap: 12px;
+
+        margin-bottom: 15px;
+    }
+
+    .card {
+        min-height: 115px;
+
+        padding: 18px;
+
+        border-radius: 17px;
+
+        text-align: right;
+    }
+
+    .card h3 {
+        font-size: 25px;
+
+        margin-bottom: 5px;
+    }
+
+    .card p {
+        font-size: 13px;
+    }
+
+    /* Chart */
+
+    .chart-card {
+        padding: 18px;
+
+        border-radius: 18px;
+
+        margin-bottom: 15px;
+    }
+
+    .chart-card h2 {
+        font-size: 18px;
+
+        margin-bottom: 12px;
+    }
+
+    #salesChart {
+        height: 260px !important;
+    }
+
+    /* Alerts */
+
+    .alerts {
+        padding: 18px;
+
+        border-radius: 18px;
+    }
+
+    .alerts h2 {
+        font-size: 18px;
+
+        margin-bottom: 14px;
+    }
+
+    .alert-item {
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 12px;
+
+        padding: 14px;
+    }
+
+    .alert-info {
+        width: 100%;
+    }
+
+    .update-btn {
+        width: 100%;
+    }
+
+}
+
+
+/*SMALL MOBILE*/
+
+@media (max-width: 480px) {
+
+    .dashboard-container {
+        padding: 10px;
+    }
+
+    .sidebar {
+        width: 270px;
+    }
+
+    .pharmacy-info {
+        margin-bottom: 25px;
+    }
+
+    .pharmacy-info h2 {
+        font-size: 19px;
+    }
+
+    .pharmacy-info p {
+        font-size: 12px;
+    }
+
+    /* Top */
+
+    .top-bar {
+        padding-right: 50px;
+
+        margin-bottom: 14px;
+    }
+
+    .status {
+        font-size: 12px;
+
+        padding: 6px 10px;
+
+        gap: 5px;
+    }
+
+    .dot {
+        width: 7px;
+        height: 7px;
+    }
+
+    /* Cards */
+
+    .cards {
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+    }
+
+    .card {
+        min-height: 105px;
+
+        padding: 17px;
+
+        border-radius: 16px;
+
+        text-align: center;
+    }
+
+    .card h3 {
+        font-size: 25px;
+    }
+
+    .card p {
+        font-size: 13px;
+    }
+
+    /* Chart */
+
+    .chart-card {
+        padding: 15px;
+
+        border-radius: 17px;
+    }
+
+    .chart-card h2 {
+        font-size: 17px;
+    }
+
+    #salesChart {
+        height: 230px !important;
+    }
+
+    /* Alerts */
+
+    .alerts {
+        padding: 15px;
+
+        border-radius: 17px;
+    }
+
+    .alerts h2 {
+        font-size: 17px;
+    }
+
+    .alert-item {
+        padding: 12px;
+    }
+
+    .alert-info {
+        gap: 10px;
+    }
+
+    .alert-image {
+        width: 46px;
+        height: 46px;
+    }
+
+    .alert-text h4 {
+        font-size: 14px;
+    }
+
+    .alert-text p {
+        font-size: 12px;
+    }
+
+    .update-btn {
+        padding: 9px;
+
+        font-size: 13px;
+    }
+
+}
+
+
+/*VERY SMALL PHONES */
+
+@media (max-width: 359px) {
+
+    .dashboard-container {
+        padding: 8px;
+    }
+
+    .sidebar {
+        width: 255px;
+    }
+
+    .cards {
+        gap: 8px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .card h3 {
+        font-size: 23px;
+    }
+
+    .card p {
+        font-size: 12px;
+    }
+
+    .chart-card,
+    .alerts {
+        padding: 13px;
+    }
+
+    #salesChart {
+        height: 210px !important;
+    }
+
+}
+
+
+/*LARGE SCREENS */
+
+@media (min-width: 1600px) {
+
+    .dashboard-container {
+        padding: 24px;
+    }
+
+    .cards {
+        gap: 18px;
+    }
+
+    .card {
+        min-height: 140px;
+    }
+
+    #salesChart {
+        height: 350px !important;
+    }
+
+}
+/*LAPTOP / TABLET */
+
+@media (max-width: 1100px) {
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .dashboard-container {
+        display: flex;
+        flex-direction: column;
+
+        gap: 12px;
+        padding: 12px;
+    }
+    /*SIDEBAR */
+    .sidebar {
+        position: relative;
+
+        top: auto;
+        right: auto;
+
+        width: 100%;
+        height: auto;
+        min-height: auto;
+
+        padding: 18px 20px;
+
+        border-radius: 20px;
+
+        overflow: visible;
+    }
+
+    /* Pharmacy info */
+
+    .pharmacy-info {
+        display: flex;
+        align-items: center;
+
+        gap: 12px;
+
+        margin-bottom: 16px;
+    }
+
+    .logo-box {
+        width: 50px;
+        height: 50px;
+
+        border-radius: 15px;
+
+        font-size: 23px;
+    }
+
+    .pharmacy-info h2 {
+        font-size: 19px;
+    }
+
+    .pharmacy-info p {
+        font-size: 13px;
+    }
+
+    /*NAVIGATION */
+
+    .sidebar nav {
+        display: flex;
+
+        flex-direction: row;
+
+        gap: 8px;
+
+        width: 100%;
+
+        overflow-x: auto;
+
+        padding-bottom: 2px;
+
+        scrollbar-width: none;
+    }
+
+    .sidebar nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .sidebar nav a {
+        flex-shrink: 0;
+
+        padding: 10px 14px;
+
+        border-radius: 12px;
+
+        font-size: 14px;
+
+        white-space: nowrap;
+    }
+
+    /*MAIN CONTENT */
+
+    .main-content {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* منع زرار القائمة */
+
+    .menu-btn {
+        display: none !important;
+    }
+
+    .overlay {
+        display: none !important;
+    }
+}
+
+
+/*SMALL LAPTOP / TABLET*/
+
+@media (max-width: 900px) {
+
+    .dashboard-container {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .sidebar {
+        padding: 16px;
+        border-radius: 18px;
+    }
+
+    .pharmacy-info {
+        margin-bottom: 13px;
+    }
+
+    .logo-box {
+        width: 46px;
+        height: 46px;
+
+        border-radius: 14px;
+
+        font-size: 21px;
+    }
+
+    .pharmacy-info h2 {
+        font-size: 18px;
+    }
+
+    .pharmacy-info p {
+        font-size: 12px;
+    }
+
+    .sidebar nav {
+        gap: 6px;
+    }
+
+    .sidebar nav a {
+        padding: 9px 12px;
+
+        font-size: 13px;
+
+        border-radius: 11px;
+    }
+}
+
+
+/*MOBILE*/
+
+@media (max-width: 600px) {
+
+    .dashboard-container {
+        padding: 8px;
+
+        gap: 10px;
+    }
+
+    .sidebar {
+        padding: 14px;
+
+        border-radius: 16px;
+    }
+
+    .pharmacy-info {
+        gap: 9px;
+
+        margin-bottom: 12px;
+    }
+
+    .logo-box {
+        width: 42px;
+        height: 42px;
+
+        border-radius: 12px;
+
+        font-size: 19px;
+    }
+
+    .pharmacy-info h2 {
+        font-size: 16px;
+    }
+
+    .pharmacy-info p {
+        font-size: 11px;
+    }
+
+    .sidebar nav {
+        gap: 5px;
+    }
+
+    .sidebar nav a {
+        padding: 8px 11px;
+
+        font-size: 12px;
+
+        border-radius: 10px;
+    }
+}
+/*STATISTICS RESPONSIVE FIX*/
+
+@media (max-width: 1000px) {
+
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden !important;
+    }
+
+    .dashboard-container {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        padding: 12px !important;
+        gap: 14px !important;
+
+        overflow-x: hidden !important;
+    }
+
+    /* Sidebar فوق */
+    .sidebar {
+        position: relative !important;
+
+        top: auto !important;
+        right: auto !important;
+        left: auto !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+
+        height: auto !important;
+        min-height: 0 !important;
+
+        display: block !important;
+
+        transform: none !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+
+        margin: 0 !important;
+
+        overflow: hidden !important;
+    }
+
+    .sidebar nav {
+        width: 100% !important;
+
+        display: flex !important;
+        flex-direction: row !important;
+
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+
+        scrollbar-width: none;
+    }
+
+    .sidebar nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .sidebar nav a {
+        flex: 0 0 auto !important;
+        white-space: nowrap;
+    }
+
+    /* MAIN*/
+
+    .main-content {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        overflow-x: hidden !important;
+    }
+
+    /* أي container داخل الصفحة */
+    .container,
+    .content,
+    .stats-container,
+    .statistics-container {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+
+        overflow-x: hidden !important;
+    }
+
+    /* كل الـ divs الرئيسية */
+    .main-content > div,
+    .container > div,
+    .stats-container > div,
+    .statistics-container > div {
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    /*GRID / CARDS */
+
+    .stats-grid,
+    .statistics-grid,
+    .cards-grid,
+    .dashboard-grid {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        display: grid !important;
+
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+
+        gap: 12px !important;
+    }
+
+    .stat-card,
+    .statistics-card,
+    .card {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        box-sizing: border-box !important;
+    }
+
+    /* الصور والأيقونات */
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* النصوص الطويلة */
+    h1,
+    h2,
+    h3,
+    h4,
+    p,
+    span {
+        max-width: 100%;
+        overflow-wrap: break-word;
+    }
+}
+
+
+/*MOBILE*/
+
+@media (max-width: 650px) {
+
+    .dashboard-container {
+        padding: 8px !important;
+    }
+
+    .stats-grid,
+    .statistics-grid,
+    .cards-grid,
+    .dashboard-grid {
+        grid-template-columns: 1fr !important;
+
+        gap: 10px !important;
+    }
+
+    .stat-card,
+    .statistics-card,
+    .card {
+        width: 100% !important;
+
+        min-width: 0 !important;
+
+        padding: 14px !important;
+    }
+}
+
+
+/*VERY SMALL */
+
+@media (max-width: 400px) {
+
+    .dashboard-container {
+        padding: 6px !important;
+    }
+
+    .stats-grid,
+    .statistics-grid,
+    .cards-grid,
+    .dashboard-grid {
+        gap: 8px !important;
+    }
+
+    .stat-card,
+    .statistics-card,
+    .card {
+        padding: 12px !important;
+    }
+}
+/*RESPONSIVE CONTENT CONTAINER*/
+
+@media (max-width: 1100px) {
+
+    .main-content {
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+
+    .main-content > *,
+    .cards,
+    .chart-card,
+    .alerts,
+    .medicine-list,
+    .add-new-card,
+    .top-bar {
+        width: 100%;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        box-sizing: border-box;
+    }
+}
+/*TABLET*/
+
+@media (max-width: 768px) {
+
+    .dashboard-container {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    .main-content {
+        width: 100%;
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 0 8px;
+        box-sizing: border-box;
+    }
+
+    .cards,
+    .chart-card,
+    .alerts,
+    .medicine-list,
+    .add-new-card,
+    .top-bar {
+        width: 100%;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+
+/*MOBILE */
+
+@media (max-width: 600px) {
+
+    .dashboard-container {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+
+    .main-content {
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+        padding: 0 8px;
+        box-sizing: border-box;
+    }
+
+    .cards,
+    .chart-card,
+    .alerts,
+    .medicine-list,
+    .add-new-card,
+    .top-bar {
+        width: 100%;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .card,
+    .medicine-card,
+    .alert-item {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+
+/* VERY SMALL PHONES */
+
+@media (max-width: 400px) {
+    .dashboard-container {
+        padding: 6px;
+    }
+
+    .main-content {
+        max-width: 380px;
+        padding: 0 6px;
+        margin: 0 auto;
+    }
+
+    .cards,
+    .chart-card,
+    .alerts,
+    .medicine-list,
+    .add-new-card,
+    .top-bar {
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* ==========================================================================
+   UNIFIED MASTER RESPONSIVE OVERRIDES FOR PHARMACIST DASHBOARDS
+   ========================================================================== */
+
+@media (min-width: 992px) {
+    .dashboard-container {
+        padding-top: 95px !important;
+    }
+}
+
+@media (max-width: 991px) {
+    body {
+        padding-top: 65px;
+    }
+
+    .dashboard-container {
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 16px 12px 30px !important;
+        gap: 16px !important;
+        width: 100% !important;
+    }
+
+    .sidebar {
+        position: static !important;
+        width: 100% !important;
+        min-height: auto !important;
+        height: auto !important;
+        padding: 12px 10px !important;
+        border-radius: 16px !important;
+    }
+
+    .pharmacy-info {
+        display: none !important;
+    }
+
+    .sidebar nav {
+        flex-direction: row !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        gap: 8px !important;
+        scrollbar-width: none !important;
+        padding-bottom: 2px !important;
+    }
+
+    .sidebar nav::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .sidebar nav a {
+        padding: 8px 14px !important;
+        border-radius: 12px !important;
+        font-size: 13px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .cards {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .cards {
+        grid-template-columns: 1fr !important;
+    }
+}

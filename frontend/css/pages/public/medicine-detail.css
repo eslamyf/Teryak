@@ -1,0 +1,297 @@
+/* ==========================================================================
+   Teryak Platform - Medicine Details Page Styles
+   ========================================================================== */
+
+body {
+  background-color: #f8fafc;
+  padding-top: 75px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #1e293b;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 15px 60px;
+  direction: rtl;
+}
+
+/* ---------------- Top Section ---------------- */
+.top {
+  margin-bottom: 28px;
+}
+
+.top .font {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.top .grey {
+  font-size: 15px;
+  color: #64748b;
+  margin: 0;
+}
+
+.top .grey b {
+  color: var(--primary-color, #008b5e);
+}
+
+/* ---------------- Main Layout ---------------- */
+.d-flexMain {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+.mainDIV {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.parg2 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+/* Pharmacy Cards */
+.DIV1, .DIV2, .DIV3 {
+  width: 100%;
+}
+
+.DIV {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1.5px solid #e2e8f0;
+  padding: 22px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
+}
+
+.DIV:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+}
+
+.d-flex1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.d-flex1 .parg {
+  font-size: 19px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.available {
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin: 0;
+}
+
+.limited {
+  background: rgba(245, 158, 11, 0.12);
+  color: #d97706;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin: 0;
+}
+
+.unAvailable {
+  background: rgba(239, 68, 68, 0.12);
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin: 0;
+}
+
+.mtop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.mtop p {
+  margin: 0;
+  font-size: 14px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pLeft {
+  margin-left: 10px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.line {
+  width: 100%;
+  height: 1px;
+  background-color: #f1f5f9;
+  margin: 14px 0 16px;
+}
+
+.d-flex2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.d-flex2 .parg {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 2px 0 0;
+}
+
+.d-flex2 small.grey,
+.d-flex2 span.grey {
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.d-flex2 .btn {
+  background: var(--primary-color, #008b5e);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 9px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.d-flex2 .btn:hover {
+  background: var(--primary-hover, #059669);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+#BTN2 {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+#BTN2:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+#DONE, #DONE2 {
+  margin-top: 14px;
+  background: #dcfce7;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  padding: 12px 16px;
+  border-radius: 10px;
+}
+
+#DONE .bold, #DONE2 .bold {
+  color: #15803d;
+  font-size: 14px;
+}
+
+.hide {
+  display: none;
+}
+
+/* ---------------- Alternatives Sidebar ---------------- */
+.left .firstDiv {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1.5px solid #e2e8f0;
+  padding: 22px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  position: sticky;
+  top: 95px;
+}
+
+.left .firstDiv .parg {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.replace {
+  width: 100%;
+  padding: 9px;
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+
+.replace:hover {
+  background: var(--primary-color, #008b5e);
+  color: #ffffff;
+  border-color: var(--primary-color, #008b5e);
+}
+
+.hiddenDiv > div {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  transition: all 0.2s;
+}
+
+.hiddenDiv > div:hover {
+  border-color: var(--primary-color, #008b5e);
+  background: #ffffff;
+}
+
+.hiddenDiv > div p {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.hiddenDiv2 {
+  display: none;
+}
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 991px) {
+  .d-flexMain {
+    grid-template-columns: 1fr;
+  }
+
+  .left .firstDiv {
+    position: static;
+  }
+}
