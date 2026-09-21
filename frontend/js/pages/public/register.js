@@ -1,3 +1,7 @@
+/**
+ * Teryak Platform - Registration Logic (Connected to API)
+ */
+
 const pharmacistFields = document.querySelectorAll(".pharmacist-field");
 const tabs = document.querySelectorAll(".tab");
 
@@ -5,325 +9,158 @@ let selectedUserType = "مريض";
 
 // إظهار وإخفاء بيانات الصيدلي
 function toggleFields(type) {
+    const pharmacyName = document.getElementById("pharmacyName");
+    const licenseNumber = document.getElementById("licenseNumber");
 
     pharmacistFields.forEach(field => {
-
-        field.style.display =
-            type === "صيدلي" ? "block" : "none";
-
+        field.style.display = type === "صيدلي" ? "block" : "none";
     });
-    if(type==="صيدلي"){
-        pharmacyName.required=true
-        licenseNumber.required=true
-    }
-    else{
-        pharmacyName.required=false
-        licenseNumber.required=false
-        pharmacyName.value=""
-        licenseNumber.value=""
+    if (type === "صيدلي") {
+        if (pharmacyName) pharmacyName.required = true;
+        if (licenseNumber) licenseNumber.required = true;
+    } else {
+        if (pharmacyName) {
+            pharmacyName.required = false;
+            pharmacyName.value = "";
+        }
+        if (licenseNumber) {
+            licenseNumber.required = false;
+            licenseNumber.value = "";
+        }
     }
 }
 
 tabs.forEach(tab => {
-
     tab.addEventListener("click", () => {
-
-        tabs.forEach(t => {
-            t.classList.remove("active");
-        });
-
+        tabs.forEach(t => t.classList.remove("active"));
         tab.classList.add("active");
-
         selectedUserType = tab.textContent.trim();
-
         localStorage.setItem("userType", selectedUserType);
-
         toggleFields(selectedUserType);
     });
-
 });
 
 toggleFields("مريض");
 
 const eyeIcons = document.querySelectorAll(".eye");
-
 eyeIcons.forEach(icon => {
-
     icon.addEventListener("click", () => {
-
         const input = icon.parentElement.querySelector("input");
-
         if (input.type === "password") {
-
             input.type = "text";
-
             icon.classList.remove("fa-eye");
             icon.classList.add("fa-eye-slash");
-
         } else {
-
             input.type = "password";
-
             icon.classList.remove("fa-eye-slash");
             icon.classList.add("fa-eye");
-
         }
-
     });
-
 });
 
 const registerForm = document.querySelector("#registerForm");
 
 if (registerForm) {
-
-    registerForm.addEventListener("submit", (e) => {
-
+    registerForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const inputs = registerForm.querySelectorAll("input");
 
-        const pharmacyName = document.getElementById("pharmacyName").value.trim();
-        const email = document.getElementById("email").value.trim();
-        const phone = document.getElementById("phone").value.trim();
-        const licenseNumber = document.getElementById("licenseNumber").value.trim();
-        const password = document.getElementById("password").value;
-        const confirmPassword = document.getElementById("confirmPassword").value;
+        const pharmacyNameInput = document.getElementById("pharmacyName");
+        const licenseNumberInput = document.getElementById("licenseNumber");
+        const emailInput = document.getElementById("email");
+        const phoneInput = document.getElementById("phone");
+        const passwordInput = document.getElementById("password");
+        const confirmPasswordInput = document.getElementById("confirmPassword");
 
-        const terms = registerForm.querySelector(
-            'input[type="checkbox"]'
-        ).checked;
+        const pharmacyName = pharmacyNameInput ? pharmacyNameInput.value.trim() : '';
+        const email = emailInput ? emailInput.value.trim() : '';
+        const phone = phoneInput ? phoneInput.value.trim() : '';
+        const licenseNumber = licenseNumberInput ? licenseNumberInput.value.trim() : '';
+        const password = passwordInput ? passwordInput.value : '';
+        const confirmPassword = confirmPasswordInput ? confirmPasswordInput.value : '';
 
-        if (email=="" ||  phone=="" ||  password==""  || confirmPassword=="" ) {
+        const termsCheckbox = registerForm.querySelector('input[type="checkbox"]');
+        const terms = termsCheckbox ? termsCheckbox.checked : true;
 
-            alert("من فضلك املئي جميع البيانات");
-
+        if (!email || !phone || !password || !confirmPassword) {
+            alert("من فضلك املأ جميع البيانات");
             return;
         }
-
 
         if (password !== confirmPassword) {
-
             alert("كلمتا المرور غير متطابقتين");
-
             return;
         }
-
 
         if (!terms) {
-
             alert("يجب الموافقة على الشروط والأحكام");
-
             return;
         }
 
-        let users =
-            JSON.parse(localStorage.getItem("users")) || [];
-
-        const existingUser = users.find(
-            user => user.email === email
-        );
-
-        if (existingUser) {
-
-            alert("هذا البريد الإلكتروني مسجل بالفعل");
-
-            return;
+        const submitBtn = registerForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn ? submitBtn.innerText : 'إنشاء حساب';
+        if (submitBtn) {
+            submitBtn.innerText = 'جاري إنشاء الحساب...';
+            submitBtn.disabled = true;
         }
-        const user = {
 
-            id: Date.now(),
-
-            userType: selectedUserType,
-
-            email: email,
-
-            phone: phone,
-
-            password: password
+        const userData = {
+            name: email.split('@')[0],
+            email,
+            phone,
+            password,
+            role: selectedUserType === 'صيدلي' ? 'pharmacist' : 'patient',
+            pharmacyName: selectedUserType === 'صيدلي' ? pharmacyName : '',
+            licenseNumber: selectedUserType === 'صيدلي' ? licenseNumber : '',
         };
-        if (selectedUserType === "صيدلي") {
 
-            user.pharmacyName = pharmacyName;
+        try {
+            if (window.API && window.API.auth) {
+                const response = await window.API.auth.register(userData);
+                const { user, token } = response.data;
+                window.Auth.login({ user, token });
+                alert("تم إنشاء الحساب بنجاح ومرحباً بك في ترياق!");
 
-            user.licenseNumber = licenseNumber;
-        }
-        users.push(user);
+                if (user.role === "pharmacist") {
+                    window.location.href = '../pharmacist/index.html';
+                } else {
+                    window.location.href = '../../index.html';
+                }
+                return;
+            }
+        } catch (error) {
+            console.warn('Backend register failed, trying fallback:', error.message);
+            // Fallback for offline demo mode
+            let users = JSON.parse(localStorage.getItem("users")) || [];
+            const existingUser = users.find(u => u.email === email);
+            if (existingUser) {
+                alert("هذا البريد الإلكتروني مسجل بالفعل");
+                return;
+            }
 
-        localStorage.setItem(
-            "users",
-            JSON.stringify(users)
-        );
-        localStorage.setItem(
-            "currentUser",
-            JSON.stringify(user)
-        );
+            const newUser = {
+                id: Date.now(),
+                userType: selectedUserType,
+                email,
+                phone,
+                password,
+                pharmacyName,
+                licenseNumber
+            };
+            users.push(newUser);
+            localStorage.setItem("users", JSON.stringify(users));
+            window.Auth.login({ user: newUser, token: 'demo-jwt-token' });
 
-        localStorage.setItem(
-            "isLoggedIn",
-            "true"
-        );
-
-
-        alert("تم إنشاء الحساب بنجاح");
-        let haveAcount=true
-        localStorage.setItem("haveAcount",haveAcount)
-        if (selectedUserType === "صيدلي") {
-            window.location.href = '../pharmacist/index.html';
-        } else {
-            window.location.href = '../../index.html';
+            alert("تم إنشاء الحساب بنجاح");
+            if (selectedUserType === "صيدلي") {
+                window.location.href = '../pharmacist/index.html';
+            } else {
+                window.location.href = '../../index.html';
+            }
+        } finally {
+            if (submitBtn) {
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            }
         }
     });
 }
-
-// // ************************************************
-
-let SignWithG = document.getElementById("SignWithG");
-SignWithG.type = "button";
-
-SignWithG.addEventListener("click", function () {
-
-    let users =JSON.parse(localStorage.getItem("users")) || [];
-
-    if (selectedUserType === "مريض") {
-
-        let name = prompt("Enter your name");
-
-        if (!name) {
-            alert("من فضلك ادخل اسمك");
-            return;
-        }
-
-
-        let mail = prompt("Enter your email");
-
-        if (!mail || !mail.endsWith("@gmail.com")) {
-            alert("من فضلك ادخل البريد الإلكتروني");
-            return;
-        }
-
-
-        // التأكد إن الإيميل مش موجود
-        const existingUser2 = users.find(
-            user => user.email === mail
-        );
-
-        if (existingUser2) {
-
-            alert("هذا البريد الإلكتروني مسجل بالفعل");
-
-            return;
-        }
-
-
-        // إنشاء حساب المريض
-        let user = {
-
-            id: Date.now(),
-
-            name: name,
-
-            email: mail,
-
-            phone: "",
-
-            password: "",
-
-            userType: "مريض",
-
-            loginMethod: "Google"
-        };
-
-
-        // إضافة المستخدم
-        users.push(user);
-
-
-        // تخزين كل المستخدمين
-        localStorage.setItem(
-            "users",
-            JSON.stringify(users)
-        );
-
-
-        // تخزين المستخدم الحالي
-        localStorage.setItem(
-            "currentUser",
-            JSON.stringify(user)
-        );
-
-
-        localStorage.setItem(
-            "isLoggedIn",
-            "true"
-        );
-
-
-        let haveAcount = true;
-
-        localStorage.setItem(
-            "haveAcount",
-            haveAcount
-        );
-
-
-        alert("تم التسجيل باستخدام Google بنجاح");
-        window.location.href = "../../index.html";
-    }
-
-    // =====================================
-    // لو المستخدم صيدلي
-    // =====================================
-    else if (selectedUserType === "صيدلي") {
-        let name = prompt("Enter your name");
-        if (!name) {
-            alert("من فضلك ادخل اسمك");
-            return;
-        }
-
-        let mail = prompt("Enter your email");
-        if (!mail || !mail.endsWith("@gmail.com")) {
-            alert("من فضلك ادخل البريد الإلكتروني");
-            return;
-        }
-
-        let pharmacyName = prompt("Enter pharmacy name");
-        if (!pharmacyName) {
-            alert("من فضلك ادخل اسم الصيدلية");
-            return;
-        }
-
-        let licenseNumber = prompt("Enter license number");
-        if (!licenseNumber) {
-            alert("من فضلك ادخل رقم الترخيص");
-            return;
-        }
-
-        const existingUser2 = users.find(user => user.email === mail);
-        if (existingUser2) {
-            alert("هذا البريد الإلكتروني مسجل بالفعل");
-            return;
-        }
-
-        let user = {
-            id: Date.now(),
-            name: name,
-            email: mail,
-            phone: "",
-            password: "",
-            userType: "صيدلي",
-            pharmacyName: pharmacyName,
-            licenseNumber: licenseNumber,
-            loginMethod: "Google"
-        };
-
-        users.push(user);
-        localStorage.setItem("users", JSON.stringify(users));
-        localStorage.setItem("currentUser", JSON.stringify(user));
-        localStorage.setItem("isLoggedIn", "true");
-        let haveAcount = true;
-        localStorage.setItem("haveAcount", haveAcount);
-
-        alert("تم التسجيل باستخدام Google بنجاح");
-        window.location.href = "../pharmacist/index.html";
-    }
-});

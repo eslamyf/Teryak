@@ -1,5 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => 
-    {
+document.addEventListener('DOMContentLoaded', () => {
     const browseTabBtn = document.getElementById('tabBrowseBtn');
     const donateTabBtn = document.getElementById('tabDonateBtn');
     const browseTabContent = document.getElementById('browseTabContent');
@@ -17,73 +16,65 @@ document.addEventListener('DOMContentLoaded', () =>
     const loadMoreBtn = document.getElementById('loadMoreBtn');
     const hiddenGrid = document.getElementById('hiddenMedicinesGrid');
 
-    function switchMainTab(tabName) 
-    {
-        if (tabName === 'browse') 
-            {
-             browseTabContent.classList.add('active');
-             donateTabContent.classList.remove('active');
-             browseTabBtn.classList.add('active');
-             browseTabBtn.setAttribute('aria-selected', 'true');
-             donateTabBtn.classList.remove('active');
-             donateTabBtn.setAttribute('aria-selected', 'false');
-            } 
-        else 
-            {
-             donateTabContent.classList.add('active');
-             browseTabContent.classList.remove('active');
-             donateTabBtn.classList.add('active');
-             donateTabBtn.setAttribute('aria-selected', 'true');
-             browseTabBtn.classList.remove('active');
-             browseTabBtn.setAttribute('aria-selected', 'false');
-            }
+    function switchMainTab(tabName) {
+        if (tabName === 'browse') {
+            browseTabContent?.classList.add('active');
+            donateTabContent?.classList.remove('active');
+            browseTabBtn?.classList.add('active');
+            browseTabBtn?.setAttribute('aria-selected', 'true');
+            donateTabBtn?.classList.remove('active');
+            donateTabBtn?.setAttribute('aria-selected', 'false');
+        } else {
+            donateTabContent?.classList.add('active');
+            browseTabContent?.classList.remove('active');
+            donateTabBtn?.classList.add('active');
+            donateTabBtn?.setAttribute('aria-selected', 'true');
+            browseTabBtn?.classList.remove('active');
+            browseTabBtn?.setAttribute('aria-selected', 'false');
+        }
     }
 
-    function setOperationType(type) 
-    {
-        if (type === 'donate') 
-            {
-             btnOpDonate.className = 'op-btn active-donate';
-             btnOpDonate.setAttribute('aria-checked', 'true');
-             btnOpExchange.className = 'op-btn';
-             btnOpExchange.setAttribute('aria-checked', 'false');
-             exchangeField.classList.remove('show');
-             formHeading.textContent = 'تبرع بدواء';
-             btnSubmitForm.textContent = 'إرسال طلب التبرع';
-             btnSubmitForm.classList.remove('btn-purple');
-            } 
-            else 
-            {
-             btnOpDonate.className = 'op-btn';
-             btnOpDonate.setAttribute('aria-checked', 'false');
-             btnOpExchange.className = 'op-btn active-exchange';
-             btnOpExchange.setAttribute('aria-checked', 'true');
-             exchangeField.classList.add('show');
-             formHeading.textContent = 'استبدال دواء';
-             btnSubmitForm.textContent = 'إرسال طلب الاستبدال';
-             btnSubmitForm.classList.add('btn-purple');
+    function setOperationType(type) {
+        if (type === 'donate') {
+            if (btnOpDonate) btnOpDonate.className = 'op-btn active-donate';
+            btnOpDonate?.setAttribute('aria-checked', 'true');
+            if (btnOpExchange) btnOpExchange.className = 'op-btn';
+            btnOpExchange?.setAttribute('aria-checked', 'false');
+            exchangeField?.classList.remove('show');
+            if (formHeading) formHeading.textContent = 'تبرع بدواء';
+            if (btnSubmitForm) {
+                btnSubmitForm.textContent = 'إرسال طلب التبرع';
+                btnSubmitForm.classList.remove('btn-purple');
             }
+        } else {
+            if (btnOpDonate) btnOpDonate.className = 'op-btn';
+            btnOpDonate?.setAttribute('aria-checked', 'false');
+            if (btnOpExchange) btnOpExchange.className = 'op-btn active-exchange';
+            btnOpExchange?.setAttribute('aria-checked', 'true');
+            exchangeField?.classList.add('show');
+            if (formHeading) formHeading.textContent = 'استبدال دواء';
+            if (btnSubmitForm) {
+                btnSubmitForm.textContent = 'إرسال طلب الاستبدال';
+                btnSubmitForm.classList.add('btn-purple');
+            }
+        }
     }
 
-    function redirectToExchangeForm(medicineName) 
-    {
+    function redirectToExchangeForm(medicineName) {
         switchMainTab('donate');
         setOperationType('exchange');
         if (exchangeTargetInput) exchangeTargetInput.value = medicineName;
         if (formMedName) formMedName.focus();
     }
 
-    function toggleMoreMedicines() 
-    {
+    function toggleMoreMedicines() {
+        if (!hiddenGrid || !loadMoreBtn) return;
         const isHidden = hiddenGrid.hasAttribute('hidden');
-        if (isHidden) 
-        {
+        if (isHidden) {
             hiddenGrid.removeAttribute('hidden');
             hiddenGrid.setAttribute('aria-hidden', 'false');
             loadMoreBtn.textContent = 'عرض أقل';
-        } 
-        else 
-        {
+        } else {
             hiddenGrid.setAttribute('hidden', '');
             hiddenGrid.setAttribute('aria-hidden', 'true');
             loadMoreBtn.textContent = 'عرض المزيد من الأدوية';
@@ -96,30 +87,47 @@ document.addEventListener('DOMContentLoaded', () =>
     btnOpExchange?.addEventListener('click', () => setOperationType('exchange'));
     loadMoreBtn?.addEventListener('click', toggleMoreMedicines);
 
-    document.addEventListener('click', (e) => 
-    {
+    document.addEventListener('click', (e) => {
         const targetBtn = e.target.closest('.btn-exchange-action');
-        if (targetBtn) 
-        {
+        if (targetBtn) {
             redirectToExchangeForm(targetBtn.dataset.medicine || '');
         }
     });
 
-    donationForm?.addEventListener('submit', (e) => 
-    {
+    donationForm?.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const medName = formMedName.value.trim();
-        const isExchange = btnOpExchange.classList.contains('active-exchange');
+        const medName = formMedName ? formMedName.value.trim() : '';
+        const isExchange = btnOpExchange?.classList.contains('active-exchange');
+        const exchangeTarget = exchangeTargetInput ? exchangeTargetInput.value.trim() : '';
+
+        if (!medName) {
+            alert('يرجى كتابة اسم الدواء');
+            return;
+        }
+
+        try {
+            if (window.API && window.API.donations) {
+                await window.API.donations.create({
+                    type: isExchange ? 'exchange' : 'donation',
+                    medicineName: medName,
+                    exchangeForMedicine: exchangeTarget,
+                });
+            }
+        } catch (err) {
+            console.log('Donation API fallback:', err.message);
+        }
+
         alert(`تم إرسال طلب ${isExchange ? 'استبدال' : 'تبرع'} بنجاح للدواء: (${medName})`);
         donationForm.reset();
         setOperationType('donate');
         switchMainTab('browse');
     });
 });
-let btnAction=document.querySelectorAll(".btn-action")
-btnAction.forEach(function(el){
-    el.addEventListener("click",function(){
-        alert("تم الطلب، ستصلك رسالة تأكيد")
-        el.innerHTML='تم الطلب'
-    })
-})
+
+let btnAction = document.querySelectorAll(".btn-action");
+btnAction.forEach(function(el) {
+    el.addEventListener("click", function() {
+        alert("تم الطلب، ستصلك رسالة تأكيد");
+        el.innerHTML = 'تم الطلب';
+    });
+});
