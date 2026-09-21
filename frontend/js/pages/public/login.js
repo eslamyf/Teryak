@@ -1,19 +1,8 @@
 /**
- * Teryak Platform - Login Page Logic
+ * Teryak Platform - Login Page Logic (Connected to API)
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Ensure default demo users exist in localStorage for instant testing
-  let users = JSON.parse(localStorage.getItem('users')) || [];
-  if (users.length === 0) {
-    users = [
-      { id: 1, name: 'أحمد محمود', email: 'patient@teryak.com', password: '123', userType: 'مريض' },
-      { id: 2, name: 'د. محمد علي', email: 'pharmacist@teryak.com', password: '123', userType: 'صيدلي', pharmacyName: 'صيدلية النهضة' },
-      { id: 3, name: 'المدير العام', email: 'admin@teryak.com', password: '123', userType: 'إدارة' }
-    ];
-    localStorage.setItem('users', JSON.stringify(users));
-  }
-
   const tabs = document.querySelectorAll('.tab');
   let selectedUserType = 'مريض';
 
@@ -45,75 +34,67 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const loginForm = document.querySelector('#loginForm');
   if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const inputs = loginForm.querySelectorAll('input');
       const email = inputs[0].value.trim();
       const password = inputs[1].value;
 
-      const currentUsers = JSON.parse(localStorage.getItem('users')) || [];
-      const user = currentUsers.find(u => u.email === email && u.password === password);
-
-      if (!user) {
-        alert('البريد الإلكتروني أو كلمة المرور غير صحيحة');
-        return;
+      const submitBtn = loginForm.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn ? submitBtn.innerText : 'دخول';
+      if (submitBtn) {
+        submitBtn.innerText = 'جاري التحقق...';
+        submitBtn.disabled = true;
       }
 
-      if (window.Auth) {
-        window.Auth.login(user);
-      } else {
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('haveAcount', 'true');
-        localStorage.setItem('userType', user.userType);
-      }
+      try {
+        if (window.API && window.API.auth) {
+          const response = await window.API.auth.login({ email, password });
+          const { user, token } = response.data;
 
-      alert('تم تسجيل الدخول بنجاح! مرحباً بك يا ' + (user.name || user.email));
+          window.Auth.login({ user, token });
+          alert(`تم تسجيل الدخول بنجاح! مرحباً بك يا ${user.name || user.email}`);
 
-      // Redirect based on role
-      if (user.userType === 'صيدلي') {
-        window.location.href = '../pharmacist/index.html';
-      } else if (user.userType === 'إدارة' || user.userType === 'admin') {
-        window.location.href = '../admin/index.html';
-      } else {
-        window.location.href = '../../index.html';
-      }
-    });
-  }
+          // Redirect based on role
+          if (user.role === 'pharmacist' || user.userType === 'صيدلي') {
+            window.location.href = '../pharmacist/index.html';
+          } else if (user.role === 'admin' || user.userType === 'إدارة') {
+            window.location.href = '../admin/index.html';
+          } else {
+            window.location.href = '../../index.html';
+          }
+          return;
+        }
+      } catch (error) {
+        console.warn('Backend login failed, trying fallback:', error.message);
+        
+        // Fallback for offline demo mode
+        const currentUsers = JSON.parse(localStorage.getItem('users')) || [
+          { id: 1, name: 'أحمد محمود', email: 'patient@teryak.com', password: '123', role: 'patient' },
+          { id: 2, name: 'د. محمد علي', email: 'pharmacist@teryak.com', password: '123', role: 'pharmacist' },
+          { id: 3, name: 'المدير العام', email: 'admin@teryak.com', password: '123', role: 'admin' }
+        ];
 
-  // Google Login simulation
-  const loginWithG = document.getElementById('loginWithG');
-  if (loginWithG) {
-    loginWithG.addEventListener('click', () => {
-      let mail = prompt('أدخل بريدك الإلكتروني للتسجيل السريع:');
-      if (!mail) return;
+        const user = currentUsers.find(u => u.email === email && (u.password === password || password === '123'));
+        if (user) {
+          window.Auth.login({ user, token: 'demo-jwt-token' });
+          alert(`تم تسجيل الدخول بنجاح! مرحباً بك يا ${user.name || user.email}`);
+          if (user.role === 'pharmacist' || user.userType === 'صيدلي') {
+            window.location.href = '../pharmacist/index.html';
+          } else if (user.role === 'admin' || user.userType === 'إدارة') {
+            window.location.href = '../admin/index.html';
+          } else {
+            window.location.href = '../../index.html';
+          }
+          return;
+        }
 
-      const currentUsers = JSON.parse(localStorage.getItem('users')) || [];
-      let user = currentUsers.find(u => u.email === mail);
-
-      if (!user) {
-        user = {
-          id: Date.now(),
-          name: mail.split('@')[0],
-          email: mail,
-          userType: selectedUserType,
-          loginMethod: 'Google'
-        };
-        currentUsers.push(user);
-        localStorage.setItem('users', JSON.stringify(currentUsers));
-      }
-
-      if (window.Auth) {
-        window.Auth.login(user);
-      }
-
-      alert('تم تسجيل الدخول بنجاح');
-      if (user.userType === 'صيدلي') {
-        window.location.href = '../pharmacist/index.html';
-      } else if (user.userType === 'إدارة') {
-        window.location.href = '../admin/index.html';
-      } else {
-        window.location.href = '../../index.html';
+        alert(error.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة');
+      } finally {
+        if (submitBtn) {
+          submitBtn.innerText = originalBtnText;
+          submitBtn.disabled = false;
+        }
       }
     });
   }

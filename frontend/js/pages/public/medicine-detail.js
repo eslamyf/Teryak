@@ -1,8 +1,8 @@
 /**
- * Teryak Platform - Medicine Details Logic
+ * Teryak Platform - Medicine Details Logic (Connected to Backend API)
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const params = new URLSearchParams(window.location.search);
   const medKey = (params.get('med') || 'paracetamol').toLowerCase();
 
@@ -65,7 +65,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  const medData = medDatabase[medKey] || medDatabase.paracetamol;
+  let medData = medDatabase[medKey] || medDatabase.paracetamol;
+
+  // Try fetching live data from API
+  if (window.API && window.API.medicines) {
+    try {
+      const response = await window.API.medicines.getById(medKey);
+      if (response && response.data && response.data.medicine) {
+        const m = response.data.medicine;
+        medData = {
+          title: `نتائج البحث عن: ${m.nameAr}`,
+          activeIng: `${m.activeIngredient} (${m.concentration || ''})`,
+          price: `${m.price.toFixed(2)} ج.م`,
+          alternatives: (response.data.alternatives || []).map(alt => ({
+            name: alt.nameAr || alt.nameEn,
+            ing: alt.activeIngredient,
+            price: `${alt.price} ج.م`,
+            count: 'عدة صيدليات'
+          }))
+        };
+      }
+    } catch (e) {
+      console.log('API detail load fallback to local presets:', e.message);
+    }
+  }
 
   const titleEl = document.getElementById('medicineDetailTitle');
   const activeIngEl = document.getElementById('medicineActiveIng');
@@ -77,16 +100,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Populate Alternatives
   const altContainer = document.getElementById('hiddenDiv2');
-  if (altContainer && medData.alternatives) {
+  if (altContainer && medData.alternatives && medData.alternatives.length > 0) {
     let altHtml = '';
     medData.alternatives.forEach(alt => {
       altHtml += `
-        <div>
-          <p>${alt.name}</p>
+        <div style="padding: 10px; border-bottom: 1px solid #eee;">
+          <p style="font-weight: bold; margin-bottom: 4px;">${alt.name}</p>
           <small style="color: gray;">${alt.ing}</small>
-          <p class="d-flex justify-content-between">
-            <small style="font-weight: 400;">${alt.price}</small>
-            <small style="color: #008b5e; font-weight: 400;">متوفر في ${alt.count}</small>
+          <p class="d-flex justify-content-between mt-1">
+            <small style="font-weight: 500; color: #333;">${alt.price}</small>
+            <small style="color: #008b5e; font-weight: 500;">متوفر في ${alt.count}</small>
           </p>
         </div>
       `;
@@ -99,9 +122,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const doneEl = document.getElementById('DONE');
   if (btnShow && doneEl) {
     btnShow.addEventListener('click', () => {
-      alert('تم حجز الدواء بنجاح! سيتم إرسال رسالة تأكيد.');
-      doneEl.classList.remove('hide');
-      doneEl.style.display = 'block';
+      btnShow.style.display = 'none';
+      doneEl.style.display = 'inline-block';
+      alert('تم حجز الدواء بنجاح في صيدلية النهضة! ستصلك رسالة تأكيد.');
     });
   }
 
@@ -109,34 +132,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const doneEl2 = document.getElementById('DONE2');
   if (btnShow2 && doneEl2) {
     btnShow2.addEventListener('click', () => {
-      alert('تم حجز الدواء بنجاح! سيتم إرسال رسالة تأكيد.');
-      doneEl2.classList.remove('hide');
-      doneEl2.style.display = 'block';
+      btnShow2.style.display = 'none';
+      doneEl2.style.display = 'inline-block';
+      alert('تم حجز الدواء بنجاح في صيدلية الشفاء! ستصلك رسالة تأكيد.');
     });
   }
 
-  // Notification button
-  const btnNotify = document.getElementById('BTN2');
-  if (btnNotify) {
-    btnNotify.addEventListener('click', () => {
-      btnNotify.innerHTML = '<i class="bi bi-bell" style="margin-left: 5px;"></i> تم تفعيل الإشعارات';
-      btnNotify.style.backgroundColor = '#059669';
-      btnNotify.style.color = 'white';
-      alert('سيتم إشعارك فور توفر الدواء');
-    });
-  }
-
-  // Toggle Alternatives
-  const toggleAltBtn = document.getElementById('showHiddenDiv');
-  if (toggleAltBtn && altContainer) {
-    toggleAltBtn.addEventListener('click', () => {
-      if (altContainer.classList.contains('hiddenDiv2')) {
-        altContainer.classList.remove('hiddenDiv2');
-        toggleAltBtn.textContent = 'إخفاء البدائل';
-      } else {
-        altContainer.classList.add('hiddenDiv2');
-        toggleAltBtn.textContent = 'عرض البدائل';
-      }
+  const btnShow3 = document.getElementById('show3');
+  const doneEl3 = document.getElementById('DONE3');
+  if (btnShow3 && doneEl3) {
+    btnShow3.addEventListener('click', () => {
+      btnShow3.style.display = 'none';
+      doneEl3.style.display = 'inline-block';
+      alert('تم حجز الدواء بنجاح في صيدلية الحياة! ستصلك رسالة تأكيد.');
     });
   }
 });

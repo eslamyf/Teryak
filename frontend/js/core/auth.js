@@ -12,35 +12,44 @@ const Auth = {
     }
   },
 
+  getToken: function() {
+    return localStorage.getItem('token') || '';
+  },
+
   isLoggedIn: function() {
-    return localStorage.getItem('isLoggedIn') === 'true' || localStorage.getItem('haveAcount') === 'true';
+    return Boolean(this.getToken()) || localStorage.getItem('isLoggedIn') === 'true';
   },
 
   getUserType: function() {
     const user = this.getCurrentUser();
-    return user ? user.userType : (localStorage.getItem('userType') || null);
+    return user ? (user.role || user.userType) : (localStorage.getItem('userType') || null);
   },
 
-  login: function(userData) {
-    localStorage.setItem('currentUser', JSON.stringify(userData));
+  login: function(authData) {
+    const user = authData.user || authData;
+    const token = authData.token || '';
+
+    localStorage.setItem('currentUser', JSON.stringify(user));
     localStorage.setItem('isLoggedIn', 'true');
     localStorage.setItem('haveAcount', 'true');
-    if (userData.userType) {
-      localStorage.setItem('userType', userData.userType);
+
+    if (token) {
+      localStorage.setItem('token', token);
     }
-    window.dispatchEvent(new CustomEvent('teryak:auth-change', { detail: { user: userData, isLoggedIn: true } }));
+
+    const role = user.role || user.userType || 'patient';
+    localStorage.setItem('userType', role);
+
+    window.dispatchEvent(new CustomEvent('teryak:auth-change', { detail: { user, isLoggedIn: true } }));
   },
 
   logout: function(redirectUrl) {
-    const currentUser = this.getCurrentUser();
-    let users = JSON.parse(localStorage.getItem('users')) || [];
-    
-    // Clean current session flags
     localStorage.removeItem('currentUser');
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('haveAcount');
     localStorage.removeItem('account');
     localStorage.removeItem('userType');
+    localStorage.removeItem('token');
     
     window.dispatchEvent(new CustomEvent('teryak:auth-change', { detail: { user: null, isLoggedIn: false } }));
     
@@ -58,7 +67,15 @@ const Auth = {
     
     if (allowedRoles.length > 0) {
       const userType = this.getUserType();
-      if (!allowedRoles.includes(userType)) {
+      const normalizedUserType = (userType === 'صيدلي' ? 'pharmacist' : (userType === 'إدارة' ? 'admin' : userType));
+      
+      const isAllowed = allowedRoles.some(role => {
+        return role === userType || role === normalizedUserType || 
+               (role === 'pharmacist' && userType === 'صيدلي') ||
+               (role === 'admin' && userType === 'إدارة');
+      });
+
+      if (!isAllowed) {
         alert('غير مصرح لك بالدخول إلى هذه الصفحة');
         window.location.href = fallbackUrl || '/frontend/index.html';
         return false;
