@@ -458,3 +458,13 @@ body {
     font-size: 18px;
   }
 }
+
+@media (max-width: 360px) {
+  .sectionOne .content h1 {
+    font-size: 20px;
+  }
+  .sectionThree .DIVS .DIV {
+    flex: 1 1 100%;
+  }
+}
+

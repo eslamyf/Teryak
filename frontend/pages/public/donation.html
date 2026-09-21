@@ -7,8 +7,9 @@
 
   <!-- Vendor CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
 
   <!-- Base & Component CSS -->
   <link rel="stylesheet" href="../../css/base/variables.css">
@@ -28,17 +29,17 @@
   <div class="con pt-5">
     <div class="app-container">
       <header class="main-header">
-        <div class="header-icon" aria-hidden="true">💜</div>
+        <div class="header-icon" aria-hidden="true" style="display:flex; align-items:center; justify-content:center; background:#8b5cf6; border-radius:50%; width:60px; height:60px; margin:0 auto 15px;"><i class="fa-solid fa-hand-holding-heart text-white fs-3"></i></div>
         <h1 class="header-title">التبرع والاستبدال</h1>
         <p class="header-subtitle">ساعد الآخرين من خلال التبرع بالأدوية غير المستخدمة أو استبدالها بأدوية تحتاجها</p>
       </header>
 
       <nav class="tabs-nav" aria-label="أقسام المنصة الرئيسية">
         <button type="button" class="nav-tab active" id="tabBrowseBtn" data-tab="browse" role="tab" aria-selected="true" aria-controls="browseTabContent">
-          🔍 تصفح الأدوية المتاحة
+          <i class="fa-solid fa-magnifying-glass me-2"></i> تصفح الأدوية المتاحة
         </button>
         <button type="button" class="nav-tab" id="tabDonateBtn" data-tab="donate" role="tab" aria-selected="false" aria-controls="donateTabContent">
-          💜 تبرع بدواء
+          <i class="fa-solid fa-hand-holding-heart me-2"></i> تبرع بدواء
         </button>
       </nav>
 
@@ -47,7 +48,7 @@
         <section id="browseTabContent" class="tab-panel active" role="tabpanel" aria-labelledby="tabBrowseBtn">
           <div class="cards-grid" id="mainMedicinesGrid">
             <article class="medicine-card">
-              <span class="card-badge badge-donation">📦 تبرع</span>
+              <span class="card-badge badge-donation"><i class="fa-solid fa-gift me-1"></i> تبرع</span>
               <div class="med-header">
                 <h2 class="med-name">أوميجا 3</h2>
                 <p class="med-scientific">زيت السمك 1000 مجم</p>
@@ -59,22 +60,22 @@
                 </div>
                 <div class="info-row">
                   <span class="info-label">تاريخ الانتهاء</span>
-                  <span class="info-value"><time datetime="2026-08-10">2026-08-10</time> 📅</span>
+                  <span class="info-value"><time datetime="2026-08-10">2026-08-10</time> <i class="fa-solid fa-calendar-days ms-1"></i></span>
                 </div>
                 <hr class="divider">
                 <div class="med-meta">
-                  <div class="location">📍 الزمالك، القاهرة</div>
+                  <div class="location"><i class="fa-solid fa-location-dot text-danger me-1"></i> الزمالك، القاهرة</div>
                   <div class="donor-info">
                     <span>من: أحمد حسن</span>
                     <span>منذ 3 أيام</span>
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn-action" onclick="alert('تم إرسال طلب استلام الدواء بنجاح!')">اطلب الآن</button>
+              <button type="button" class="btn-action btn-request-item" data-type="donation" data-name="أوجمنتين 1 جم">اطلب الآن</button>
             </article>
 
             <article class="medicine-card">
-              <span class="card-badge badge-donation">📦 تبرع</span>
+              <span class="card-badge badge-donation"><i class="fa-solid fa-gift me-1"></i> تبرع</span>
               <div class="med-header">
                 <h2 class="med-name">بانادول إكسترا</h2>
                 <p class="med-scientific">باراسيتامول + كافيين</p>
@@ -86,22 +87,22 @@
                 </div>
                 <div class="info-row">
                   <span class="info-label">تاريخ الانتهاء</span>
-                  <span class="info-value"><time datetime="2026-11-15">2026-11-15</time> 📅</span>
+                  <span class="info-value"><time datetime="2026-11-15">2026-11-15</time> <i class="fa-solid fa-calendar-days ms-1"></i></span>
                 </div>
                 <hr class="divider">
                 <div class="med-meta">
-                  <div class="location">📍 المعادي، القاهرة</div>
+                  <div class="location"><i class="fa-solid fa-location-dot text-danger me-1"></i> المعادي، القاهرة</div>
                   <div class="donor-info">
                     <span>من: سارة علي</span>
                     <span>منذ يومين</span>
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn-action" onclick="alert('تم إرسال طلب استلام الدواء بنجاح!')">اطلب الآن</button>
+              <button type="button" class="btn-action btn-request-item" data-type="donation" data-name="بانادول إكسترا">اطلب الآن</button>
             </article>
 
             <article class="medicine-card">
-              <span class="card-badge badge-exchange" style="background:#7c3aed; color:white; padding:4px 8px; border-radius:8px; font-size:12px;">🔄 استبدال</span>
+              <span class="card-badge badge-exchange" style="background:#7c3aed; color:white; padding:4px 8px; border-radius:8px; font-size:12px;"><i class="fa-solid fa-arrow-right-arrow-left me-1"></i> استبدال</span>
               <div class="med-header">
                 <h2 class="med-name">كونجستال أقراص</h2>
                 <p class="med-scientific">علاج أعراض البرد</p>
@@ -113,17 +114,17 @@
                 </div>
                 <div class="info-row">
                   <span class="info-label">تاريخ الانتهاء</span>
-                  <span class="info-value"><time datetime="2026-12-01">2026-12-01</time> 📅</span>
+                  <span class="info-value"><time datetime="2026-12-01">2026-12-01</time> <i class="fa-solid fa-calendar-days ms-1"></i></span>
                 </div>
                 <hr class="divider">
                 <div class="med-meta">
-                  <div class="location">📍 الدقي، الجيزة</div>
+                  <div class="location"><i class="fa-solid fa-location-dot text-danger me-1"></i> الدقي، الجيزة</div>
                   <div class="donor-info">
                     <span>طلب استبدال بـ: فيتامين سي</span>
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn-action" style="background:#7c3aed;" onclick="alert('تم إرسال طلب استبدال الدواء!')">طلب استبدال</button>
+              <button type="button" class="btn-action btn-request-item" style="background:#7c3aed;" data-type="exchange" data-name="كونجستال أقراص">طلب استبدال</button>
             </article>
           </div>
         </section>
@@ -158,10 +159,10 @@
                 <label>نوع العملية</label>
                 <div class="d-flex gap-2">
                   <button type="button" class="op-btn active-donate" id="btnOpDonate" data-op="donate" role="radio" aria-checked="true">
-                    🎁 تبرع مجاناً
+                    <i class="fa-solid fa-gift me-1"></i> تبرع مجاناً
                   </button>
                   <button type="button" class="op-btn" id="btnOpExchange" data-op="exchange" role="radio" aria-checked="false">
-                    🔄 استبدال
+                    <i class="fa-solid fa-arrow-right-arrow-left me-1"></i> استبدال
                   </button>
                 </div>
               </div>
@@ -205,6 +206,8 @@
 
   <!-- Core & Component Scripts -->
   <script src="../../js/config.js"></script>
+  <script src="../../js/core/toast.js"></script>
+  <script src="../../js/core/validation.js"></script>
   <script src="../../js/core/api.js"></script>
   <script src="../../js/core/auth.js"></script>
   <script src="../../js/core/cart.js"></script>

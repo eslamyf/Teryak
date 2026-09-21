@@ -1,4 +1,18 @@
 const mongoose = require('mongoose');
+const dns = require('dns');
+const path = require('path');
+const dotenv = require('dotenv');
+
+// Load environment variables if not already loaded
+dotenv.config({ path: path.join(__dirname, '../.env') });
+dotenv.config();
+
+// Configure public DNS servers for resolving MongoDB Atlas SRV records reliably
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1', '8.8.4.4']);
+} catch (e) {
+  // Ignore if unable to set DNS servers in certain environments
+}
 
 let cachedConnection = null;
 

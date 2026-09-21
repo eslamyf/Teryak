@@ -1,5 +1,6 @@
 /**
  * Teryak Platform - Login Page Logic (Connected to API)
+ * Integrated with Form Validation & Side-Sliding Toast Notifications
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -34,16 +35,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const loginForm = document.querySelector('#loginForm');
   if (loginForm) {
+    const emailInput = loginForm.querySelector('input[type="email"], input[name="email"], input:first-of-type');
+    const passwordInput = loginForm.querySelector('input[type="password"]');
+
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const inputs = loginForm.querySelectorAll('input');
-      const email = inputs[0].value.trim();
-      const password = inputs[1].value;
+      const email = emailInput ? emailInput.value.trim() : '';
+      const password = passwordInput ? passwordInput.value : '';
+
+      if (!email) {
+        if (window.TeryakValidator) window.TeryakValidator.setError(emailInput, 'يرجى إدخال البريد الإلكتروني');
+        if (window.Toast) window.Toast.warning('يرجى إدخال بريدك الإلكتروني المسجل', 'حقل مطلوب');
+        emailInput?.focus();
+        return;
+      }
+
+      if (!password) {
+        if (window.TeryakValidator) window.TeryakValidator.setError(passwordInput, 'يرجى إدخال كلمة المرور');
+        if (window.Toast) window.Toast.warning('يرجى إدخال كلمة المرور للمتابعة', 'حقل مطلوب');
+        passwordInput?.focus();
+        return;
+      }
 
       const submitBtn = loginForm.querySelector('button[type="submit"]');
-      const originalBtnText = submitBtn ? submitBtn.innerText : 'دخول';
+      const originalBtnHtml = submitBtn ? submitBtn.innerHTML : 'دخول';
       if (submitBtn) {
-        submitBtn.innerText = 'جاري التحقق...';
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> جاري التحقق...';
         submitBtn.disabled = true;
       }
 
@@ -52,17 +69,34 @@ document.addEventListener('DOMContentLoaded', () => {
           const response = await window.API.auth.login({ email, password });
           const { user, token } = response.data;
 
-          window.Auth.login({ user, token });
-          alert(`تم تسجيل الدخول بنجاح! مرحباً بك يا ${user.name || user.email}`);
-
-          // Redirect based on role
-          if (user.role === 'pharmacist' || user.userType === 'صيدلي') {
-            window.location.href = '../pharmacist/index.html';
-          } else if (user.role === 'admin' || user.userType === 'إدارة') {
-            window.location.href = '../admin/index.html';
-          } else {
-            window.location.href = '../../index.html';
+          if (window.Auth) window.Auth.login({ user, token });
+          
+          if (window.Toast) {
+            window.Toast.success(
+              `مرحباً بك مجدداً يا ${user.name || user.email}!`,
+              'تم تسجيل الدخول بنجاح',
+              2500
+            );
           }
+
+          setTimeout(() => {
+            // Check for redirect param
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectTarget = urlParams.get('redirect');
+            if (redirectTarget) {
+              window.location.href = redirectTarget;
+              return;
+            }
+
+            // Redirect based on role
+            if (user.role === 'pharmacist' || user.userType === 'صيدلي') {
+              window.location.href = '../pharmacist/index.html';
+            } else if (user.role === 'admin' || user.userType === 'إدارة') {
+              window.location.href = '../admin/index.html';
+            } else {
+              window.location.href = '../../index.html';
+            }
+          }, 800);
           return;
         }
       } catch (error) {
@@ -75,24 +109,40 @@ document.addEventListener('DOMContentLoaded', () => {
           { id: 3, name: 'المدير العام', email: 'admin@teryak.com', password: '123', role: 'admin' }
         ];
 
-        const user = currentUsers.find(u => u.email === email && (u.password === password || password === '123'));
+        const user = currentUsers.find(u => u.email.toLowerCase() === email.toLowerCase() && (u.password === password || password === '123'));
         if (user) {
-          window.Auth.login({ user, token: 'demo-jwt-token' });
-          alert(`تم تسجيل الدخول بنجاح! مرحباً بك يا ${user.name || user.email}`);
-          if (user.role === 'pharmacist' || user.userType === 'صيدلي') {
-            window.location.href = '../pharmacist/index.html';
-          } else if (user.role === 'admin' || user.userType === 'إدارة') {
-            window.location.href = '../admin/index.html';
-          } else {
-            window.location.href = '../../index.html';
+          if (window.Auth) window.Auth.login({ user, token: 'demo-jwt-token' });
+          if (window.Toast) {
+            window.Toast.success(`مرحباً بك يا ${user.name || user.email}`, 'تم تسجيل الدخول');
           }
+          setTimeout(() => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectTarget = urlParams.get('redirect');
+            if (redirectTarget) {
+              window.location.href = redirectTarget;
+              return;
+            }
+
+            if (user.role === 'pharmacist' || user.userType === 'صيدلي') {
+              window.location.href = '../pharmacist/index.html';
+            } else if (user.role === 'admin' || user.userType === 'إدارة') {
+              window.location.href = '../admin/index.html';
+            } else {
+              window.location.href = '../../index.html';
+            }
+          }, 800);
           return;
         }
 
-        alert(error.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة');
+        if (window.Toast) {
+          window.Toast.error(
+            error.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة. يرجى التأكد من صحة البيانات.',
+            'خطأ في تسجيل الدخول'
+          );
+        }
       } finally {
         if (submitBtn) {
-          submitBtn.innerText = originalBtnText;
+          submitBtn.innerHTML = originalBtnHtml;
           submitBtn.disabled = false;
         }
       }

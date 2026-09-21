@@ -1,118 +1,170 @@
 /**
  * Teryak Platform - Payment Step Logic
+ * Integrated with Auth Protection, Cart Synchronization & Payment Validation
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  const credit = document.getElementById('credit');
-  const Visa = document.getElementById('Visa');
-  const Cash = document.getElementById('Cash');
-  const cash = document.getElementById('cash');
+  // 1. Auth Protection Check
+  const isLoggedIn = window.Auth ? window.Auth.isLoggedIn() : Boolean(localStorage.getItem('token') || localStorage.getItem('isLoggedIn') === 'true');
+  if (!isLoggedIn) {
+    if (window.Toast) {
+      window.Toast.warning('يرجى تسجيل الدخول أولاً للمتابعة إلى الدفع', 'تسجيل الدخول مطلوب');
+    }
+    setTimeout(() => {
+      window.location.href = 'login.html?redirect=checkout.html';
+    }, 600);
+    return;
+  }
+
+  // 2. Render Order Summary
+  const itemsContainer = document.getElementById('checkoutItemsContainer');
+  const countBadge = document.getElementById('summaryCountBadge');
+  const subtotalDisplay = document.getElementById('subtotalPriceDisplay');
+  const deliveryDisplay = document.getElementById('deliveryFeeDisplay');
+  const finalTotalDisplay = document.getElementById('finalTotalPriceDisplay');
+  const deliveryFee = 15.00;
+
+  function renderSummary() {
+    const cartItems = (window.Cart && typeof window.Cart.getItems === 'function') ? window.Cart.getItems() : [];
+    const subtotal = (window.Cart && typeof window.Cart.getTotal === 'function') ? window.Cart.getTotal() : 0;
+    const count = (window.Cart && typeof window.Cart.getCount === 'function') ? window.Cart.getCount() : cartItems.length;
+    const finalTotal = subtotal > 0 ? subtotal + deliveryFee : 0;
+
+    if (countBadge) countBadge.textContent = `${count} أدوية`;
+    if (subtotalDisplay) subtotalDisplay.textContent = `${subtotal.toFixed(2)} ج.م`;
+    if (deliveryDisplay) deliveryDisplay.textContent = `${deliveryFee.toFixed(2)} ج.م`;
+    if (finalTotalDisplay) finalTotalDisplay.textContent = `${finalTotal.toFixed(2)} ج.م`;
+
+    if (!itemsContainer) return;
+
+    if (cartItems.length === 0) {
+      itemsContainer.innerHTML = `
+        <div class="text-center py-3 text-muted">
+          <small>السلة فارغة. <a href="medicines.html" class="text-success">تصفح الأدوية</a></small>
+        </div>
+      `;
+      return;
+    }
+
+    let itemsHtml = '';
+    cartItems.forEach((item) => {
+      const img = item.image || item.img || '../../assets/images/parst.jpg';
+      const qty = Number(item.quantity) || 1;
+      const price = typeof item.price === 'number' ? item.price : parseFloat(String(item.price).replace(/[^0-9.]/g, '')) || 25;
+      const itemSubtotal = (price * qty).toFixed(2);
+      const pharmacy = item.pharmacy || 'صيدلية النهضة';
+
+      itemsHtml += `
+        <div class="summary-item-row">
+          <img src="${img}" alt="${item.name}" class="summary-item-img" onerror="this.src='../../assets/images/parst.jpg'">
+          <div class="summary-item-info">
+            <div class="summary-item-name" title="${item.name}">${item.name}</div>
+            <div class="summary-item-meta d-flex justify-content-between align-items-center">
+              <span>${pharmacy}</span>
+              <span class="badge bg-light text-dark border">× ${qty}</span>
+            </div>
+          </div>
+          <div class="summary-item-price">${itemSubtotal} ج.م</div>
+        </div>
+      `;
+    });
+
+    itemsContainer.innerHTML = itemsHtml;
+  }
+
+  renderSummary();
+
+  // 3. Payment Method Selection
   const byHand = document.getElementById('byHand');
+  const Cash = document.getElementById('Cash'); // Card
+  const credit = document.getElementById('credit'); // E-Wallet
 
   const byHandIC = document.getElementById('byHandIC');
   const cashIC = document.getElementById('cashIC');
   const creditIC = document.getElementById('creditIC');
 
-  if (credit) {
-    credit.addEventListener('click', () => {
-      if (Visa) Visa.classList.add('hideF2');
-      if (cash) cash.classList.remove('hideF1');
+  const VisaForm = document.getElementById('Visa');
+  const CashForm = document.getElementById('cash');
 
-      if (Cash) Cash.classList.remove('active');
-      if (byHand) byHand.classList.remove('active');
-      credit.classList.add('active');
+  let selectedMethod = 'cash'; // 'cash' | 'card' | 'vodafone_cash'
 
-      if (byHandIC) byHandIC.classList.add('hidenn');
-      if (cashIC) cashIC.classList.add('hidenn');
-      if (creditIC) creditIC.classList.remove('hidenn');
-      localStorage.setItem('paymentMethod', 'محفظة إلكترونية');
-    });
-  }
+  function selectPayment(type) {
+    selectedMethod = type;
 
-  if (Cash) {
-    Cash.addEventListener('click', () => {
-      if (Visa) Visa.classList.remove('hideF2');
-      if (cash) cash.classList.add('hideF1');
+    // Reset options
+    [byHand, Cash, credit].forEach(opt => opt?.classList.remove('active'));
+    [byHandIC, cashIC, creditIC].forEach(ic => ic?.classList.add('d-none'));
+    if (VisaForm) VisaForm.classList.add('d-none');
+    if (CashForm) CashForm.classList.add('d-none');
 
-      if (credit) credit.classList.remove('active');
-      if (byHand) byHand.classList.remove('active');
-      Cash.classList.add('active');
-
-      if (byHandIC) byHandIC.classList.add('hidenn');
-      if (creditIC) creditIC.classList.add('hidenn');
-      if (cashIC) cashIC.classList.remove('hidenn');
-      localStorage.setItem('paymentMethod', 'بطاقة بنكية');
-    });
-  }
-
-  if (byHand) {
-    byHand.addEventListener('click', () => {
-      if (Visa) Visa.classList.add('hideF2');
-      if (cash) cash.classList.add('hideF1');
-
-      if (credit) credit.classList.remove('active');
-      if (Cash) Cash.classList.remove('active');
-      byHand.classList.add('active');
-
-      if (creditIC) creditIC.classList.add('hidenn');
-      if (cashIC) cashIC.classList.add('hidenn');
-      if (byHandIC) byHandIC.classList.remove('hidenn');
+    if (type === 'cash') {
+      if (byHand) byHand.classList.add('active');
+      if (byHandIC) byHandIC.classList.remove('d-none');
       localStorage.setItem('paymentMethod', 'الدفع عند الاستلام');
-    });
+      localStorage.setItem('paymentMethodCode', 'cash');
+    } else if (type === 'card') {
+      if (Cash) Cash.classList.add('active');
+      if (cashIC) cashIC.classList.remove('d-none');
+      if (VisaForm) VisaForm.classList.remove('d-none');
+      localStorage.setItem('paymentMethod', 'بطاقة بنكية');
+      localStorage.setItem('paymentMethodCode', 'card');
+    } else if (type === 'wallet') {
+      if (credit) credit.classList.add('active');
+      if (creditIC) creditIC.classList.remove('d-none');
+      if (CashForm) CashForm.classList.remove('d-none');
+      localStorage.setItem('paymentMethod', 'محفظة إلكترونية');
+      localStorage.setItem('paymentMethodCode', 'vodafone_cash');
+    }
   }
 
-  // Next Step Navigation
+  if (byHand) byHand.addEventListener('click', () => selectPayment('cash'));
+  if (Cash) Cash.addEventListener('click', () => selectPayment('card'));
+  if (credit) credit.addEventListener('click', () => selectPayment('wallet'));
+
+  // Default selection
+  selectPayment('cash');
+
+  // 4. Handle Next Button Navigation
   const nextBtn = document.getElementById('nextBtn');
   if (nextBtn) {
     nextBtn.addEventListener('click', () => {
-      const active = document.querySelector('.DIV1.active');
-      const activeId = active ? active.id : 'byHand';
+      if (selectedMethod === 'card') {
+        const cardNum = document.getElementById('criditNum')?.value.trim();
+        const exp = document.getElementById('rev')?.value.trim();
+        const cvv = document.getElementById('CVV')?.value.trim();
 
-      if (activeId === 'byHand') {
-        localStorage.setItem('paymentMethod', 'الدفع عند الاستلام');
-        window.location.href = 'order-summary.html';
-      } else if (activeId === 'Cash') {
-        const visaForm = document.getElementById('Visa');
-        if (visaForm && !visaForm.checkValidity()) {
-          visaForm.reportValidity();
+        if (!cardNum || cardNum.length < 12) {
+          if (window.Toast) window.Toast.warning('يرجى إدخال رقم بطاقة بنكية صحيح مكون من 16 رقماً', 'بيانات البطاقة');
+          document.getElementById('criditNum')?.focus();
           return;
         }
-        localStorage.setItem('paymentMethod', 'بطاقة بنكية');
-        window.location.href = 'order-summary.html';
-      } else if (activeId === 'credit') {
-        const cashForm = document.getElementById('cash');
-        if (cashForm && !cashForm.checkValidity()) {
-          cashForm.reportValidity();
+        if (!exp || !exp.includes('/') || exp.length < 5) {
+          if (window.Toast) window.Toast.warning('يرجى إدخال تاريخ انتهاء البطاقة بصيغة MM/YY', 'بيانات البطاقة');
+          document.getElementById('rev')?.focus();
           return;
         }
-        localStorage.setItem('paymentMethod', 'محفظة إلكترونية');
-        window.location.href = 'order-summary.html';
+        if (!cvv || cvv.length < 3) {
+          if (window.Toast) window.Toast.warning('يرجى إدخال رمز الأمان CVV (3 أرقام)', 'بيانات البطاقة');
+          document.getElementById('CVV')?.focus();
+          return;
+        }
+      } else if (selectedMethod === 'wallet') {
+        const walletNum = document.getElementById('num')?.value.trim();
+        if (!walletNum || walletNum.length < 5) {
+          if (window.Toast) window.Toast.warning('يرجى إدخال رقم المحفظة الإلكترونية أو عنوان InstaPay', 'المحفظة الإلكترونية');
+          document.getElementById('num')?.focus();
+          return;
+        }
       }
+
+      if (window.Toast) {
+        window.Toast.success('تم اختيار طريقة الدفع، جاري نقلك لمراجعة الطلب النهائية...', 'طريقة الدفع', 2000);
+      }
+
+      setTimeout(() => {
+        window.location.href = 'order-summary.html';
+      }, 400);
     });
   }
-
-  // Populate dynamic order summary from cart or medicineData
-  try {
-    const medicineData = JSON.parse(localStorage.getItem('medicineData')) || {
-      name: 'باراسيتامول 500 مجم',
-      price: '24.50 ج.م',
-      img: '../../assets/images/parst.jpg'
-    };
-
-    const imgEl = document.querySelector('.IMGG');
-    const nameEl = document.querySelector('.Name');
-    const subtotalEl = document.querySelector('.blk');
-    const totalEl = document.querySelector('.grn');
-
-    if (imgEl && medicineData.img) imgEl.src = medicineData.img;
-    if (nameEl && medicineData.name) nameEl.textContent = medicineData.name;
-    if (subtotalEl && medicineData.price) subtotalEl.textContent = medicineData.price;
-
-    if (totalEl && medicineData.price) {
-      const numeric = parseFloat(String(medicineData.price).replace(/[^0-9.]/g, '')) || 24.5;
-      totalEl.textContent = (numeric + 15.0).toFixed(2) + ' ج.م';
-    }
-  } catch (e) {
-    console.error('Error updating order summary', e);
-  }
 });
+

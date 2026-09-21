@@ -15,4 +15,19 @@
     VERSION: '1.0.0',
     CURRENCY: 'ج.م'
   };
+
+  // Ensure Toast & Validation scripts are loaded
+  function loadCoreScript(src) {
+    const scripts = Array.from(document.querySelectorAll('script')).map(s => s.src);
+    if (!scripts.some(s => s.endsWith(src))) {
+      const script = document.createElement('script');
+      // Resolve path relative to current page
+      const depth = window.location.pathname.includes('/pages/') ? '../../' : '';
+      script.src = `${depth}js/core/${src}`;
+      document.head.appendChild(script);
+    }
+  }
+
+  if (!window.Toast) loadCoreScript('toast.js');
+  if (!window.TeryakValidator) loadCoreScript('validation.js');
 })();

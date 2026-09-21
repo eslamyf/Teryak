@@ -7,8 +7,9 @@
 
   <!-- Vendor CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
 
   <!-- Base & Component CSS -->
   <link rel="stylesheet" href="../../css/base/variables.css">
@@ -52,34 +53,34 @@
           
           <article class="report-card report-card-green p-4 bg-white border rounded shadow-sm d-flex align-items-center gap-3">
             <div class="report-icon bg-success bg-opacity-10 text-success p-3 rounded-circle fs-3">
-              <i class="bi bi-calendar-check-fill"></i>
+              <i class="fa-solid fa-calendar-check"></i>
             </div>
             <div class="report-copy flex-grow-1">
               <h2 class="h5 font-bold mb-1">تقرير الحجوزات الشهري</h2>
               <p class="text-muted mb-2">28,430 حجز في مايو 2026</p>
-              <a href="javascript:void(0)" class="text-success text-decoration-none font-bold" onclick="alert('جاري تجهيز وتحميل تقرير الحجوزات...');">تحميل التقرير (PDF) &larr;</a>
+              <a href="javascript:void(0)" class="text-success text-decoration-none font-bold" onclick="if(window.Toast) window.Toast.success('جاري تجهيز وتصدير تقرير الحجوزات بصيغة PDF...', 'تصدير التقرير');">تحميل التقرير (PDF) &larr;</a>
             </div>
           </article>
 
           <article class="report-card report-card-blue p-4 bg-white border rounded shadow-sm d-flex align-items-center gap-3">
             <div class="report-icon bg-primary bg-opacity-10 text-primary p-3 rounded-circle fs-3">
-              <i class="bi bi-hospital-fill"></i>
+              <i class="fa-solid fa-hospital"></i>
             </div>
             <div class="report-copy flex-grow-1">
               <h2 class="h5 font-bold mb-1">تقرير نشاط الصيدليات</h2>
               <p class="text-muted mb-2">245 صيدلية في آخر مراجعة</p>
-              <a href="javascript:void(0)" class="text-primary text-decoration-none font-bold" onclick="alert('جاري تحميل تقرير أداء الصيدليات...');">تحميل التقرير (Excel) &larr;</a>
+              <a href="javascript:void(0)" class="text-primary text-decoration-none font-bold" onclick="if(window.Toast) window.Toast.info('جاري تصدير بيانات الصيدليات وجداول النشاط بصيغة Excel...', 'تصدير البيانات');">تحميل التقرير (Excel) &larr;</a>
             </div>
           </article>
 
           <article class="report-card report-card-danger p-4 bg-white border rounded shadow-sm d-flex align-items-center gap-3">
             <div class="report-icon bg-danger bg-opacity-10 text-danger p-3 rounded-circle fs-3">
-              <i class="bi bi-exclamation-octagon-fill"></i>
+              <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
             <div class="report-copy flex-grow-1">
               <h2 class="h5 font-bold mb-1">تقرير الأدوية الناقصة</h2>
               <p class="text-muted mb-2">12 دواء يحتاج لتوفير عاجل</p>
-              <a href="javascript:void(0)" class="text-danger text-decoration-none font-bold" onclick="alert('جاري تصدير قائمة الأدوية الشحيحة...');">تحميل التقرير (CSV) &larr;</a>
+              <a href="javascript:void(0)" class="text-danger text-decoration-none font-bold" onclick="if(window.Toast) window.Toast.warning('جاري إنشاء قائمة الأدوية الناقصة والشحيحة بصيغة CSV...', 'تقرير النواقص');">تحميل التقرير (CSV) &larr;</a>
             </div>
           </article>
 
@@ -111,6 +112,8 @@
 
   <!-- Core & Component Scripts -->
   <script src="../../js/config.js"></script>
+  <script src="../../js/core/toast.js"></script>
+  <script src="../../js/core/validation.js"></script>
   <script src="../../js/core/api.js"></script>
   <script src="../../js/core/auth.js"></script>
   <script src="../../js/core/cart.js"></script>

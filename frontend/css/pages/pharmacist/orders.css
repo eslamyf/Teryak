@@ -1,18 +1,21 @@
 /* RESET*/
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Cairo',sans-serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-html{
-    scroll-behavior:smooth;
+body, button, input, select, textarea {
+    font-family: 'Cairo', sans-serif;
 }
 
-body{
-    background:#f5f7fb;
-    min-height:100vh;
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #f5f7fb;
+    min-height: 100vh;
     direction:rtl;
     color:#222;
     overflow-x:hidden;

@@ -1,7 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;800&display=swap');
 
 :root { --bg: #fafbf9; --card: #ffffff; --text: #111827; --muted: #6b7280; --line: #e5e7eb; --green: #059669; }
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body, button, input, select, textarea { font-family: 'Cairo', sans-serif; }
 html, body { min-height: 100%; }
 body { background: var(--bg); color: var(--text); direction: rtl; overflow-x: hidden; }
 .app-container { width: 100%; max-width: 100%; margin: 0; padding: 8px 16px 20px; }

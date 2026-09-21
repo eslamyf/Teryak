@@ -37,7 +37,7 @@ class AppCartModal extends HTMLElement {
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalToggleLabel"><i class="bi bi-cart3 me-2"></i> قائمة الطلبات (سلة المشتريات)</h5>
+              <h5 class="modal-title" id="exampleModalToggleLabel"><i class="fa-solid fa-cart-shopping me-2"></i> قائمة الطلبات (سلة المشتريات)</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
@@ -77,7 +77,7 @@ class AppCartModal extends HTMLElement {
     if (cart.length === 0) {
       container.innerHTML = `
         <div class="cart-empty-message">
-          <i class="bi bi-cart-x text-muted" style="font-size: 40px; display: block; margin-bottom: 10px;"></i>
+          <i class="fa-solid fa-cart-arrow-down text-muted" style="font-size: 40px; display: block; margin-bottom: 10px;"></i>
           <p>سلة المشتريات فارغة حالياً</p>
         </div>
       `;
@@ -107,9 +107,9 @@ class AppCartModal extends HTMLElement {
             </div>
           </div>
           <div class="modalIcon">
-            <i class="bi bi-plus-square-fill btn-plus" data-name="${item.name}"></i>
+            <i class="fa-solid fa-square-plus btn-plus" data-name="${item.name}"></i>
             <span id="Counter">${item.quantity || 1}</span>
-            <i class="bi bi-dash-square-fill btn-minus" data-name="${item.name}"></i>
+            <i class="fa-solid fa-square-minus btn-minus" data-name="${item.name}"></i>
           </div>
         </div>
       `;

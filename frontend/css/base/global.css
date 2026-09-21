@@ -1,11 +1,83 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap');
 @import url('./variables.css');
+@import url('../components/toast.css');
+@import url('../components/validation.css');
 
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+body, button, input, select, textarea, optgroup, option {
   font-family: var(--font-arabic);
+}
+
+/* Local FontAwesome @font-face Declarations (Offline & Local Fallback) */
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+  src: url('../../assets/fonts/fa-solid-900.woff2') format('woff2'),
+       url('/assets/fonts/fa-solid-900.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('../../assets/fonts/fa-regular-400.woff2') format('woff2'),
+       url('/assets/fonts/fa-regular-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Font Awesome 6 Brands';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('../../assets/fonts/fa-brands-400.woff2') format('woff2'),
+       url('/assets/fonts/fa-brands-400.woff2') format('woff2');
+}
+
+/* Ensure FontAwesome icons & pseudo-elements are never overridden by Arabic text fonts */
+.fa, .fas, .fa-solid, .far, .fa-regular, .fab, .fa-brands,
+.fa::before, .fas::before, .fa-solid::before, .far::before, .fa-regular::before, .fab::before, .fa-brands::before {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-rendering: auto;
+}
+
+.fa, .fas, .fa-solid, .far, .fa-regular,
+.fa::before, .fas::before, .fa-solid::before, .far::before, .fa-regular::before {
+  font-family: "Font Awesome 6 Free" !important;
+}
+
+.fa-solid, .fas, .fa-solid::before, .fas::before {
+  font-weight: 900 !important;
+}
+
+.fa-regular, .far, .fa-regular::before, .far::before {
+  font-weight: 400 !important;
+}
+
+.fab, .fa-brands, .fab::before, .fa-brands::before {
+  font-family: "Font Awesome 6 Brands" !important;
+  font-weight: 400 !important;
+}
+
+/* FontAwesome Inline SVG styling */
+svg.svg-inline--fa {
+  display: inline-block;
+  height: 1em;
+  overflow: visible;
+  vertical-align: -0.125em;
+  width: auto;
 }
 
 html {
@@ -20,6 +92,7 @@ body {
   text-align: right;
   background-color: var(--bg-main);
   color: var(--text-main);
+  font-family: var(--font-arabic);
   min-height: 100vh;
   width: 100%;
   max-width: 100vw;

@@ -7,8 +7,9 @@
 
   <!-- Vendor CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
 
   <!-- Base & Component CSS -->
   <link rel="stylesheet" href="../../css/base/variables.css">
@@ -28,7 +29,7 @@
   <main class="container my-5 pt-4">
     <!-- User Welcome Card -->
     <div class="d-flex user align-items-center gap-3 p-3 bg-white border rounded mb-4 shadow-sm">
-      <i class="bi bi-person-circle fs-1 text-primary"></i>
+      <i class="fa-solid fa-circle-user fs-1 text-primary"></i>
       <div>
         <h4 class="mb-0 font-bold">مرحباً، <span id="userName">أحمد محمود</span></h4>
         <small class="text-muted">آخر تسجيل دخول: اليوم 10:30 ص</small>
@@ -40,12 +41,12 @@
       <div class="col-12 col-md-3 list">
         <small class="text-muted fw-bold d-block mb-2">لوحة المريض</small>
         <ul class="list-unstyled d-flex flex-column gap-2">
-          <li class="active p-2 rounded" data-target="hidden1" style="cursor: pointer;"><i class="bi bi-grid me-2"></i> نظرة عامة</li>
-          <li class="p-2 rounded" data-target="hidden2" style="cursor: pointer;"><i class="bi bi-box me-2"></i> حجوزاتي</li>
-          <li class="p-2 rounded" data-target="hidden3" style="cursor: pointer;"><i class="bi bi-bell me-2"></i> قائمة المتابعة</li>
-          <li class="p-2 rounded" data-target="hidden4" style="cursor: pointer;"><i class="bi bi-heart me-2"></i> تبرعاتي</li>
-          <li class="p-2 rounded" data-target="hidden5" style="cursor: pointer;"><i class="bi bi-credit-card-2-back me-2"></i> مدفوعاتي</li>
-          <li class="p-2 rounded" data-target="hidden6" style="cursor: pointer;"><i class="bi bi-clock-history me-2"></i> السجل الطبي</li>
+          <li class="active p-2 rounded" data-target="hidden1" style="cursor: pointer;"><i class="fa-solid fa-chart-pie me-2"></i> نظرة عامة</li>
+          <li class="p-2 rounded" data-target="hidden2" style="cursor: pointer;"><i class="fa-solid fa-box me-2"></i> حجوزاتي</li>
+          <li class="p-2 rounded" data-target="hidden3" style="cursor: pointer;"><i class="fa-solid fa-bell me-2"></i> قائمة المتابعة</li>
+          <li class="p-2 rounded" data-target="hidden4" style="cursor: pointer;"><i class="fa-solid fa-heart me-2"></i> تبرعاتي</li>
+          <li class="p-2 rounded" data-target="hidden5" style="cursor: pointer;"><i class="fa-solid fa-credit-card me-2"></i> مدفوعاتي</li>
+          <li class="p-2 rounded" data-target="hidden6" style="cursor: pointer;"><i class="fa-solid fa-clock-rotate-left me-2"></i> السجل الطبي</li>
         </ul>
       </div>
 
@@ -57,22 +58,22 @@
             <div class="sectionOne mb-4">
               <div class="dis-flex d-flex gap-3 flex-wrap">
                 <div class="DIV1 p-3 bg-white border rounded flex-grow-1 text-center">
-                  <i class="bi bi-box fs-2 text-success"></i>
+                  <i class="fa-solid fa-box fs-2 text-success"></i>
                   <p class="num fs-4 font-bold my-1">1</p>
                   <small class="text-muted">حجوزات نشطة</small>
                 </div>
                 <div class="DIV2 p-3 bg-white border rounded flex-grow-1 text-center">
-                  <i class="bi bi-bell fs-2 text-primary"></i>
+                  <i class="fa-solid fa-bell fs-2 text-primary"></i>
                   <p class="num fs-4 font-bold my-1">3</p>
                   <small class="text-muted">في المتابعة</small>
                 </div>
                 <div class="DIV3 p-3 bg-white border rounded flex-grow-1 text-center">
-                  <i class="bi bi-heart fs-2" style="color: #8b5cf6;"></i>
+                  <i class="fa-solid fa-heart fs-2" style="color: #8b5cf6;"></i>
                   <p class="num fs-4 font-bold my-1">3</p>
                   <small class="text-muted">تبرعات</small>
                 </div>
                 <div class="DIV4 p-3 bg-white border rounded flex-grow-1 text-center">
-                  <i class="bi bi-wallet2 fs-2 text-warning"></i>
+                  <i class="fa-solid fa-wallet fs-2 text-warning"></i>
                   <p class="num fs-4 font-bold my-1">308 ج.م</p>
                   <small class="text-muted">إجمالي المصروف</small>
                 </div>
@@ -83,7 +84,7 @@
               <div class="col-md-6">
                 <div class="color Active p-3 bg-white border rounded">
                   <div class="sm d-flex align-items-center gap-2 mb-2 text-success font-bold">
-                    <i class="bi bi-check-circle-fill"></i>
+                    <i class="fa-solid fa-circle-check"></i>
                     <small>حجز نشط حالياً</small>
                   </div>
                   <div class="color2 d-flex align-items-center gap-3">
@@ -100,11 +101,11 @@
                 <div class="color2 Active2 p-3 bg-white border rounded">
                   <p class="parg font-bold mb-2">آخر الإشعارات</p>
                   <div class="color mb-2">
-                    <small><i class="bi bi-circle-fill text-success me-1"></i> توفر أموكسيسيلين في صيدلية الشفاء القريبة منك</small><br>
+                    <small><i class="fa-solid fa-circle text-success me-1" style="font-size: 8px;"></i> توفر أموكسيسيلين في صيدلية الشفاء القريبة منك</small><br>
                     <small class="text-muted" style="font-size: 11px;">منذ 10 دقائق</small>
                   </div>
                   <div class="color">
-                    <small><i class="bi bi-circle-fill text-warning me-1"></i> سينتهي حجزك في صيدلية النهضة بعد 3 ساعات</small><br>
+                    <small><i class="fa-solid fa-circle text-warning me-1" style="font-size: 8px;"></i> سينتهي حجزك في صيدلية النهضة بعد 3 ساعات</small><br>
                     <small class="text-muted" style="font-size: 11px;">منذ ساعة</small>
                   </div>
                 </div>
@@ -121,11 +122,11 @@
                 <img src="../../assets/images/parst.jpg" alt="Paracetamol" style="width: 55px; height: 55px; border-radius: 8px;">
                 <div>
                   <p class="parg font-bold mb-0">باراسيتامول 500 مجم</p>
-                  <small class="text-muted"><i class="bi bi-geo-alt"></i> صيدلية الرحمة — شارع الجامعة، المعادي</small><br>
-                  <small class="text-muted"><i class="bi bi-clock"></i> يُسلم قبل 6:00 م · 25.00 ج.م</small>
+                  <small class="text-muted"><i class="fa-solid fa-location-dot me-1"></i> صيدلية الرحمة — شارع الجامعة، المعادي</small><br>
+                  <small class="text-muted"><i class="fa-solid fa-clock me-1"></i> يُسلم قبل 6:00 م · 25.00 ج.م</small>
                 </div>
               </div>
-              <button class="btn btn-outline-danger btn-sm" onclick="alert('تم إلغاء الحجز')">إلغاء الحجز</button>
+              <button class="btn btn-outline-danger btn-sm btn-cancel-booking">إلغاء الحجز</button>
             </div>
 
             <div class="secOne p-3 bg-white border rounded d-flex justify-content-between align-items-center">
@@ -133,8 +134,8 @@
                 <img src="../../assets/images/vitamine.jpg" alt="Vitamin D" style="width: 55px; height: 55px; border-radius: 8px;">
                 <div>
                   <p class="parg font-bold mb-0">فيتامين د 1000 وحدة</p>
-                  <small class="text-muted"><i class="bi bi-geo-alt"></i> صيدلية الشفاء — ميدان الحرية</small><br>
-                  <small class="text-success"><i class="bi bi-check2"></i> تم الاستلام · 85.00 ج.م</small>
+                  <small class="text-muted"><i class="fa-solid fa-location-dot me-1"></i> صيدلية الشفاء — ميدان الحرية</small><br>
+                  <small class="text-success"><i class="fa-solid fa-check me-1"></i> تم الاستلام · 85.00 ج.م</small>
                 </div>
               </div>
               <span class="badge bg-success">مكتمل</span>
@@ -145,7 +146,7 @@
         <!-- Tab 3: Watchlist -->
         <div class="col hidden3" style="display: none;">
           <div class="top p-3 bg-primary bg-opacity-10 text-primary rounded mb-3">
-            <i class="bi bi-bell-fill me-2"></i>
+            <i class="fa-solid fa-bell me-2"></i>
             <small class="font-bold">ستصلك إشعارات فورية عند توفر أي دواء في هذه القائمة</small>
           </div>
           <div class="mainSection d-flex flex-column gap-3">
@@ -176,7 +177,7 @@
         <!-- Tab 4: Donations -->
         <div class="col hidden4" style="display: none;">
           <div class="topDON p-3 rounded mb-3 text-center" style="background-color: #f3e8ff; color: #7c3aed;">
-            <i class="bi bi-heart-fill fs-3"></i>
+            <i class="fa-solid fa-heart fs-3"></i>
             <h5 class="font-bold mt-2">شكراً على تبرعاتك!</h5>
             <small>ساعدت <b>3 مرضى</b> حتى الآن من خلال منصة ترياق</small>
           </div>
@@ -236,10 +237,10 @@
         <!-- Tab 6: Medical Record -->
         <div class="col hidden6" style="display: none;">
           <div class="p-4 bg-white border rounded text-center">
-            <i class="bi bi-file-earmark-medical fs-1 text-muted mb-2 d-block"></i>
+            <i class="fa-solid fa-file-medical fs-1 text-muted mb-2 d-block"></i>
             <h5>السجل الطبي والوصفات السابقة</h5>
             <p class="text-muted">يمكنك رفع ومتابعة وصفاتك الطبية وتاريخ الأدوية المزمنة الخاصة بك بسهولة.</p>
-            <button class="btn btn-success" onclick="alert('سيتم فتح نافذة رفع الروشتة')">+ رفع روشتة طبية جديدة</button>
+            <button class="btn btn-success btn-upload-rx">+ رفع روشتة طبية جديدة</button>
           </div>
         </div>
       </div>
@@ -257,6 +258,8 @@
 
   <!-- Core & Component Scripts -->
   <script src="../../js/config.js"></script>
+  <script src="../../js/core/toast.js"></script>
+  <script src="../../js/core/validation.js"></script>
   <script src="../../js/core/api.js"></script>
   <script src="../../js/core/auth.js"></script>
   <script src="../../js/core/cart.js"></script>

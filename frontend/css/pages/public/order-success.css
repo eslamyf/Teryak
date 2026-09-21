@@ -6,7 +6,7 @@ body {
   background-color: #f8fafc;
   padding-top: 75px;
   direction: rtl;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-arabic, 'Cairo', sans-serif);
   color: #1e293b;
   display: flex;
   flex-direction: column;

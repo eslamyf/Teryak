@@ -19,7 +19,7 @@ class PharmacistSidebar extends HTMLElement {
     this.innerHTML = `
       <aside class="sidebar" id="sidebar">
         <div class="pharmacy-info">
-          <div class="logo-box">💊</div>
+          <div class="logo-box"><i class="fa-solid fa-prescription-bottle-medical text-success fs-3"></i></div>
           <div>
             <h2 id="sidebarPharmacyName">صيدلية النهضة</h2>
             <p id="sidebarPharmacyAddress">شارع الجامعة</p>
@@ -28,19 +28,19 @@ class PharmacistSidebar extends HTMLElement {
 
         <nav>
           <a class="${current === 'index.html' ? 'active' : ''}" href="index.html">
-            📊 الإحصائيات
+            <i class="fa-solid fa-chart-pie me-2"></i> الإحصائيات
           </a>
           <a class="${current === 'inventory.html' ? 'active' : ''}" href="inventory.html">
-            📦 المخزون
+            <i class="fa-solid fa-boxes-stacked me-2"></i> المخزون
           </a>
           <a class="${current === 'orders.html' || current === 'order.html' ? 'active' : ''}" href="orders.html">
-            📝 الطلبات
+            <i class="fa-solid fa-clipboard-list me-2"></i> الطلبات
           </a>
           <a class="${current === 'exchange.html' || current === 'exchanges.html' ? 'active' : ''}" href="exchange.html">
-            🔄 تبادل المخزون
+            <i class="fa-solid fa-arrow-right-arrow-left me-2"></i> تبادل المخزون
           </a>
           <a class="${current === 'notifications.html' ? 'active' : ''}" href="notifications.html">
-            🔔 الإشعارات
+            <i class="fa-solid fa-bell me-2"></i> الإشعارات
           </a>
         </nav>
       </aside>

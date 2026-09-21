@@ -7,8 +7,9 @@
 
   <!-- Vendor CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
 
   <!-- Base & Component CSS -->
   <link rel="stylesheet" href="../../css/base/variables.css">
@@ -31,49 +32,51 @@
       <p class="grey">المادة الفعالة: <b id="medicineActiveIng">باراسيتامول 500 مجم</b></p>
     </div>
 
-    <div class="d-flex d-flexMain">
+    <div class="d-flexMain">
       <div class="mainDIV">
         <!-- Pharmacy 1 -->
         <div class="DIV1">
-          <p class="parg parg2">الصيدليات القريبة منك</p>
+          <p class="parg parg2">الصيدليات المتوفر بها الدواء</p>
           <div class="DIV">
             <div class="d-flex1">
-              <p class="parg">صيدلية النهضة</p>
-              <p class="available d-rtl"><i class="bi bi-check2"></i> متوفر</p>
+              <div class="pharmacy-name-box">
+                <p class="parg">صيدلية النهضة</p>
+                <small class="text-muted"><i class="fa-solid fa-location-dot text-success me-1"></i> شارع الجامعة، المعادي</small>
+              </div>
+              <p class="available d-rtl"><i class="fa-solid fa-circle-check"></i> متوفر الآن</p>
             </div>
+            
             <div class="mtop">
-              <p class="grey">
-                <i class="bi bi-geo-alt"></i>
-                <small>شارع الجامعة، المعادي</small>
-              </p>
-              <p>
-                <small class="grey pLeft">0.8 كم</small>
-                <i class="icon bi bi-clock" style="color: rgb(16, 195, 140);"></i>
-                <small style="color: rgb(16, 195, 140);">مفتوحة الآن</small>
-              </p>
+              <span class="badge-dist"><i class="fa-solid fa-route me-1"></i> 0.8 كم منك</span>
+              <span class="badge-status open"><i class="fa-solid fa-clock me-1"></i> مفتوحة على مدار 24 ساعة</span>
             </div>
+
             <div class="line"></div>
 
             <div class="d-flex2">
-              <div class="d-flex gap-3">
-                <div>
-                  <small class="grey">السعر</small><br>
-                  <p class="parg" id="pharmacyPrice1">24.50 ج.م</p>
+              <div class="stats-row">
+                <div class="stat-box">
+                  <span class="stat-lbl">السعر الرسمي</span>
+                  <p class="stat-val text-success" id="pharmacyPrice1">24.50 ج.م</p>
                 </div>
-                <div>
-                  <small class="grey">الكمية المتاحة</small><br>
-                  <p class="parg">15 علبة</p>
+                <div class="stat-box">
+                  <span class="stat-lbl">الكمية المتاحة</span>
+                  <p class="stat-val">15 علبة</p>
                 </div>
-                <div>
-                  <small class="grey">وقت الوصول</small><br>
-                  <p class="parg">~15 دقيقة</p>
+                <div class="stat-box">
+                  <span class="stat-lbl">وقت الوصول</span>
+                  <p class="stat-val">~15 دقيقة</p>
                 </div>
               </div>
-              <button class="btn" id="show">احجز الآن</button>
+
+              <div class="action-box">
+                <button class="btn btn-booking" id="show"><i class="fa-solid fa-bag-shopping me-1"></i> احجز الدواء الآن</button>
+              </div>
             </div>
+
             <div id="DONE" class="hide">
-              <small class="bold"><b>✓ تم الحجز بنجاح</b></small><br>
-              <small>يرجى استلام الدواء خلال 24 ساعة من الصيدلية</small>
+              <small class="bold"><b>✓ تم حجز الدواء بنجاح</b></small><br>
+              <small>يرجى استلام الدواء خلال 24 ساعة برقم الطلب #TRK-8921</small>
             </div>
           </div>
         </div>
@@ -82,42 +85,44 @@
         <div class="DIV2">
           <div class="DIV">
             <div class="d-flex1">
-              <p class="parg">صيدلية الشفاء</p>
-              <p class="limited"><i class="bi bi-info-circle" style="color: rgb(226, 186, 3); font-size: 13px;"></i> كمية محدودة</p>
+              <div class="pharmacy-name-box">
+                <p class="parg">صيدلية الشفاء</p>
+                <small class="text-muted"><i class="fa-solid fa-location-dot text-success me-1"></i> ميدان الحرية، المعادي</small>
+              </div>
+              <p class="limited"><i class="fa-solid fa-circle-exclamation me-1"></i> كمية محدودة</p>
             </div>
+
             <div class="mtop">
-              <p class="grey">
-                <i class="bi bi-geo-alt"></i>
-                <small>ميدان الحرية، المعادي</small>
-              </p>
-              <p>
-                <small class="grey pLeft">1.2 كم</small>
-                <i class="icon bi bi-clock" style="color: rgb(16, 195, 140);"></i>
-                <small style="color: rgb(16, 195, 140);">مفتوحة الآن</small>
-              </p>
+              <span class="badge-dist"><i class="fa-solid fa-route me-1"></i> 1.2 كم منك</span>
+              <span class="badge-status open"><i class="fa-solid fa-clock me-1"></i> مفتوحة حتى 2:00 ص</span>
             </div>
+
             <div class="line"></div>
 
             <div class="d-flex2">
-              <div class="d-flex gap-3">
-                <div>
-                  <span class="grey">السعر</span><br>
-                  <p class="parg">23.00 ج.م</p>
+              <div class="stats-row">
+                <div class="stat-box">
+                  <span class="stat-lbl">السعر الرسمي</span>
+                  <p class="stat-val text-success">23.00 ج.م</p>
                 </div>
-                <div>
-                  <span class="grey">الكمية المتاحة</span><br>
-                  <p class="parg">3 علب</p>
+                <div class="stat-box">
+                  <span class="stat-lbl">الكمية المتاحة</span>
+                  <p class="stat-val text-warning">3 علب</p>
                 </div>
-                <div>
-                  <span class="grey">وقت الوصول</span><br>
-                  <p class="parg">~20 دقيقة</p>
+                <div class="stat-box">
+                  <span class="stat-lbl">وقت الوصول</span>
+                  <p class="stat-val">~20 دقيقة</p>
                 </div>
               </div>
-              <button class="btn" id="show2">احجز الآن</button>
+
+              <div class="action-box">
+                <button class="btn btn-booking" id="show2"><i class="fa-solid fa-bag-shopping me-1"></i> احجز الدواء الآن</button>
+              </div>
             </div>
+
             <div id="DONE2" class="hide">
-              <small class="bold"><b>✓ تم الحجز بنجاح</b></small><br>
-              <small>يرجى استلام الدواء خلال 24 ساعة</small>
+              <small class="bold"><b>✓ تم حجز الدواء بنجاح</b></small><br>
+              <small>يرجى استلام الدواء خلال 24 ساعة برقم الطلب #TRK-8922</small>
             </div>
           </div>
         </div>
@@ -126,71 +131,101 @@
         <div class="DIV3">
           <div class="DIV">
             <div class="d-flex1">
-              <p class="parg">صيدلية الحياة</p>
-              <p class="unAvailable"><i class="bi bi-info-circle" style="color: rgb(246, 83, 80); font-size: 13px;"></i> غير متوفر</p>
+              <div class="pharmacy-name-box">
+                <p class="parg">صيدلية الحياة</p>
+                <small class="text-muted"><i class="fa-solid fa-location-dot text-danger me-1"></i> شارع 9، المعادي</small>
+              </div>
+              <p class="unAvailable"><i class="fa-solid fa-circle-xmark me-1"></i> غير متوفر حالياً</p>
             </div>
+
             <div class="mtop">
-              <p class="grey">
-                <i class="bi bi-geo-alt"></i>
-                <small>شارع 9، المعادي</small>
-              </p>
-              <p>
-                <small class="grey pLeft">2.1 كم</small>
-                <i class="icon bi bi-clock" style="color: rgb(195, 37, 16);"></i>
-                <small style="color: rgb(195, 37, 16);">مغلقة</small>
-              </p>
+              <span class="badge-dist"><i class="fa-solid fa-route me-1"></i> 2.1 كم منك</span>
+              <span class="badge-status closed"><i class="fa-solid fa-clock me-1"></i> مغلقة حالياً</span>
             </div>
+
             <div class="line"></div>
 
             <div class="d-flex2">
-              <div class="d-flex gap-3">
-                <div>
-                  <small class="grey">السعر</small><br>
-                  <p class="parg">25.00 ج.م</p>
+              <div class="stats-row">
+                <div class="stat-box">
+                  <span class="stat-lbl">السعر المقدر</span>
+                  <p class="stat-val">25.00 ج.م</p>
                 </div>
-                <div>
-                  <small class="grey">وقت الوصول</small><br>
-                  <p class="parg">~30 دقيقة</p>
+                <div class="stat-box">
+                  <span class="stat-lbl">الحالة</span>
+                  <p class="stat-val text-danger">نفد المخزون</p>
+                </div>
+                <div class="stat-box">
+                  <span class="stat-lbl">وقت الوصول</span>
+                  <p class="stat-val">~30 دقيقة</p>
                 </div>
               </div>
-              <button class="btn" id="BTN2"><i class="bi bi-bell" style="margin-left: 5px;"></i> إشعار عند التوفر</button>
+
+              <div class="action-box">
+                <button class="btn btn-notify" id="BTN2"><i class="fa-solid fa-bell me-1"></i> إشعار عند التوفر</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Alternatives Sidebar -->
+      <!-- Alternatives & Medical Info Sidebar -->
       <div class="left">
-        <div class="firstDiv">
-          <p class="parg">البدائل المتاحة</p>
-          <button class="replace" id="showHiddenDiv">عرض البدائل</button>
+        <!-- Alternatives Card -->
+        <div class="firstDiv sidebar-card">
+          <div class="sidebar-header">
+            <i class="fa-solid fa-pills text-success"></i>
+            <p class="parg mb-0">البدائل الدوائية المتاحة</p>
+          </div>
+          <p class="sidebar-subtitle">نفس المادة الفعالة والتأثير العلاجي</p>
       
-          <div class="hiddenDiv hiddenDiv2" id="hiddenDiv2">
-            <div>
-              <p>بانادول أزرق</p>
-              <small style="color: gray;">باراسيتامول 500 مجم</small>
-              <p class="d-flex justify-content-between">
-                <small style="font-weight: 400;">20-28 ج.م</small>
-                <small style="color: #008b5e; font-weight: 400;">متوفر في 12 صيدلية</small>
-              </p>
+          <div class="hiddenDiv" id="hiddenDiv2">
+            <div class="alt-item">
+              <div class="alt-top">
+                <strong>بانادول أزرق</strong>
+                <span class="alt-price">20-28 ج.م</span>
+              </div>
+              <small class="text-muted">باراسيتامول 500 مجم</small>
+              <div class="alt-avail">
+                <i class="fa-solid fa-check text-success"></i> متوفر في 12 صيدلية قريبة
+              </div>
             </div>
-            <div>
-              <p>أدول 500</p>
-              <small style="color: gray;">باراسيتامول 500 مجم</small>
-              <p class="d-flex justify-content-between">
-                <small style="font-weight: 400;">18-25 ج.م</small>
-                <small style="color: #008b5e; font-weight: 400;">متوفر في 8 صيدليات</small>
-              </p>
+
+            <div class="alt-item">
+              <div class="alt-top">
+                <strong>أدول 500</strong>
+                <span class="alt-price">18-25 ج.م</span>
+              </div>
+              <small class="text-muted">باراسيتامول 500 مجم</small>
+              <div class="alt-avail">
+                <i class="fa-solid fa-check text-success"></i> متوفر في 8 صيدليات
+              </div>
             </div>
-            <div>
-              <p>سيتال أقراص</p>
-              <small style="color: gray;">باراسيتامول 500 مجم</small>
-              <p class="d-flex justify-content-between">
-                <small style="font-weight: 400;">15-22 ج.م</small>
-                <small style="color: #008b5e; font-weight: 400;">متوفر في 15 صيدلية</small>
-              </p>
+
+            <div class="alt-item">
+              <div class="alt-top">
+                <strong>سيتال أقراص</strong>
+                <span class="alt-price">15-22 ج.م</span>
+              </div>
+              <small class="text-muted">باراسيتامول 500 مجم</small>
+              <div class="alt-avail">
+                <i class="fa-solid fa-check text-success"></i> متوفر في 15 صيدلية
+              </div>
             </div>
           </div>
+        </div>
+
+        <!-- Medical Advice Card -->
+        <div class="sidebar-card advice-card mt-3">
+          <div class="sidebar-header">
+            <i class="fa-solid fa-user-doctor text-primary"></i>
+            <p class="parg mb-0">إرشادات صيدلانية</p>
+          </div>
+          <ul class="advice-list">
+            <li><i class="fa-solid fa-circle-check text-success"></i> يرجى الالتزام بالجرعات المقررة من الطبيب.</li>
+            <li><i class="fa-solid fa-circle-check text-success"></i> احفظ الدواء بعيداً عن الرطوبة وحرارة الشمس.</li>
+            <li><i class="fa-solid fa-circle-check text-success"></i> يمكنك مراجعة الصيدلي لأي استفسار عند الاستلام.</li>
+          </ul>
         </div>
       </div>
     </div>
@@ -207,6 +242,8 @@
 
   <!-- Core & Component Scripts -->
   <script src="../../js/config.js"></script>
+  <script src="../../js/core/toast.js"></script>
+  <script src="../../js/core/validation.js"></script>
   <script src="../../js/core/api.js"></script>
   <script src="../../js/core/auth.js"></script>
   <script src="../../js/core/cart.js"></script>

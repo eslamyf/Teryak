@@ -15,12 +15,15 @@
   --purple-color: #7c3aed;
   --orange-color: #d97706;
   
-  --font-family: 'Tajawal', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family: 'Cairo', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+body, button, input, select, textarea {
   font-family: var(--font-family);
 }
 html, body {
@@ -752,7 +755,7 @@ html, body {
   --orange-color: #d97706;
 
   --font-family:
-    'Tajawal',
+    'Cairo',
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",

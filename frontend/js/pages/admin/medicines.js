@@ -145,14 +145,28 @@ document.addEventListener('DOMContentLoaded', () => {
       const medName = card.querySelector('.medicine-name')?.innerText || 'الدواء';
 
       if (targetBtn.classList.contains('delete-btn')) {
-        if (confirm(`هل أنت تأكد من رغبتك في حذف ${medName}؟`)) {
-          card.style.opacity = '0';
-          card.style.transform = 'scale(0.95)';
-          card.style.transition = 'all 0.2s ease';
-          setTimeout(() => card.remove(), 200);
-        }
+        const proceedDelete = async () => {
+          let ok = true;
+          if (window.Toast && window.Toast.confirm) {
+            ok = await window.Toast.confirm({
+              title: 'حذف الدواء',
+              message: `هل أنت متأكد من رغبتك في حذف ${medName} من قاعدة البيانات؟`,
+              type: 'danger',
+              confirmText: 'حذف نهائي',
+              cancelText: 'إلغاء'
+            });
+          }
+          if (ok) {
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.95)';
+            card.style.transition = 'all 0.2s ease';
+            setTimeout(() => card.remove(), 200);
+            if (window.Toast) window.Toast.success(`تم حذف ${medName} بنجاح.`, 'تم الحذف');
+          }
+        };
+        proceedDelete();
       } else if (targetBtn.classList.contains('view-btn')) {
-        alert(`معاينة تفاصيل ${medName}`);
+        window.location.href = '../public/medicine-detail.html?med=' + encodeURIComponent(medName);
       }
     });
   }

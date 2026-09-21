@@ -22,35 +22,35 @@ class AdminSidebar extends HTMLElement {
         <nav class="sidebar-nav">
           <a href="index.html" class="nav-item ${current === 'index.html' ? 'active' : ''}">
             <span class="nav-icon">
-              <i class="bi bi-grid-fill"></i>
+              <i class="fa-solid fa-chart-pie"></i>
             </span>
             <span class="nav-label">لوحة التحكم الرئيسية</span>
           </a>
 
           <a href="medicines.html" class="nav-item ${current === 'medicines.html' ? 'active' : ''}">
             <span class="nav-icon">
-              <i class="bi bi-capsule-pill"></i>
+              <i class="fa-solid fa-pills"></i>
             </span>
             <span class="nav-label">إدارة الأدوية</span>
           </a>
 
           <a href="pharmacies.html" class="nav-item ${current === 'pharmacies.html' ? 'active' : ''}">
             <span class="nav-icon">
-              <i class="bi bi-hospital"></i>
+              <i class="fa-solid fa-hospital"></i>
             </span>
             <span class="nav-label">إدارة الصيدليات</span>
           </a>
 
           <a href="users.html" class="nav-item ${current === 'users.html' ? 'active' : ''}">
             <span class="nav-icon">
-              <i class="bi bi-people-fill"></i>
+              <i class="fa-solid fa-users"></i>
             </span>
             <span class="nav-label">إدارة المستخدمين</span>
           </a>
 
           <a href="reports.html" class="nav-item ${current === 'reports.html' || current === 'Reports.html' ? 'active' : ''}">
             <span class="nav-icon">
-              <i class="bi bi-bar-chart-line-fill"></i>
+              <i class="fa-solid fa-chart-line"></i>
             </span>
             <span class="nav-label">التقارير والإحصائيات</span>
           </a>

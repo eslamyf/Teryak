@@ -210,14 +210,27 @@ document.addEventListener('DOMContentLoaded', () => {
       const targetBtn = e.target.closest('.action-btn');
       if (!targetBtn) return;
       const row = targetBtn.closest('tr');
-      const pharmacyName = row.querySelector('.pharmacy-name')?.innerText || 'الصيدلية';
       if (targetBtn.classList.contains('delete-btn')) {
-        if (confirm(`هل أنت تأكد من رغبتك في حذف ${pharmacyName}؟`)) {
-          row.style.opacity = '0';
-          row.style.transform = 'scale(0.95)';
-          row.style.transition = 'all 0.2s ease';
-          setTimeout(() => row.remove(), 200);
-        }
+        const proceedDelete = async () => {
+          let ok = true;
+          if (window.Toast && window.Toast.confirm) {
+            ok = await window.Toast.confirm({
+              title: 'حذف الصيدلية',
+              message: `هل أنت متأكد من رغبتك في حذف بيانات ${pharmacyName}؟`,
+              type: 'danger',
+              confirmText: 'حذف نهائي',
+              cancelText: 'إلغاء'
+            });
+          }
+          if (ok) {
+            row.style.opacity = '0';
+            row.style.transform = 'scale(0.95)';
+            row.style.transition = 'all 0.2s ease';
+            setTimeout(() => row.remove(), 200);
+            if (window.Toast) window.Toast.success(`تم حذف ${pharmacyName} بنجاح.`, 'تم الحذف');
+          }
+        };
+        proceedDelete();
       } else if (targetBtn.classList.contains('block-btn')) {
         const badge = row.querySelector('.status-badge');
         if (badge) {

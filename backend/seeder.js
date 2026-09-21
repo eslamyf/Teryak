@@ -221,12 +221,84 @@ const seedData = async () => {
       status: 'active',
     });
 
+    const aspirin = await Medicine.create({
+      nameAr: 'أسبيرين بروتكت 100 مجم',
+      nameEn: 'Aspirin Protect 100mg',
+      activeIngredient: 'حمض أسيتيل ساليسيليك (Aspirin)',
+      category: 'أدوية السيولة والقلب',
+      dosageForm: 'أقراص مغلفة معوياً',
+      concentration: '100mg',
+      description: 'يستخدم للوقاية من الجلطات الدموية وحماية القلب والشرايين تحت إشراف طبي.',
+      usageInstructions: 'قرص واحد يومياً بعد الوجبة الرئيسية مع كوب ماء كامل.',
+      price: 28.0,
+      requiresPrescription: false,
+      status: 'active',
+    });
+
+    const ecosprin = await Medicine.create({
+      nameAr: 'إيكوسبرين 75 مجم',
+      nameEn: 'Ecosprin 75mg',
+      activeIngredient: 'حمض أسيتيل ساليسيليك (Aspirin)',
+      category: 'أدوية السيولة والقلب',
+      dosageForm: 'أقراص مغلفة',
+      concentration: '75mg',
+      description: 'بديل فعال ومكافئ للأسبرين للوقاية الثانوية من أمراض القلب والأوعية الدموية.',
+      price: 22.0,
+      requiresPrescription: false,
+      status: 'active',
+    });
+
+    const aspocid = await Medicine.create({
+      nameAr: 'أسبوسيد أطفال 75 مجم',
+      nameEn: 'Aspocid 75mg Chewable',
+      activeIngredient: 'حمض أسيتيل ساليسيليك (Aspirin)',
+      category: 'أدوية السيولة والقلب',
+      dosageForm: 'أقراص للمضغ',
+      concentration: '75mg',
+      description: 'أقراص مضغ للسيولة والحماية القلبية سهلة الامتصاص والبلع.',
+      price: 18.0,
+      requiresPrescription: false,
+      status: 'active',
+    });
+
+    const amoxil = await Medicine.create({
+      nameAr: 'أموكسيل 500 مجم',
+      nameEn: 'Amoxil 500mg (Amoxicillin)',
+      activeIngredient: 'أموكسيسيلين',
+      category: 'مضادات حيوية',
+      dosageForm: 'كبسولات',
+      concentration: '500mg',
+      description: 'مضاد حيوي بكتيري واسع الطيف لعلاج الالتهابات والعدوى البكتيرية.',
+      price: 45.0,
+      requiresPrescription: true,
+      status: 'active',
+    });
+
+    const antinal = await Medicine.create({
+      nameAr: 'أنتينال 200 مجم',
+      nameEn: 'Antinal 200mg',
+      activeIngredient: 'نيفوروكسازيد',
+      category: 'أدوية الجهاز الهضمي',
+      dosageForm: 'كبسولات',
+      concentration: '200mg',
+      description: 'مطهر معوي قوي وفعال لعلاج حالات الإسهال الحاد والتهابات المعدة.',
+      price: 32.0,
+      requiresPrescription: false,
+      status: 'active',
+    });
+
     // Link alternatives
     panadol.alternatives = [paramol._id, cataflam._id];
     await panadol.save();
 
-    augmentin.alternatives = [curam._id];
+    augmentin.alternatives = [curam._id, amoxil._id];
     await augmentin.save();
+
+    aspirin.alternatives = [ecosprin._id, aspocid._id];
+    await aspirin.save();
+
+    ecosprin.alternatives = [aspirin._id, aspocid._id];
+    await ecosprin.save();
 
     console.log('Seeding pharmacy inventory...');
     await PharmacyInventory.create([
@@ -255,6 +327,24 @@ const seedData = async () => {
         customPrice: 65.0,
       },
       {
+        pharmacyId: pharmacies[0]._id,
+        medicineId: aspirin._id,
+        quantity: 28,
+        customPrice: 28.0,
+      },
+      {
+        pharmacyId: pharmacies[0]._id,
+        medicineId: ecosprin._id,
+        quantity: 15,
+        customPrice: 22.0,
+      },
+      {
+        pharmacyId: pharmacies[0]._id,
+        medicineId: antinal._id,
+        quantity: 50,
+        customPrice: 32.0,
+      },
+      {
         pharmacyId: pharmacies[1]._id,
         medicineId: panadol._id,
         quantity: 60,
@@ -277,6 +367,18 @@ const seedData = async () => {
         medicineId: vitaminD._id,
         quantity: 40,
         customPrice: 25.0,
+      },
+      {
+        pharmacyId: pharmacies[1]._id,
+        medicineId: aspirin._id,
+        quantity: 35,
+        customPrice: 28.0,
+      },
+      {
+        pharmacyId: pharmacies[1]._id,
+        medicineId: amoxil._id,
+        quantity: 20,
+        customPrice: 45.0,
       },
     ]);
 

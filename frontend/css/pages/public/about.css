@@ -290,3 +290,25 @@ body {
     width: 100%;
   }
 }
+
+@media (max-width: 576px) {
+  .container {
+    padding: 24px 14px;
+  }
+  .hero-title {
+    font-size: 1.75rem;
+  }
+  .hero-desc {
+    font-size: 0.95rem;
+  }
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .stat-card {
+    padding: 20px 12px;
+  }
+  .stat-num {
+    font-size: 1.75rem;
+  }
+}

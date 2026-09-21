@@ -1,0 +1,62 @@
+/**
+ * Teryak Platform - Form Validation Styles
+ * Real-time feedback, shake animations, and error helper text
+ */
+
+/* Input Validation States */
+.form-control.is-invalid,
+.form-select.is-invalid,
+input.is-invalid,
+select.is-invalid,
+textarea.is-invalid {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+  background-image: none !important;
+  animation: teryakInputShake 0.4s ease-in-out;
+}
+
+.form-control.is-valid,
+.form-select.is-valid,
+input.is-valid,
+select.is-valid,
+textarea.is-valid {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12) !important;
+  background-image: none !important;
+}
+
+/* Error Message Text */
+.invalid-feedback-custom,
+.teryak-error-message {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #e53e3e;
+  margin-top: 5px;
+  margin-bottom: 2px;
+  direction: rtl;
+  text-align: right;
+  animation: teryakFadeInDown 0.25s ease-out;
+}
+
+.teryak-error-message i {
+  margin-left: 5px;
+}
+
+/* Shake Animation for Invalid Inputs */
+@keyframes teryakInputShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(5px); }
+  40%, 80% { transform: translateX(-5px); }
+}
+
+@keyframes teryakFadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

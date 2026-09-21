@@ -16,8 +16,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 2rem;
+  padding: 0 1.5rem;
   direction: rtl;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1280px) {
+  .header {
+    padding: 0 2.5rem;
+  }
 }
 
 /* Logo & Brand (Right side in RTL) */
@@ -35,17 +42,18 @@
 }
 
 .leftofHeader .logo {
-  height: 48px;
+  height: 44px;
   width: auto;
   object-fit: contain;
 }
 
 .leftofHeader h1 {
   margin: 0;
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 800;
   color: var(--primary-color, #008b5e);
   letter-spacing: -0.5px;
+  white-space: nowrap;
 }
 
 /* Navigation Links (Center in RTL) */
@@ -54,26 +62,35 @@
   align-items: center;
   justify-content: center;
   flex: 1;
+  min-width: 0;
+  margin: 0 12px;
 }
 
 .centerofHeader ul {
   list-style: none;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   margin: 0;
   padding: 0;
+  flex-wrap: nowrap;
+}
+
+.centerofHeader ul li {
+  flex-shrink: 0;
 }
 
 .centerofHeader ul li a {
   color: #334155;
   text-decoration: none;
-  padding: 8px 16px;
-  font-size: 16px;
+  padding: 7px 12px;
+  font-size: 14.5px;
   font-weight: 600;
   border-radius: 8px;
   transition: all 0.2s ease;
   position: relative;
+  white-space: nowrap;
+  display: block;
 }
 
 .centerofHeader ul li a:hover {
@@ -103,7 +120,7 @@
 .rightofHeader {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   flex-shrink: 0;
 }
 
@@ -111,11 +128,12 @@
 .rightofHeader #SignIn {
   color: #334155;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13.5px;
   text-decoration: none;
-  padding: 8px 14px;
+  padding: 7px 12px;
   border-radius: 8px;
   transition: all 0.2s;
+  white-space: nowrap;
 }
 
 .rightofHeader .span:hover,
@@ -126,18 +144,19 @@
 
 .rightofHeader .btn-primary-action,
 .rightofHeader #SignUp {
-  padding: 8px 18px;
+  padding: 7px 16px;
   border-radius: 8px;
   background-color: var(--primary-color, #008b5e);
   border: none;
   color: #ffffff;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  white-space: nowrap;
   transition: all 0.2s ease;
   box-shadow: 0 2px 6px rgba(0, 139, 94, 0.25);
 }
@@ -469,8 +488,88 @@
   border: 1px solid #e2e8f0;
 }
 
-/* ---------------- Responsive Switch ---------------- */
-@media (min-width: 992px) {
+/* ---------------- Tablet Scaling (768px - 1079px) ---------------- */
+@media (min-width: 768px) and (max-width: 1079.98px) {
+  .header {
+    height: 68px;
+    padding: 0 12px;
+  }
+
+  .leftofHeader .logo {
+    height: 38px;
+  }
+
+  .leftofHeader h1 {
+    font-size: 20px;
+  }
+
+  .leftofHeader a {
+    gap: 6px;
+  }
+
+  .centerofHeader {
+    margin: 0 4px;
+  }
+
+  .centerofHeader ul {
+    gap: 2px;
+  }
+
+  .centerofHeader ul li a {
+    padding: 5px 8px;
+    font-size: 13px;
+    border-radius: 6px;
+  }
+
+  .centerofHeader ul li a.active::after {
+    width: 16px;
+    height: 2px;
+    bottom: -3px;
+  }
+
+  .rightofHeader {
+    gap: 5px;
+  }
+
+  .rightofHeader .btn-primary-action,
+  .rightofHeader #SignUp {
+    padding: 6px 11px;
+    font-size: 12.5px;
+    border-radius: 6px;
+  }
+
+  .rightofHeader .span,
+  .rightofHeader #SignIn {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .rightofHeader .btn2 {
+    width: 32px;
+    height: 32px;
+    font-size: 11px;
+  }
+
+  .cart-icon-wrapper {
+    width: 34px;
+    height: 34px;
+  }
+
+  .cart-icon-wrapper .icon {
+    font-size: 16px;
+  }
+
+  .cart-icon-wrapper #count {
+    width: 17px;
+    height: 17px;
+    font-size: 10px;
+    top: -3px;
+    left: -3px;
+  }
+}
+
+/* ---------------- Responsive Switch (Mobile vs Tablet/Desktop) ---------------- */
+@media (min-width: 768px) {
   .header {
     display: flex !important;
   }
@@ -479,7 +578,7 @@
   }
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 767.98px) {
   .header {
     display: none !important;
   }

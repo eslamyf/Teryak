@@ -75,7 +75,7 @@ class AppNavbar extends HTMLElement {
           <!-- Logged-in User Controls -->
           <div class="auth-user-section hide" id="userAuthDisplay">
             <button class="btn btn-sm" id="Logout">تسجيل خروج</button>
-            <i class="bi bi-person-circle" id="Icon" title="الملف الشخصي / لوحة التحكم"></i>
+            <i class="fa-solid fa-circle-user" id="Icon" title="الملف الشخصي / لوحة التحكم"></i>
           </div>
 
           <!-- Guest Controls -->
@@ -85,10 +85,10 @@ class AppNavbar extends HTMLElement {
           </div>
 
           <button class="btn2" id="langToggleBtn" title="تغيير اللغة">AR</button>
-          <button class="btn2" id="themeToggleBtn" title="الوضع الليلي"><i class="bi bi-moon-stars"></i></button>
+          <button class="btn2" id="themeToggleBtn" title="الوضع الليلي"><i class="fa-solid fa-moon"></i></button>
 
           <div class="cart-icon-wrapper" data-bs-toggle="modal" data-bs-target="#exampleModalToggle" title="سلة الطلبات">
-            <i class="bi bi-cart-plus icon"></i>
+            <i class="fa-solid fa-cart-shopping icon"></i>
             <span id="count">0</span>
           </div>
         </div>
@@ -107,13 +107,13 @@ class AppNavbar extends HTMLElement {
         <!-- Left (RTL End): Actions & Hamburger Menu -->
         <div class="rightofHeaderResp">
           <div class="cart-icon-wrapper" data-bs-toggle="modal" data-bs-target="#exampleModalToggle" title="سلة الطلبات">
-            <i class="bi bi-cart-plus icon"></i>
+            <i class="fa-solid fa-cart-shopping icon"></i>
             <span id="counter">0</span>
           </div>
-          <button class="btn2" id="mobileThemeToggleBtn" title="الوضع الليلي"><i class="bi bi-moon-stars"></i></button>
+          <button class="btn2" id="mobileThemeToggleBtn" title="الوضع الليلي"><i class="fa-solid fa-moon"></i></button>
           <button class="btn2" id="mobileLangToggleBtn" title="تغيير اللغة">AR</button>
           <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-            <i class="bi bi-list"></i>
+            <i class="fa-solid fa-bars"></i>
           </button>
         </div>
       </div>
@@ -139,8 +139,8 @@ class AppNavbar extends HTMLElement {
               <a href="${loginUrl}"><button class="btn btn-login">تسجيل الدخول</button></a>
             </div>
             <div id="mobileUserButtons" class="d-flex flex-column gap-2 hide">
-              <button class="btn btn-success" id="mobileDashboardBtn"><i class="bi bi-speedometer2"></i> لوحة التحكم</button>
-              <button class="btn btn-danger" id="mobileLogoutBtn"><i class="bi bi-box-arrow-right"></i> تسجيل خروج</button>
+              <button class="btn btn-success" id="mobileDashboardBtn"><i class="fa-solid fa-gauge-high me-2"></i> لوحة التحكم</button>
+              <button class="btn btn-danger" id="mobileLogoutBtn"><i class="fa-solid fa-right-from-bracket me-2"></i> تسجيل خروج</button>
             </div>
           </div>
         </div>
@@ -189,9 +189,13 @@ class AppNavbar extends HTMLElement {
     if (userIcon) userIcon.addEventListener('click', handleDashboardNav);
     if (mobileDashBtn) mobileDashBtn.addEventListener('click', handleDashboardNav);
     if (themeToggleBtn) themeToggleBtn.addEventListener('click', handleThemeToggle);
-    if (mobileThemeToggleBtn) mobileThemeToggleBtn.addEventListener('click', handleThemeToggle);
-    if (langToggleBtn) langToggleBtn.addEventListener('click', () => alert('اللغة الحالية: العربية'));
-    if (mobileLangToggleBtn) mobileLangToggleBtn.addEventListener('click', () => alert('اللغة الحالية: العربية'));
+    const handleLangToggle = () => {
+      if (window.Toast) {
+        window.Toast.info('اللغة الحالية هي العربية (الافتراضية). دعم اللغات الإضافية قريباً!', 'لغة الواجهة');
+      }
+    };
+    if (langToggleBtn) langToggleBtn.addEventListener('click', handleLangToggle);
+    if (mobileLangToggleBtn) mobileLangToggleBtn.addEventListener('click', handleLangToggle);
   }
 
   updateAuthState() {

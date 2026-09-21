@@ -1,0 +1,336 @@
+/**
+ * Teryak Platform - Luxury Side-Sliding Toast Notifications
+ * Designed for RTL Arabic with Glassmorphism, Micro-Animations & Progress Bar
+ */
+
+/* Toast Container: Fixed on the top-left (for RTL) or responsive side */
+.teryak-toast-container {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  pointer-events: none;
+  max-width: 420px;
+  width: calc(100% - 48px);
+  direction: rtl;
+  font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+}
+
+@media (max-width: 576px) {
+  .teryak-toast-container {
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    width: auto;
+    max-width: none;
+  }
+}
+
+/* Individual Toast Card */
+.teryak-toast {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px 16px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.14),
+              0 4px 12px -2px rgba(0, 0, 0, 0.06);
+  pointer-events: auto;
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: translateX(-120%);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* Slide in active state */
+.teryak-toast.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* Slide out state */
+.teryak-toast.hide {
+  transform: translateX(-120%) scale(0.92);
+  opacity: 0;
+  margin-top: -60px;
+}
+
+/* Toast Icon Wrapper */
+.teryak-toast-icon {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-top: 2px;
+}
+
+/* Toast Body */
+.teryak-toast-body {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.teryak-toast-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 3px;
+  line-height: 1.3;
+}
+
+.teryak-toast-message {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #4a5568;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+/* Toast Action Button (optional) */
+.teryak-toast-action {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #008b5e;
+  color: #ffffff;
+}
+
+.teryak-toast-action:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 139, 94, 0.3);
+}
+
+/* Close Button */
+.teryak-toast-close {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  color: #a0aec0;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  margin: -4px -4px 0 0;
+  border-radius: 8px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.teryak-toast-close:hover {
+  color: #2d3748;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Animated Progress Bar */
+.teryak-toast-progress {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 3.5px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.teryak-toast-progress-bar {
+  height: 100%;
+  width: 100%;
+  transform-origin: right center;
+  transition: transform linear;
+}
+
+/* Variant Styles */
+/* 1. SUCCESS (Emerald Green) */
+.teryak-toast-success {
+  border-right: 5px solid #008b5e;
+}
+.teryak-toast-success .teryak-toast-icon {
+  background: rgba(0, 139, 94, 0.12);
+  color: #008b5e;
+}
+.teryak-toast-success .teryak-toast-progress-bar {
+  background: linear-gradient(90deg, #10b981, #008b5e);
+}
+
+/* 2. ERROR (Crimson Red) */
+.teryak-toast-error {
+  border-right: 5px solid #e53e3e;
+}
+.teryak-toast-error .teryak-toast-icon {
+  background: rgba(229, 62, 62, 0.12);
+  color: #e53e3e;
+}
+.teryak-toast-error .teryak-toast-progress-bar {
+  background: linear-gradient(90deg, #f87171, #e53e3e);
+}
+
+/* 3. WARNING (Amber Gold) */
+.teryak-toast-warning {
+  border-right: 5px solid #d97706;
+}
+.teryak-toast-warning .teryak-toast-icon {
+  background: rgba(217, 119, 6, 0.12);
+  color: #d97706;
+}
+.teryak-toast-warning .teryak-toast-progress-bar {
+  background: linear-gradient(90deg, #fbbf24, #d97706);
+}
+
+/* 4. INFO (Sky Blue) */
+.teryak-toast-info {
+  border-right: 5px solid #0284c7;
+}
+.teryak-toast-info .teryak-toast-icon {
+  background: rgba(2, 132, 199, 0.12);
+  color: #0284c7;
+}
+.teryak-toast-info .teryak-toast-progress-bar {
+  background: linear-gradient(90deg, #38bdf8, #0284c7);
+}
+
+/* Custom Styled Modal Dialog for Confirmations */
+.teryak-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  direction: rtl;
+  font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.25s ease;
+}
+
+.teryak-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.teryak-modal-box {
+  background: #ffffff;
+  border-radius: 20px;
+  max-width: 440px;
+  width: 100%;
+  padding: 28px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  transform: scale(0.9) translateY(20px);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.teryak-modal-overlay.active .teryak-modal-box {
+  transform: scale(1) translateY(0);
+}
+
+.teryak-modal-icon-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.teryak-modal-icon-wrap.danger {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.teryak-modal-icon-wrap.warning {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.teryak-modal-icon-wrap.info {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.teryak-modal-title {
+  font-size: 19px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+.teryak-modal-desc {
+  font-size: 14.5px;
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.teryak-modal-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.teryak-modal-btn {
+  flex: 1;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-size: 14.5px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.teryak-modal-btn.btn-confirm-danger {
+  background: #ef4444;
+  color: #ffffff;
+}
+.teryak-modal-btn.btn-confirm-danger:hover {
+  background: #dc2626;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.teryak-modal-btn.btn-confirm-primary {
+  background: #008b5e;
+  color: #ffffff;
+}
+.teryak-modal-btn.btn-confirm-primary:hover {
+  background: #00734e;
+  box-shadow: 0 4px 12px rgba(0, 139, 94, 0.3);
+}
+
+.teryak-modal-btn.btn-cancel {
+  background: #f1f5f9;
+  color: #475569;
+}
+.teryak-modal-btn.btn-cancel:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}

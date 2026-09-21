@@ -1,24 +1,24 @@
 /* ==========================================================================
-   Teryak Platform - Medicine Details Page Styles
+   Teryak Platform - Medicine Details Page Styles (Balanced & Responsive)
    ========================================================================== */
 
 body {
   background-color: #f8fafc;
   padding-top: 75px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-arabic, 'Cairo', sans-serif);
   color: #1e293b;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 30px 15px 60px;
+  padding: 30px 16px 60px;
   direction: rtl;
 }
 
 /* ---------------- Top Section ---------------- */
 .top {
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .top .font {
@@ -26,6 +26,7 @@ body {
   font-weight: 800;
   color: #0f172a;
   margin-bottom: 6px;
+  line-height: 1.3;
 }
 
 .top .grey {
@@ -44,12 +45,15 @@ body {
   grid-template-columns: 1fr 340px;
   gap: 24px;
   align-items: start;
+  width: 100%;
 }
 
 .mainDIV {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
+  width: 100%;
+  min-width: 0;
 }
 
 .parg2 {
@@ -70,7 +74,9 @@ body {
   border: 1.5px solid #e2e8f0;
   padding: 22px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .DIV:hover {
@@ -78,18 +84,25 @@ body {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
 }
 
+/* Pharmacy Header in Card */
 .d-flex1 {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-.d-flex1 .parg {
-  font-size: 19px;
+.pharmacy-name-box .parg {
+  font-size: 20px;
   font-weight: 800;
   color: #0f172a;
-  margin: 0;
+  margin-bottom: 4px;
+}
+
+.pharmacy-name-box small {
+  font-size: 13px;
 }
 
 .available {
@@ -97,9 +110,13 @@ body {
   color: #059669;
   font-size: 13px;
   font-weight: 700;
-  padding: 4px 12px;
+  padding: 5px 12px;
   border-radius: 20px;
   margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
 }
 
 .limited {
@@ -107,9 +124,13 @@ body {
   color: #d97706;
   font-size: 13px;
   font-weight: 700;
-  padding: 4px 12px;
+  padding: 5px 12px;
   border-radius: 20px;
   margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
 }
 
 .unAvailable {
@@ -117,89 +138,142 @@ body {
   color: #dc2626;
   font-size: 13px;
   font-weight: 700;
-  padding: 4px 12px;
+  padding: 5px 12px;
   border-radius: 20px;
   margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
 }
 
+/* Secondary Meta Row */
 .mtop {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
+  gap: 12px;
   flex-wrap: wrap;
-  gap: 10px;
+  margin-bottom: 16px;
 }
 
-.mtop p {
-  margin: 0;
-  font-size: 14px;
-  color: #64748b;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.pLeft {
-  margin-left: 10px;
-  color: #64748b;
+.badge-dist {
+  font-size: 12.5px;
+  color: #475569;
+  background: #f1f5f9;
+  padding: 4px 10px;
+  border-radius: 8px;
   font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+}
+
+.badge-status {
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.badge-status.open {
+  background: rgba(16, 185, 129, 0.08);
+  color: #059669;
+}
+
+.badge-status.closed {
+  background: rgba(239, 68, 68, 0.08);
+  color: #dc2626;
 }
 
 .line {
   width: 100%;
   height: 1px;
   background-color: #f1f5f9;
-  margin: 14px 0 16px;
+  margin: 12px 0 16px;
 }
 
+/* Bottom Stats & Action */
 .d-flex2 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
   gap: 16px;
+  flex-wrap: wrap;
 }
 
-.d-flex2 .parg {
-  font-size: 16px;
-  font-weight: 800;
-  color: #0f172a;
-  margin: 2px 0 0;
+.stats-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-.d-flex2 small.grey,
-.d-flex2 span.grey {
-  color: #94a3b8;
-  font-size: 12px;
+.stat-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 8px 14px;
+  text-align: center;
+  min-width: 90px;
+}
+
+.stat-lbl {
+  font-size: 11.5px;
+  color: #64748b;
+  display: block;
+  margin-bottom: 2px;
   font-weight: 600;
 }
 
-.d-flex2 .btn {
+.stat-val {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.action-box {
+  margin-right: auto;
+}
+
+.btn-booking {
   background: var(--primary-color, #008b5e);
   color: #ffffff;
   border: none;
   border-radius: 10px;
-  padding: 9px 24px;
+  padding: 11px 22px;
+  font-size: 14.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 139, 94, 0.25);
+}
+
+.btn-booking:hover {
+  background: var(--primary-hover, #059669);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 139, 94, 0.35);
+}
+
+.btn-notify {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 10px 18px;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
+  white-space: nowrap;
 }
 
-.d-flex2 .btn:hover {
-  background: var(--primary-hover, #059669);
-  color: #ffffff;
-  transform: translateY(-1px);
-}
-
-#BTN2 {
-  background: #f1f5f9;
-  color: #475569;
-  border: 1px solid #cbd5e1;
-}
-
-#BTN2:hover {
+.btn-notify:hover {
   background: #e2e8f0;
   color: #0f172a;
 }
@@ -219,79 +293,183 @@ body {
 }
 
 .hide {
-  display: none;
+  display: none !important;
 }
 
-/* ---------------- Alternatives Sidebar ---------------- */
-.left .firstDiv {
+/* ---------------- Alternatives & Medical Info Sidebar ---------------- */
+.left {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebar-card {
   background: #ffffff;
   border-radius: 16px;
   border: 1.5px solid #e2e8f0;
-  padding: 22px;
+  padding: 20px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-  position: sticky;
-  top: 95px;
+  box-sizing: border-box;
 }
 
-.left .firstDiv .parg {
-  font-size: 18px;
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.sidebar-header .parg {
+  font-size: 17px;
   font-weight: 800;
   color: #0f172a;
-  margin-bottom: 12px;
 }
 
-.replace {
-  width: 100%;
-  padding: 9px;
-  background: #f1f5f9;
-  color: #334155;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-bottom: 16px;
+.sidebar-subtitle {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 14px;
 }
 
-.replace:hover {
-  background: var(--primary-color, #008b5e);
-  color: #ffffff;
-  border-color: var(--primary-color, #008b5e);
-}
-
-.hiddenDiv > div {
+.alt-item {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   padding: 12px 14px;
   margin-bottom: 10px;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
-.hiddenDiv > div:hover {
+.alt-item:hover {
   border-color: var(--primary-color, #008b5e);
   background: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
 }
 
-.hiddenDiv > div p {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 700;
+.alt-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 3px;
+}
+
+.alt-top strong {
+  font-size: 14.5px;
   color: #0f172a;
 }
 
-.hiddenDiv2 {
-  display: none;
+.alt-price {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary-color, #008b5e);
 }
 
-/* ---------------- Responsive ---------------- */
+.alt-avail {
+  font-size: 12px;
+  color: #059669;
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+.advice-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.advice-list li {
+  font-size: 13px;
+  color: #334155;
+  line-height: 1.6;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.advice-list li i {
+  margin-top: 3px;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
 @media (max-width: 991px) {
   .d-flexMain {
     grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 20px 12px 40px;
   }
 
-  .left .firstDiv {
-    position: static;
+  .top {
+    margin-bottom: 18px;
+  }
+
+  .top .font {
+    font-size: 21px;
+  }
+
+  .top .grey {
+    font-size: 13px;
+  }
+
+  .DIV {
+    padding: 16px 14px;
+    border-radius: 14px;
+  }
+
+  .d-flex1 {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .available, .limited, .unAvailable {
+    align-self: flex-start;
+  }
+
+  .d-flex2 {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .stats-row {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    width: 100%;
+  }
+
+  .stat-box {
+    min-width: 0;
+    padding: 8px 4px;
+  }
+
+  .stat-val {
+    font-size: 13.5px;
+  }
+
+  .action-box {
+    width: 100%;
+  }
+
+  .btn-booking, .btn-notify {
+    width: 100%;
+    justify-content: center;
+    padding: 11px;
+    font-size: 14px;
   }
 }

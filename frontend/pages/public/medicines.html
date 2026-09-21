@@ -7,8 +7,9 @@
 
   <!-- Vendor CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
 
   <!-- Base & Component CSS -->
   <link rel="stylesheet" href="../../css/base/variables.css">
@@ -26,282 +27,131 @@
   <app-navbar></app-navbar>
 
   <main class="container">
+    <!-- Page Header & Filter Section -->
     <div class="top">
-      <h2>دليل الأدوية</h2>
-      <p>تصفح قاعدة بيانات الأدوية المتاحة وابحث عن دوائك بسهولة</p>
-      
-      <div class="d-flex d-flexResp">
-        <div class="search">
-          <i class="bi bi-search"></i>
-          <input type="text" placeholder="ابحث باسم الدواء أو المادة الفعالة..." id="searchInput">
+      <div class="catalog-header-wrap">
+        <div>
+          <h2>دليل الأدوية والمستحضرات</h2>
+          <p>تصفح قاعدة بيانات الأدوية المتاحة وقارن الأسعار وأماكن التوفر في أقرب صيدلية لك</p>
         </div>
-        <div class="DIV2">
-          <select id="sortSelect">
-            <option value="default">ترتيب افتراضي</option>
-            <option value="priceLow">السعر: الأقل أولاً</option>
-            <option value="priceHigh">السعر: الأعلى أولاً</option>
-            <option value="rating">الأعلى تقييماً</option>
-            <option value="availability">الأكثر توفراً</option>
-          </select>
-          <button id="filterBtn">
-            <i class="bi bi-filter"></i> فلترة 
-            <i id="arrow" class="bi bi-chevron-down"></i>
+      </div>
+      
+      <!-- Main Search & Sort Toolbar -->
+      <div class="toolbar-card">
+        <div class="search-box-wrap">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" placeholder="ابحث بالاسم التجاري، المادة الفعالة، أو الاستخدام..." id="searchInput" autocomplete="off">
+          <button type="button" id="clearSearchBtn" class="clear-search-btn hide" aria-label="مسح البحث">&times;</button>
+        </div>
+        
+        <div class="toolbar-actions">
+          <div class="sort-wrap">
+            <i class="fa-solid fa-arrow-down-short-wide sort-icon"></i>
+            <select id="sortSelect" aria-label="ترتيب النتائج">
+              <option value="default">الترتيب الافتراضي</option>
+              <option value="priceLow">السعر: من الأقل للأعلى</option>
+              <option value="priceHigh">السعر: من الأعلى للأقل</option>
+              <option value="rating">الأعلى تقييماً ★</option>
+              <option value="availability">الأكثر توفراً في الصيدليات</option>
+              <option value="name">الاسم أبجدياً (أ - ي)</option>
+            </select>
+          </div>
+
+          <button type="button" id="filterBtn" class="filter-toggle-btn" aria-expanded="false">
+            <i class="fa-solid fa-sliders"></i>
+            <span>الفلاتر المتقدمة</span>
+            <span id="activeFilterBadge" class="filter-badge hide">0</span>
+            <i id="arrow" class="fa-solid fa-chevron-down ms-1"></i>
           </button>
         </div>
       </div>
 
-      <div id="filter" class="d-flex show">
-        <div class="right">
-          <small>الفئة</small><br>
-          <button class="active" data-category="all">الكل</button>
-          <button data-category="مسكنات">مسكنات</button>
-          <button data-category="مضادات حيوية">مضادات حيوية</button>
-          <button data-category="فيتامينات">فيتامينات</button>
-          <button data-category="مكملات غذائية">مكملات غذائية</button>
-          <button data-category="نزلات برد">نزلات برد</button>
-          <button data-category="هضمي">هضمي</button>
+      <!-- Quick Category Pills (Horizontal scrolling/flex) -->
+      <div class="quick-categories-bar" id="quickCategoriesBar">
+        <button class="cat-pill active" data-category="all">
+          <i class="fa-solid fa-border-all me-1"></i> جميع الأدوية
+        </button>
+        <button class="cat-pill" data-category="مسكنات">
+          <i class="fa-solid fa-pills me-1"></i> مسكنات وسيولة
+        </button>
+        <button class="cat-pill" data-category="مضادات حيوية">
+          <i class="fa-solid fa-shield-virus me-1"></i> مضادات حيوية
+        </button>
+        <button class="cat-pill" data-category="فيتامينات">
+          <i class="fa-solid fa-capsules me-1"></i> فيتامينات
+        </button>
+        <button class="cat-pill" data-category="مكملات غذائية">
+          <i class="fa-solid fa-heart-pulse me-1"></i> مكملات غذائية
+        </button>
+        <button class="cat-pill" data-category="نزلات برد">
+          <i class="fa-solid fa-snowflake me-1"></i> نزلات البرد
+        </button>
+        <button class="cat-pill" data-category="هضمي">
+          <i class="fa-solid fa-shield-heart me-1"></i> جهاز هضمي
+        </button>
+      </div>
+
+      <!-- Advanced Collapsible Filter Drawer -->
+      <div id="filter" class="advanced-filter-drawer">
+        <div class="filter-grid">
+          <!-- Availability Filter Section -->
+          <div class="filter-section">
+            <label class="filter-section-title"><i class="fa-solid fa-boxes-stacked me-1"></i> حالة التوفر في الصيدليات</label>
+            <div class="filter-pills-group" id="statusFilterGroup">
+              <button type="button" class="filter-pill active" data-filter="all">الكل</button>
+              <button type="button" class="filter-pill" data-filter="available"><i class="fa-solid fa-circle-check text-success me-1"></i> متوفر فوراً</button>
+              <button type="button" class="filter-pill" data-filter="limited"><i class="fa-solid fa-circle-exclamation text-warning me-1"></i> كمية محدودة</button>
+              <button type="button" class="filter-pill" data-filter="unavailable"><i class="fa-solid fa-circle-xmark text-danger me-1"></i> غير متوفر</button>
+            </div>
+          </div>
+
+          <!-- Price Range Filter Section -->
+          <div class="filter-section">
+            <label class="filter-section-title"><i class="fa-solid fa-tag me-1"></i> نطاق السعر (ج.م)</label>
+            <div class="filter-pills-group" id="priceFilterGroup">
+              <button type="button" class="filter-pill active" data-price-range="all">جميع الأسعار</button>
+              <button type="button" class="filter-pill" data-price-range="under30">أقل من 30 ج.م</button>
+              <button type="button" class="filter-pill" data-price-range="30to60">30 - 60 ج.م</button>
+              <button type="button" class="filter-pill" data-price-range="over60">أكثر من 60 ج.م</button>
+            </div>
+          </div>
         </div>
-        <div class="left">
-          <small>الحالة</small><br>
-          <button class="active2" data-filter="all">الكل</button>
-          <button data-filter="available">متوفر</button>
-          <button data-filter="limited">محدود</button>
-          <button data-filter="unavailable">غير متوفر</button>
+
+        <div class="filter-drawer-footer">
+          <button type="button" id="resetFiltersBtn" class="btn-reset-filters">
+            <i class="fa-solid fa-rotate-left me-1"></i> إعادة تعيين كافة الفلاتر
+          </button>
         </div>
+      </div>
+
+      <!-- Results Info & Active Filter Chips Bar -->
+      <div class="results-meta-bar">
+        <div class="results-count-text">
+          <i class="fa-solid fa-list-check me-1 text-success"></i>
+          عرض <strong id="resultsCount">13</strong> من أصل <span id="totalCount">13</span> أدوية
+        </div>
+        <div class="active-chips-container" id="activeChipsContainer"></div>
       </div>
     </div>
 
-    <!-- Medicine Cards Grid -->
-    <div class="row cards-row g-4 my-3">
-      <!-- Item 1: Paracetamol -->
-      <div class="col-12 col-md-6 col-lg-3">
-        <div class="card" data-status="available" data-category="مسكنات">
-          <div class="img-box">
-            <a href="medicine-detail.html?med=paracetamol">
-              <img src="../../assets/images/1.jpg" class="card-img-top" alt="باراسيتامول">
-            </a>
-            <span class="rate"><i class="fa-solid fa-star"></i> 4.8</span>
-            <span class="available">متوفر</span>
-          </div>
-          <div class="card-body">
-            <small>Panadol · مسكنات</small>
-            <p class="card-title"><a href="medicine-detail.html?med=paracetamol">باراسيتامول 500 مجم</a></p>
-            <small>Paracetamol</small>
-            <div class="d-flex justify-content-between align-items-center mt-2">
-              <div>
-                <small>السعر</small>
-                <p class="parg">24.50 ج.م</p>
-              </div>
-              <div class="mrT text-end">
-                <small>متوفر في</small><br>
-                <small class="sml">48 صيدلية</small>
-              </div>
-            </div>
-            <button class="addCart w-100 mt-2"><i class="bi bi-cart2"></i> <span>أضف للسلة</span></button>
-          </div>
-        </div>
+    <!-- Medicine Cards Grid (Populated Dynamically via medicines.js) -->
+    <div class="row cards-row g-4 my-3" id="medicinesGrid">
+      <div class="col-12 text-center py-5">
+        <i class="fa-solid fa-circle-notch fa-spin text-success fs-1 mb-3"></i>
+        <p class="text-muted font-bold">جاري تحميل وتحديث قائمة الأدوية المتوفرة...</p>
       </div>
+    </div>
 
-      <!-- Item 2: Amoxicillin -->
-      <div class="col-12 col-md-6 col-lg-3">
-        <div class="card" data-status="limited" data-category="مضادات حيوية">
-          <div class="img-box">
-            <a href="medicine-detail.html?med=amoxicillin">
-              <img src="../../assets/images/2.jpg" class="card-img-top" alt="أموكسيسيلين">
-            </a>
-            <span class="rate"><i class="fa-solid fa-star"></i> 4.5</span>
-            <span class="limited">كمية محدودة</span>
-          </div>
-          <div class="card-body">
-            <small>Amoxil · مضادات حيوية</small>
-            <p class="card-title"><a href="medicine-detail.html?med=amoxicillin">أموكسيسيلين 500 مجم</a></p>
-            <small>Amoxicillin</small>
-            <div class="d-flex justify-content-between align-items-center mt-2">
-              <div>
-                <small>السعر</small>
-                <p class="parg">45.00 ج.م</p>
-              </div>
-              <div class="mrT text-end">
-                <small>متوفر في</small><br>
-                <small class="sml">12 صيدلية</small>
-              </div>
-            </div>
-            <button class="addCart w-100 mt-2"><i class="bi bi-cart2"></i> <span>أضف للسلة</span></button>
-          </div>
-        </div>
+    <!-- Empty State (Shown when no matching medicines found) -->
+    <div id="noResultsState" class="empty-results-box hide">
+      <div class="empty-icon-wrap">
+        <i class="fa-solid fa-magnifying-glass-chart"></i>
       </div>
-
-      <!-- Item 3: Omega 3 -->
-      <div class="col-12 col-md-6 col-lg-3">
-        <div class="card" data-status="available" data-category="مكملات غذائية">
-          <div class="img-box">
-            <a href="medicine-detail.html?med=omega3">
-              <img src="../../assets/images/3.jpg" class="card-img-top" alt="أوميجا 3">
-            </a>
-            <span class="rate"><i class="fa-solid fa-star"></i> 4.9</span>
-            <span class="available">متوفر</span>
-          </div>
-          <div class="card-body">
-            <small>Omega-3 · مكملات غذائية</small>
-            <p class="card-title"><a href="medicine-detail.html?med=omega3">أوميجا 3 بلس كبسولات</a></p>
-            <small>Fish Oil 1000mg</small>
-            <div class="d-flex justify-content-between align-items-center mt-2">
-              <div>
-                <small>السعر</small>
-                <p class="parg">85.00 ج.م</p>
-              </div>
-              <div class="mrT text-end">
-                <small>متوفر في</small><br>
-                <small class="sml">35 صيدلية</small>
-              </div>
-            </div>
-            <button class="addCart w-100 mt-2"><i class="bi bi-cart2"></i> <span>أضف للسلة</span></button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Item 4: Vitamin D -->
-      <div class="col-12 col-md-6 col-lg-3">
-        <div class="card" data-status="available" data-category="فيتامينات">
-          <div class="img-box">
-            <a href="medicine-detail.html?med=vitamind">
-              <img src="../../assets/images/4.jpg" class="card-img-top" alt="فيتامين د">
-            </a>
-            <span class="rate"><i class="fa-solid fa-star"></i> 4.7</span>
-            <span class="available">متوفر</span>
-          </div>
-          <div class="card-body">
-            <small>Vidrop · فيتامينات</small>
-            <p class="card-title"><a href="medicine-detail.html?med=vitamind">فيتامين د 50,000 وحدة</a></p>
-            <small>Vitamin D3</small>
-            <div class="d-flex justify-content-between align-items-center mt-2">
-              <div>
-                <small>السعر</small>
-                <p class="parg">60.00 ج.م</p>
-              </div>
-              <div class="mrT text-end">
-                <small>متوفر في</small><br>
-                <small class="sml">28 صيدلية</small>
-              </div>
-            </div>
-            <button class="addCart w-100 mt-2"><i class="bi bi-cart2"></i> <span>أضف للسلة</span></button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Item 5: Congestal -->
-      <div class="col-12 col-md-6 col-lg-3">
-        <div class="card" data-status="available" data-category="نزلات برد">
-          <div class="img-box">
-            <a href="medicine-detail.html?med=congestal">
-              <img src="../../assets/images/5.jpg" class="card-img-top" alt="كونجستال">
-            </a>
-            <span class="rate"><i class="fa-solid fa-star"></i> 4.6</span>
-            <span class="available">متوفر</span>
-          </div>
-          <div class="card-body">
-            <small>Congestal · نزلات برد</small>
-            <p class="card-title"><a href="medicine-detail.html?med=congestal">كونجستال أقراص للبرد</a></p>
-            <small>Paracetamol / Chlorpheniramine</small>
-            <div class="d-flex justify-content-between align-items-center mt-2">
-              <div>
-                <small>السعر</small>
-                <p class="parg">31.00 ج.م</p>
-              </div>
-              <div class="mrT text-end">
-                <small>متوفر في</small><br>
-                <small class="sml">60 صيدلية</small>
-              </div>
-            </div>
-            <button class="addCart w-100 mt-2"><i class="bi bi-cart2"></i> <span>أضف للسلة</span></button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Item 6: Aspirin Protect -->
-      <div class="col-12 col-md-6 col-lg-3">
-        <div class="card" data-status="available" data-category="مسكنات">
-          <div class="img-box">
-            <a href="medicine-detail.html?med=aspirin">
-              <img src="../../assets/images/6.jpg" class="card-img-top" alt="أسبيرين">
-            </a>
-            <span class="rate"><i class="fa-solid fa-star"></i> 4.8</span>
-            <span class="available">متوفر</span>
-          </div>
-          <div class="card-body">
-            <small>Bayer · مسكنات وسيولة</small>
-            <p class="card-title"><a href="medicine-detail.html?med=aspirin">أسبيرين بروتكت 100 مجم</a></p>
-            <small>Acetylsalicylic acid</small>
-            <div class="d-flex justify-content-between align-items-center mt-2">
-              <div>
-                <small>السعر</small>
-                <p class="parg">28.00 ج.م</p>
-              </div>
-              <div class="mrT text-end">
-                <small>متوفر في</small><br>
-                <small class="sml">42 صيدلية</small>
-              </div>
-            </div>
-            <button class="addCart w-100 mt-2"><i class="bi bi-cart2"></i> <span>أضف للسلة</span></button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Item 7: Antacid / Digest -->
-      <div class="col-12 col-md-6 col-lg-3">
-        <div class="card" data-status="unavailable" data-category="هضمي">
-          <div class="img-box">
-            <img src="../../assets/images/7.jpg" class="card-img-top" alt="فوار فواكه">
-            <span class="rate"><i class="fa-solid fa-star"></i> 4.3</span>
-            <span class="unavailable" style="background:#ef4444; color:white; padding:2px 8px; border-radius:12px; font-size:12px;">غير متوفر</span>
-          </div>
-          <div class="card-body">
-            <small>Eno · هضمي وحموضة</small>
-            <p class="card-title">فوار فواكه أكياس</p>
-            <small>Sodium Bicarbonate</small>
-            <div class="d-flex justify-content-between align-items-center mt-2">
-              <div>
-                <small>السعر</small>
-                <p class="parg">15.00 ج.م</p>
-              </div>
-              <div class="mrT text-end">
-                <small>متوفر في</small><br>
-                <small class="sml text-danger">0 صيدلية</small>
-              </div>
-            </div>
-            <button class="btn btn-outline-success w-100 mt-2" onclick="alert('سيتم إشعارك فور توفر الدواء')"><i class="bi bi-bell"></i> أبلغني عند التوفر</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Item 8: Augmentin -->
-      <div class="col-12 col-md-6 col-lg-3">
-        <div class="card" data-status="available" data-category="مضادات حيوية">
-          <div class="img-box">
-            <a href="medicine-detail.html?med=amoxicillin">
-              <img src="../../assets/images/8.jpg" class="card-img-top" alt="أوجمنتين">
-            </a>
-            <span class="rate"><i class="fa-solid fa-star"></i> 4.9</span>
-            <span class="available">متوفر</span>
-          </div>
-          <div class="card-body">
-            <small>GSK · مضادات حيوية</small>
-            <p class="card-title"><a href="medicine-detail.html?med=amoxicillin">أوجمنتين 1 جم أقراص</a></p>
-            <small>Amoxicillin / Clavulanic</small>
-            <div class="d-flex justify-content-between align-items-center mt-2">
-              <div>
-                <small>السعر</small>
-                <p class="parg">120.00 ج.م</p>
-              </div>
-              <div class="mrT text-end">
-                <small>متوفر في</small><br>
-                <small class="sml">30 صيدلية</small>
-              </div>
-            </div>
-            <button class="addCart w-100 mt-2"><i class="bi bi-cart2"></i> <span>أضف للسلة</span></button>
-          </div>
-        </div>
-      </div>
+      <h3 class="empty-title">لم يتم العثور على أدوية مطابقة</h3>
+      <p class="empty-desc">جرب تعديل مصطلحات البحث أو إزالة بعض الفلاتر المحددة لعرض المزيد من الأدوية.</p>
+      <button type="button" class="btn btn-success btn-reset-all" id="emptyResetBtn">
+        <i class="fa-solid fa-rotate-left me-1"></i> إعادة ضبط وعرض كافة الأدوية
+      </button>
     </div>
   </main>
 
@@ -316,6 +166,8 @@
 
   <!-- Core & Component Scripts -->
   <script src="../../js/config.js"></script>
+  <script src="../../js/core/toast.js"></script>
+  <script src="../../js/core/validation.js"></script>
   <script src="../../js/core/api.js"></script>
   <script src="../../js/core/auth.js"></script>
   <script src="../../js/core/cart.js"></script>

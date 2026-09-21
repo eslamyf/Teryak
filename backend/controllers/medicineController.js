@@ -72,16 +72,45 @@ const getMedicineById = async (req, res, next) => {
 
     // Find medicine by ID or by English/Arabic name lookup
     let medicine;
-    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+    if (id && id.match(/^[0-9a-fA-F]{24}$/)) {
       medicine = await Medicine.findById(id).populate(
         'alternatives',
         'nameAr nameEn price image activeIngredient category dosageForm'
       );
     } else {
-      // Slug or keyword search fallback
-      const regex = new RegExp(id, 'i');
+      const cleanQuery = (id || '').trim();
+      const sanitized = cleanQuery.replace(/[-_]/g, ' ');
+      const tokens = sanitized.split(/\s+/).filter(Boolean);
+      const flexiblePattern = tokens.join('.*');
+      const regex = new RegExp(cleanQuery, 'i');
+      const flexRegex = new RegExp(flexiblePattern, 'i');
+
+      // Common slug aliases for platform navigation
+      const aliasQueries = [];
+      const lower = cleanQuery.toLowerCase();
+      if (lower.includes('aspirin')) {
+        aliasQueries.push({ nameEn: /aspirin/i }, { nameAr: /أسبيرين|اسبرين|اسبوسيد/i });
+      } else if (lower.includes('paracetamol')) {
+        aliasQueries.push({ nameEn: /panadol|paramol|paracetamol/i }, { nameAr: /بانادول|بارامول|باراسيتامول/i });
+      } else if (lower.includes('amox')) {
+        aliasQueries.push({ nameEn: /amox|augmentin/i }, { nameAr: /أموكس|أوجمنتين/i });
+      } else if (lower.includes('vitamin') || lower.includes('vitamind')) {
+        aliasQueries.push({ nameEn: /vitamin|devarol/i }, { nameAr: /فيتامين|ديفارول/i });
+      } else if (lower.includes('omega')) {
+        aliasQueries.push({ nameEn: /omega/i }, { nameAr: /أوميجا|اوميجا/i });
+      }
+
       medicine = await Medicine.findOne({
-        $or: [{ nameEn: regex }, { nameAr: regex }],
+        $or: [
+          { nameEn: regex },
+          { nameAr: regex },
+          { activeIngredient: regex },
+          { nameEn: flexRegex },
+          { nameAr: flexRegex },
+          { activeIngredient: flexRegex },
+          { category: regex },
+          ...aliasQueries,
+        ],
       }).populate(
         'alternatives',
         'nameAr nameEn price image activeIngredient category dosageForm'

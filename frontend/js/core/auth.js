@@ -60,8 +60,12 @@ const Auth = {
 
   requireAuth: function(allowedRoles = [], fallbackUrl = '') {
     if (!this.isLoggedIn()) {
-      alert('يجب تسجيل الدخول للوصول إلى هذه الصفحة');
-      window.location.href = fallbackUrl || '/frontend/pages/public/login.html';
+      if (window.Toast) {
+        window.Toast.warning('يجب تسجيل الدخول أولاً للوصول إلى هذه الصفحة', 'تسجيل الدخول مطلوب');
+      }
+      setTimeout(() => {
+        window.location.href = fallbackUrl || '/frontend/pages/public/login.html';
+      }, 1000);
       return false;
     }
     
@@ -76,8 +80,12 @@ const Auth = {
       });
 
       if (!isAllowed) {
-        alert('غير مصرح لك بالدخول إلى هذه الصفحة');
-        window.location.href = fallbackUrl || '/frontend/index.html';
+        if (window.Toast) {
+          window.Toast.error('غير مصرح لحسابك بالدخول إلى هذه الصفحة الإدارية', 'صلاحية غير كافية');
+        }
+        setTimeout(() => {
+          window.location.href = fallbackUrl || '/frontend/index.html';
+        }, 1200);
         return false;
       }
     }

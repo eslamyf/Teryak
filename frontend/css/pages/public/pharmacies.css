@@ -5,7 +5,7 @@
 body {
   background-color: #f8fafc;
   padding-top: 75px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-arabic, 'Cairo', sans-serif);
   color: #1e293b;
 }
 
@@ -664,3 +664,19 @@ svg {
     justify-content: center;
   }
 }
+
+@media (max-width: 576px) {
+  .page {
+    padding: 20px 12px 40px;
+  }
+
+  .pharmacy-card {
+    padding: 16px 14px;
+    border-radius: 14px;
+  }
+
+  .page-title {
+    font-size: 22px;
+  }
+}
+
