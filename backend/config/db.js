@@ -11,7 +11,7 @@ dotenv.config();
 try {
   dns.setServers(['8.8.8.8', '1.1.1.1', '8.8.4.4']);
 } catch (e) {
-  // Ignore if unable to set DNS servers in certain environments
+  // Ignore if unable to set DNS servers in restricted environments
 }
 
 let cachedConnection = null;
@@ -25,7 +25,7 @@ const connectDB = async () => {
 
   try {
     const opts = {
-      bufferCommands: true,
+      bufferCommands: false, // Prevent hanging buffers when connection fails
       serverSelectionTimeoutMS: 5000,
       connectTimeoutMS: 10000,
     };
@@ -38,12 +38,11 @@ const connectDB = async () => {
     return cachedConnection;
   } catch (error) {
     console.error(`[MongoDB Error] Connection failed: ${error.message}`);
-    console.log(`[MongoDB Info] If local MongoDB is not running, set a free cloud database URI in backend/.env`);
-    console.log(`               Example: MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.xxx.mongodb.net/teryak_db\n`);
+    console.log(`[MongoDB Info] If using MongoDB Atlas, verify that your IP is whitelisted (0.0.0.0/0 in Network Access)`);
+    console.log(`               Or set a free database URI in backend/.env`);
+    console.log(`               Example: MONGODB_URI=mongodb+srv://<user>:<password>@cluster0.xxx.mongodb.net/teryak_db\n`);
 
-    if (process.env.NODE_ENV === 'production') {
-      throw error;
-    }
+    throw error;
   }
 };
 

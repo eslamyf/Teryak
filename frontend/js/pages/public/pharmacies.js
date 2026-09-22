@@ -1,4 +1,4 @@
-const pharmacies = 
+let pharmacies = 
 [
   {
     id:'nahda', name:'صيدلية النهضة', doctor:'د. محمد علي',
@@ -274,22 +274,60 @@ sortMenu.querySelectorAll('.dropdown-item').forEach(item=>
 });
 document.addEventListener('click', ()=> sortMenu.classList.remove('open'));
 
-document.getElementById('searchInput').addEventListener('input', renderList);
+const searchInputEl = document.getElementById('searchInput');
+if (searchInputEl) {
+  searchInputEl.addEventListener('input', renderList);
+  
+  // Check URL query params for pre-filled search
+  const urlSearch = new URLSearchParams(window.location.search).get('search');
+  if (urlSearch) {
+    searchInputEl.value = urlSearch;
+  }
+}
 
+async function syncLivePharmacies() {
+  try {
+    if (window.API && window.API.pharmacies) {
+      const res = await window.API.pharmacies.getAll();
+      if (res && res.data && Array.isArray(res.data) && res.data.length > 0) {
+        const livePharmacies = res.data.map((p, idx) => {
+          const addr = p.address;
+          const loc = typeof addr === 'string' ? addr : `${addr?.street || ''}، ${addr?.city || ''}، ${addr?.governorate || 'القاهرة'}`;
+          const iconsList = ['cross', 'bottle', 'capsule', 'mortar', 'pill', 'shelf'];
+          const colors = ['#2f8f5b', '#3d7ec9', '#b1793a', '#8a5fc9', '#c9527d', '#1a9c5c'];
+          return {
+            id: p._id || `pharm_${idx}`,
+            name: p.name,
+            doctor: p.ownerId?.name ? `د. ${p.ownerId.name}` : 'د. صيدلي معتمد',
+            address: loc,
+            distance: (0.8 + idx * 0.6).toFixed(1),
+            hours: p.openingHours?.is24Hours ? '24 ساعة' : `${p.openingHours?.open || '8 ص'} — ${p.openingHours?.close || '12 م'}`,
+            meds: p.meds || (200 + idx * 40),
+            rating: p.rating || 4.8,
+            reviews: p.reviewCount || (80 + idx * 30),
+            status: 'open',
+            phone: p.phone || '02-25261234',
+            tags: ['أدوية عامة', 'طوارئ', 'توصيل منزلي'],
+            accent: colors[idx % colors.length],
+            icon: iconsList[idx % iconsList.length],
+            photo: '../../assets/images/nahda.jpg'
+          };
+        });
+
+        if (livePharmacies.length > 0) {
+          pharmacies = livePharmacies;
+          renderTopPanel();
+          renderOpenNowList();
+          renderList();
+        }
+      }
+    }
+  } catch (e) {
+    console.log('[Pharmacies Live Sync Fallback]:', e.message);
+  }
+}
 
 renderTopPanel();
 renderOpenNowList();
 renderList();
-
-// ___________________________________________________________________
-// let searchBtn=document.querySelector("#BTN")
-// // for(let i=0;i<searchBtn.length;++i){
-//   searchBtn.addEventListener("click",function(){
-//   window.location.href='../htmlFiles/medicine.html'
-// })
-// container.querySelectorAll(".search-med-btn").forEach(btn=>{
-//   btn.addEventListener("click",function(e){
-//     e.stopPropagation()
-//     window.location.href='../htmlFiles/medicine.html'
-//   })
-// })
+syncLivePharmacies();

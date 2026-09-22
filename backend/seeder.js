@@ -16,6 +16,7 @@ dotenv.config();
 
 const seedData = async () => {
   try {
+    console.log('Connecting to database...');
     await connectDB();
     console.log('Clearing existing database collections...');
 

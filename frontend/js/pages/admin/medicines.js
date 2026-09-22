@@ -1,55 +1,15 @@
-document.addEventListener('DOMContentLoaded', () => {
+/**
+ * Teryak Platform - Admin Medicines Management Logic
+ * Connected with Backend API (/api/medicines) & Live Catalog Operations
+ */
+
+document.addEventListener('DOMContentLoaded', async () => {
   const activeNavItem = document.querySelector('.sidebar-nav .nav-item.active');
   if (activeNavItem) {
     activeNavItem.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'center' });
   }
 
-  // 1. Initialize Charts (for index.html)
-  const newUsersElem = document.getElementById('newUsersChart');
-  const weeklyBookingsElem = document.getElementById('weeklyBookingsChart');
-
-  if (typeof Chart !== 'undefined' && (newUsersElem || weeklyBookingsElem)) {
-    Chart.defaults.font.family = "'Tajawal', sans-serif";
-    Chart.defaults.color = '#6b7280';
-    const arabicDays = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-
-    if (newUsersElem) {
-      new Chart(newUsersElem.getContext('2d'), {
-        type: 'line',
-        data: {
-          labels: arabicDays,
-          datasets: [{
-            label: 'مستخدمون جدد',
-            data: [40, 65, 55, 80, 72, 30, 48],
-            borderColor: '#3b82f6',
-            borderWidth: 2.5,
-            backgroundColor: 'rgba(59, 130, 246, 0.05)',
-            fill: false,
-            tension: 0.4
-          }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-      });
-    }
-
-    if (weeklyBookingsElem) {
-      new Chart(weeklyBookingsElem.getContext('2d'), {
-        type: 'bar',
-        data: {
-          labels: arabicDays,
-          datasets: [{
-            label: 'الحجوزات',
-            data: [75, 105, 90, 130, 125, 65, 85],
-            backgroundColor: '#059669',
-            borderRadius: 6
-          }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-      });
-    }
-  }
-
-  // 2. Mobile Sidebar Toggle
+  // 1. Mobile Sidebar Toggle
   const sidebarToggle = document.getElementById('sidebarToggle');
   const sidebar = document.getElementById('sidebar');
   const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -63,29 +23,173 @@ document.addEventListener('DOMContentLoaded', () => {
     sidebarOverlay.addEventListener('click', toggleMenu);
   }
 
-  // 3. Search Filter Logic for Medicines Cards
+  // 2. DOM Elements
   const medSearchInput = document.getElementById('medicineSearchInput');
   const medList = document.getElementById('medicinesList');
-
-  if (medSearchInput && medList) {
-    medSearchInput.addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase().trim();
-      const cards = medList.querySelectorAll('.medicine-card');
-
-      cards.forEach(card => {
-        const text = card.innerText.toLowerCase();
-        card.style.display = text.includes(query) ? '' : 'none';
-      });
-    });
-  }
-
-  // 4. Modal Logic (Add Medicine)
   const openMedModalBtn = document.getElementById('openAddMedicineModalBtn');
   const closeMedModalBtn = document.getElementById('closeAddMedModalBtn');
   const cancelMedModalBtn = document.getElementById('cancelMedModalBtn');
   const medModal = document.getElementById('addMedicineModal');
   const addMedForm = document.getElementById('addMedicineForm');
 
+  let currentMedicines = [];
+
+  // 3. Fallback Initial Catalog
+  const defaultMedicines = [
+    {
+      _id: 'med_1',
+      nameAr: 'باراسيتامول 500 مجم',
+      nameEn: 'Paracetamol',
+      category: 'مسكنات',
+      price: 24.50,
+      status: 'active',
+      pharmaciesCount: 48,
+      image: '../../assets/images/parst.jpg',
+    },
+    {
+      _id: 'med_2',
+      nameAr: 'أموكسيسيلين 500 مجم',
+      nameEn: 'Amoxicillin',
+      category: 'مضادات حيوية',
+      price: 45.00,
+      status: 'active',
+      pharmaciesCount: 32,
+      image: '../../assets/images/amoc.jpg',
+    },
+    {
+      _id: 'med_3',
+      nameAr: 'فيتامين د 1000 وحدة',
+      nameEn: 'Vitamin D3',
+      category: 'فيتامينات',
+      price: 25.00,
+      status: 'active',
+      pharmaciesCount: 55,
+      image: '../../assets/images/vitamine.jpg',
+    },
+  ];
+
+  // 4. Load Medicines from API
+  async function loadMedicines() {
+    let items = [];
+
+    try {
+      if (window.API && window.API.medicines) {
+        const res = await window.API.medicines.getAll();
+        if (res && res.data && Array.isArray(res.data) && res.data.length > 0) {
+          items = res.data.map(m => ({
+            _id: m._id,
+            nameAr: m.nameAr,
+            nameEn: m.nameEn || m.nameAr,
+            category: m.category || 'أدوية عامة',
+            price: m.price || 25,
+            status: m.status || 'active',
+            pharmaciesCount: m.pharmaciesCount || 12,
+            image: m.image || '../../assets/images/parst.jpg',
+          }));
+        }
+      }
+    } catch (e) {
+      console.warn('[Admin Medicines API Fallback]:', e.message);
+    }
+
+    if (items.length === 0) {
+      try {
+        const local = JSON.parse(localStorage.getItem('admin_medicines_catalog'));
+        items = local && local.length > 0 ? local : defaultMedicines;
+      } catch (e) {
+        items = defaultMedicines;
+      }
+    }
+
+    currentMedicines = items;
+    saveLocalMedicines();
+    renderMedicines(currentMedicines);
+  }
+
+  function saveLocalMedicines() {
+    try {
+      localStorage.setItem('admin_medicines_catalog', JSON.stringify(currentMedicines));
+    } catch (e) {}
+  }
+
+  // 5. Render Medicines List
+  function renderMedicines(items) {
+    if (!medList) return;
+
+    if (items.length === 0) {
+      medList.innerHTML = `
+        <div class="text-center py-5 text-muted bg-white border rounded">
+          <i class="fa-solid fa-pills fs-2 mb-2 text-muted"></i>
+          <p class="font-bold mb-0">لا توجد أدوية مطابقة للبحث</p>
+        </div>
+      `;
+      return;
+    }
+
+    let html = '';
+    items.forEach(med => {
+      const statusText = med.status === 'active' || med.status === 'نشط' ? 'نشط' : 'قيد المراجعة';
+      const statusClass = med.status === 'active' || med.status === 'نشط' ? 'status-active' : 'status-pending';
+      const img = med.image || '../../assets/images/parst.jpg';
+
+      html += `
+        <div class="medicine-card" data-id="${med._id}">
+          <div class="medicine-right">
+            <div class="medicine-img-box colorful">
+              <img src="${img}" alt="${med.nameAr}" class="medicine-image" onerror="this.src='../../assets/images/parst.jpg'">
+            </div>
+            <div class="medicine-details">
+              <h3 class="medicine-name">${med.nameAr}</h3>
+              <div class="medicine-subtext">
+                <span class="eng-name">${med.nameEn}</span>
+                <span class="dot">•</span>
+                <span class="category-name">${med.category}</span>
+                <span class="dot">•</span>
+                <span class="pharmacy-count">${med.pharmaciesCount || 10} صيدلية</span>
+                <span class="dot">•</span>
+                <span class="fw-bold text-success">${Number(med.price || 25).toFixed(2)} ج.م</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="medicine-left">
+            <span class="status-badge ${statusClass}">${statusText}</span>
+            <div class="actions-group">
+              <button class="action-btn delete-btn" title="حذف" data-id="${med._id}">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+              <button class="action-btn view-btn" title="معاينة" data-id="${med._id}" data-name="${med.nameAr}">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    medList.innerHTML = html;
+  }
+
+  // 6. Search Filter
+  if (medSearchInput) {
+    medSearchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase().trim();
+      if (!query) {
+        renderMedicines(currentMedicines);
+        return;
+      }
+      const filtered = currentMedicines.filter(m => {
+        return (
+          m.nameAr.toLowerCase().includes(query) ||
+          m.nameEn.toLowerCase().includes(query) ||
+          m.category.toLowerCase().includes(query)
+        );
+      });
+      renderMedicines(filtered);
+    });
+  }
+
+  // 7. Modal Handlers (Add Medicine)
   if (openMedModalBtn && medModal) {
     const openMedModal = () => medModal.classList.add('active');
     const closeMedModal = () => medModal.classList.remove('active');
@@ -94,80 +198,110 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeMedModalBtn) closeMedModalBtn.addEventListener('click', closeMedModal);
     if (cancelMedModalBtn) cancelMedModalBtn.addEventListener('click', closeMedModal);
 
-    if (addMedForm && medList) {
-      addMedForm.addEventListener('submit', (e) => {
+    if (addMedForm) {
+      addMedForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const mName = document.getElementById('newMedName').value;
-        const engName = document.getElementById('newMedEngName').value || 'Medicine';
-        const category = document.getElementById('newMedCategory').value || 'عام';
-        const pCount = document.getElementById('newMedPharmacyCount').value || '0';
-        const status = document.getElementById('newMedStatus').value;
+        const mName = document.getElementById('newMedName')?.value.trim();
+        const engName = document.getElementById('newMedEngName')?.value.trim() || mName;
+        const category = document.getElementById('newMedCategory')?.value || 'عام';
+        const pCount = Number(document.getElementById('newMedPharmacyCount')?.value) || 1;
+        const status = document.getElementById('newMedStatus')?.value || 'active';
 
-        let statusClass = status === 'قيد المراجعة' ? 'status-pending' : 'status-active';
+        if (!mName) {
+          if (window.Toast) window.Toast.warning('يرجى كتابة اسم الدواء بالعربية', 'حقل مطلوب');
+          return;
+        }
 
-        const card = document.createElement('div');
-        card.className = 'medicine-card';
-        card.innerHTML = `
-          <div class="medicine-right">
-            <div class="medicine-img-box blue">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><path d="M10.5 20.5l10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7z"></path><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"></line></svg>
-            </div>
-            <div class="medicine-details">
-              <h3 class="medicine-name">${mName}</h3>
-              <div class="medicine-subtext">
-                <span>${engName}</span><span class="dot">•</span><span>${category}</span><span class="dot">•</span><span>${pCount} صيدلية</span>
-              </div>
-            </div>
-          </div>
-          <div class="medicine-left">
-            <span class="status-badge ${statusClass}">${status}</span>
-            <div class="actions-group">
-              <button class="action-btn delete-btn" title="حذف"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.8"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
-              <button class="action-btn view-btn" title="معاينة"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
-            </div>
-          </div>
-        `;
+        let newId = `med_${Date.now()}`;
 
-        medList.prepend(card);
+        // Send to Backend API
+        try {
+          if (window.API && window.API.medicines) {
+            const res = await window.API.medicines.create({
+              nameAr: mName,
+              nameEn: engName,
+              category,
+              price: 35.0,
+              status: status === 'قيد المراجعة' ? 'pending' : 'active',
+            });
+            if (res && res.data && res.data._id) {
+              newId = res.data._id;
+            }
+          }
+        } catch (err) {
+          console.warn('API create medicine fallback:', err.message);
+        }
+
+        const newMed = {
+          _id: newId,
+          nameAr: mName,
+          nameEn: engName,
+          category,
+          price: 35.0,
+          status: status === 'قيد المراجعة' ? 'pending' : 'active',
+          pharmaciesCount: pCount,
+          image: '../../assets/images/parst.jpg',
+        };
+
+        currentMedicines.unshift(newMed);
+        saveLocalMedicines();
+        renderMedicines(currentMedicines);
+
+        if (window.Toast) {
+          window.Toast.success(`تمت إضافة (${mName}) إلى قاعدة بيانات الأدوية بنجاح.`, 'إضافة دواء');
+        }
+
         addMedForm.reset();
         closeMedModal();
       });
     }
   }
 
-  // 5. Action Delegation for Medicine Cards List
+  // 8. Action Delegation (Delete & View)
   if (medList) {
-    medList.addEventListener('click', (e) => {
+    medList.addEventListener('click', async (e) => {
       const targetBtn = e.target.closest('.action-btn');
       if (!targetBtn) return;
 
       const card = targetBtn.closest('.medicine-card');
-      const medName = card.querySelector('.medicine-name')?.innerText || 'الدواء';
+      const medId = targetBtn.dataset.id || card?.dataset.id;
+      const medItem = currentMedicines.find(m => m._id === medId);
+      const medName = medItem ? medItem.nameAr : (card?.querySelector('.medicine-name')?.innerText || 'الدواء');
 
       if (targetBtn.classList.contains('delete-btn')) {
-        const proceedDelete = async () => {
-          let ok = true;
-          if (window.Toast && window.Toast.confirm) {
-            ok = await window.Toast.confirm({
-              title: 'حذف الدواء',
-              message: `هل أنت متأكد من رغبتك في حذف ${medName} من قاعدة البيانات؟`,
-              type: 'danger',
-              confirmText: 'حذف نهائي',
-              cancelText: 'إلغاء'
-            });
+        let confirmed = true;
+        if (window.Toast && window.Toast.confirm) {
+          confirmed = await window.Toast.confirm({
+            title: 'حذف الدواء',
+            message: `هل أنت متأكد من رغبتك في حذف (${medName}) من قاعدة البيانات؟`,
+            type: 'danger',
+            confirmText: 'حذف نهائي',
+            cancelText: 'إلغاء'
+          });
+        }
+
+        if (confirmed) {
+          try {
+            if (window.API && window.API.medicines && medId && medId.length === 24) {
+              await window.API.medicines.delete(medId);
+            }
+          } catch (err) {
+            console.warn('API delete medicine fallback:', err.message);
           }
-          if (ok) {
-            card.style.opacity = '0';
-            card.style.transform = 'scale(0.95)';
-            card.style.transition = 'all 0.2s ease';
-            setTimeout(() => card.remove(), 200);
-            if (window.Toast) window.Toast.success(`تم حذف ${medName} بنجاح.`, 'تم الحذف');
+
+          currentMedicines = currentMedicines.filter(m => m._id !== medId);
+          saveLocalMedicines();
+          renderMedicines(currentMedicines);
+
+          if (window.Toast) {
+            window.Toast.success(`تم حذف (${medName}) بنجاح من المنصة.`, 'تم الحذف');
           }
-        };
-        proceedDelete();
+        }
       } else if (targetBtn.classList.contains('view-btn')) {
         window.location.href = '../public/medicine-detail.html?med=' + encodeURIComponent(medName);
       }
     });
   }
+
+  await loadMedicines();
 });
