@@ -30,7 +30,7 @@ connectDB().catch((err) => console.error('[Initial DB Error]:', err.message));
 // Middleware
 app.use(
   cors({
-    origin: '*',
+    origin: true, // Allow dynamic origin reflecting for Vercel preview URLs and custom domains
     credentials: true,
   })
 );
@@ -56,7 +56,8 @@ const checkDbConnection = (req, res, next) => {
     connectDB().catch(() => {});
     return res.status(503).json({
       success: false,
-      message: 'Database is not connected. Please ensure MongoDB is running or configure MONGODB_URI in backend/.env',
+      message: 'قاعدة البيانات غير متصلة. يرجى التأكد من تشغيل MongoDB أو السماح بـ IP Whitelist (0.0.0.0/0) في MongoDB Atlas.',
+      error: 'Database connection is pending or unavailable.',
     });
   }
   next();

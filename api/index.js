@@ -1,9 +1,8 @@
-const app = require('../app');
-const connectDB = require('../config/db');
+const app = require('../backend/app');
+const connectDB = require('../backend/config/db');
 
-// Serverless Handler for Vercel
+// Root Serverless Function for Vercel Fullstack Deployment
 module.exports = async (req, res) => {
-  // Ensure database is connected before handling serverless request
   try {
     await connectDB();
   } catch (err) {
