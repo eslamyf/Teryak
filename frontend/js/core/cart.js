@@ -54,7 +54,13 @@
         : parseFloat(String(product.price).replace(/[^0-9.]/g, '')) || 25.0;
 
       const qtyToAdd = Number(product.quantity) || 1;
-      const productImg = product.image || product.img || '../../assets/images/parst.jpg';
+      const getBase = () => {
+        const p = window.location.pathname.replace(/\\/g, '/');
+        if (p.includes('/pages/public/') || p.includes('/pages/pharmacist/') || p.includes('/pages/admin/')) return '../../';
+        if (p.includes('/pages/')) return '../';
+        return './';
+      };
+      const productImg = product.image || product.img || (getBase() + 'assets/images/parst.jpg');
 
       if (existingItem) {
         existingItem.quantity = (Number(existingItem.quantity) || 1) + qtyToAdd;

@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
           name: 'بانادول إكسترا 500 مجم',
-          image: '../../assets/images/panadol.jpg',
+          image: '../../assets/images/tablets.jpg',
           quantity: 2,
           price: 40.00,
           total: 80.00
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
       items: [
         {
           name: 'أموكسيسيلين 500 مجم كبسولات',
-          image: '../../assets/images/Amoxicillin.jpg',
+          image: '../../assets/images/amoc.jpg',
           quantity: 1,
           price: 85.50,
           total: 85.50

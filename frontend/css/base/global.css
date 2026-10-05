@@ -13,33 +13,7 @@ body, button, input, select, textarea, optgroup, option {
   font-family: var(--font-arabic);
 }
 
-/* Local FontAwesome @font-face Declarations (Offline & Local Fallback) */
-@font-face {
-  font-family: 'Font Awesome 6 Free';
-  font-style: normal;
-  font-weight: 900;
-  font-display: block;
-  src: url('../../assets/fonts/fa-solid-900.woff2') format('woff2'),
-       url('/assets/fonts/fa-solid-900.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Font Awesome 6 Free';
-  font-style: normal;
-  font-weight: 400;
-  font-display: block;
-  src: url('../../assets/fonts/fa-regular-400.woff2') format('woff2'),
-       url('/assets/fonts/fa-regular-400.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Font Awesome 6 Brands';
-  font-style: normal;
-  font-weight: 400;
-  font-display: block;
-  src: url('../../assets/fonts/fa-brands-400.woff2') format('woff2'),
-       url('/assets/fonts/fa-brands-400.woff2') format('woff2');
-}
+/* FontAwesome font rules */
 
 /* Ensure FontAwesome icons & pseudo-elements are never overridden by Arabic text fonts */
 .fa, .fas, .fa-solid, .far, .fa-regular, .fab, .fa-brands,

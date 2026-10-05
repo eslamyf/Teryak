@@ -58,13 +58,25 @@ const Auth = {
     }
   },
 
+  getBasePath: function() {
+    const path = window.location.pathname.replace(/\\/g, '/');
+    if (path.includes('/pages/public/') || path.includes('/pages/pharmacist/') || path.includes('/pages/admin/')) {
+      return '../../';
+    } else if (path.includes('/pages/')) {
+      return '../';
+    } else {
+      return './';
+    }
+  },
+
   requireAuth: function(allowedRoles = [], fallbackUrl = '') {
+    const base = this.getBasePath();
     if (!this.isLoggedIn()) {
       if (window.Toast) {
         window.Toast.warning('يجب تسجيل الدخول أولاً للوصول إلى هذه الصفحة', 'تسجيل الدخول مطلوب');
       }
       setTimeout(() => {
-        window.location.href = fallbackUrl || '/frontend/pages/public/login.html';
+        window.location.href = fallbackUrl || (base + 'pages/public/login.html');
       }, 1000);
       return false;
     }
@@ -84,7 +96,7 @@ const Auth = {
           window.Toast.error('غير مصرح لحسابك بالدخول إلى هذه الصفحة الإدارية', 'صلاحية غير كافية');
         }
         setTimeout(() => {
-          window.location.href = fallbackUrl || '/frontend/index.html';
+          window.location.href = fallbackUrl || (base + 'index.html');
         }, 1200);
         return false;
       }
