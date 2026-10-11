@@ -139,6 +139,12 @@
       markAsRead: (id) => API.put(`/notifications/${id}/read`),
       markAllAsRead: () => API.put('/notifications/read-all'),
     },
+
+    // 9. Payment Services (Egyptian Gateways)
+    payment: {
+      initiate: (data) => API.post('/payment/initiate', data),
+      verify: (orderId) => API.get(`/payment/verify/${orderId}`),
+    },
   };
 
   window.API = API;

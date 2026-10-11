@@ -2,6 +2,7 @@ const PharmacyInventory = require('../models/PharmacyInventory');
 const Pharmacy = require('../models/Pharmacy');
 const Medicine = require('../models/Medicine');
 const { successResponse, errorResponse } = require('../utils/apiResponse');
+const { escapeRegex } = require('../utils/regexHelper');
 
 // Helper to get pharmacy for logged-in user
 const getUserPharmacy = async (userId) => {
@@ -274,7 +275,7 @@ const bulkImportInventory = async (req, res, next) => {
         let med = await Medicine.findOne({
           $or: [
             { nameAr: name },
-            { nameEn: new RegExp('^' + name + '$', 'i') }
+            { nameEn: new RegExp('^' + escapeRegex(name) + '$', 'i') }
           ]
         });
         if (!med) {

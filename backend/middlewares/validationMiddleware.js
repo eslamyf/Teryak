@@ -31,17 +31,21 @@ const validateRegister = (req, res, next) => {
   }
 
   if (!password || typeof password !== 'string') {
-    errors.push('Password is required');
-  } else if (password.length < 3) {
-    errors.push('Password must be at least 3 characters');
+    errors.push('كلمة المرور مطلوبة');
+  } else if (password.length < 6) {
+    errors.push('كلمة المرور يجب أن لا تقل عن 6 أحرف أو أرقام');
+  }
+
+  if (role === 'admin' || role === 'إدارة') {
+    errors.push('غير مسموح بإنشاء حساب إدارة عبر هذا النموذج');
   }
 
   if (role === 'صيدلي' || role === 'pharmacist') {
     if (!pharmacyName || !pharmacyName.trim()) {
-      errors.push('Pharmacy name is required for pharmacist accounts');
+      errors.push('اسم الصيدلية مطلوب لحسابات الصيادلة');
     }
     if (!licenseNumber || !licenseNumber.trim()) {
-      errors.push('License number is required for pharmacist accounts');
+      errors.push('رقم ترخيص الصيدلية مطلوب لحسابات الصيادلة');
     }
   }
 

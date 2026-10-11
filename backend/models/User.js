@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, 'كلمة المرور مطلوبة'],
-      minlength: [3, 'كلمة المرور يجب أن لا تقل عن 3 أحرف'],
+      minlength: [6, 'كلمة المرور يجب أن لا تقل عن 6 أحرف'],
     },
     phone: {
       type: String,
@@ -80,5 +80,9 @@ userSchema.methods.toJSON = function () {
   delete user.password;
   return user;
 };
+
+// Performance indexes
+userSchema.index({ role: 1 });
+userSchema.index({ phone: 1 });
 
 module.exports = mongoose.model('User', userSchema);

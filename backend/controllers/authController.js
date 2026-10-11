@@ -20,12 +20,14 @@ const registerUser = async (req, res, next) => {
       return errorResponse(res, 400, 'هذا البريد الإلكتروني مسجل بالفعل');
     }
 
-    // Determine normalized role (support Arabic frontend inputs: 'مريض' -> 'patient', 'صيدلي' -> 'pharmacist')
+    // Determine normalized role - Only 'patient' and 'pharmacist' can be registered publicly
     let normalizedRole = 'patient';
     if (role === 'صيدلي' || role === 'pharmacist') {
       normalizedRole = 'pharmacist';
-    } else if (role === 'admin' || role === 'إدارة') {
-      normalizedRole = 'admin';
+    }
+    // SECURITY: Reject or sanitize attempts to self-register as admin
+    if (role === 'admin' || role === 'إدارة') {
+      return errorResponse(res, 403, 'غير مصرح بإنشاء حساب إدارة عبر التسجيل العام');
     }
 
     // Create user
@@ -40,7 +42,7 @@ const registerUser = async (req, res, next) => {
       address: address || { governorate: 'القاهرة', city: 'مدينة نصر' },
     });
 
-    // If pharmacist, also create pharmacy profile record
+    // If pharmacist, also create pharmacy profile record in pending status
     let pharmacy = null;
     if (normalizedRole === 'pharmacist' && pharmacyName) {
       pharmacy = await Pharmacy.create({
@@ -48,6 +50,7 @@ const registerUser = async (req, res, next) => {
         name: pharmacyName,
         licenseNumber: licenseNumber || 'LIC-' + Date.now(),
         phone: phone || '01000000000',
+        isApproved: false, // Must be approved by Admin before going public
         address: {
           governorate: address?.governorate || 'القاهرة',
           city: address?.city || 'مدينة نصر',

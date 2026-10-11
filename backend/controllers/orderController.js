@@ -1,5 +1,7 @@
 const Order = require('../models/Order');
 const Pharmacy = require('../models/Pharmacy');
+const Medicine = require('../models/Medicine');
+const PharmacyInventory = require('../models/PharmacyInventory');
 const Notification = require('../models/Notification');
 const { successResponse, errorResponse } = require('../utils/apiResponse');
 
@@ -11,39 +13,101 @@ const createOrder = async (req, res, next) => {
     const {
       items,
       pharmacyId,
-      subtotal,
-      deliveryFee = 15,
-      totalAmount,
+      deliveryFee,
       paymentMethod = 'cash',
       shippingAddress,
       prescriptionImage,
     } = req.body;
 
-    if (!items || items.length === 0) {
+    if (!items || !Array.isArray(items) || items.length === 0) {
       return errorResponse(res, 400, 'السلة فارغة، يرجى إضافة أدوية للطلب');
     }
 
-    // Default or resolve pharmacy
+    // Resolve target pharmacy
     let targetPharmacyId = pharmacyId;
-    if (!targetPharmacyId) {
-      const defaultPharmacy = await Pharmacy.findOne({ isApproved: true });
-      if (defaultPharmacy) targetPharmacyId = defaultPharmacy._id;
+    let pharmacyDoc = null;
+    if (targetPharmacyId) {
+      pharmacyDoc = await Pharmacy.findById(targetPharmacyId);
+    }
+    if (!pharmacyDoc) {
+      pharmacyDoc = await Pharmacy.findOne({ isApproved: true });
+      if (pharmacyDoc) targetPharmacyId = pharmacyDoc._id;
     }
 
-    const calculatedSubtotal =
-      subtotal !== undefined
-        ? Number(subtotal)
-        : items.reduce((acc, item) => acc + item.price * (item.quantity || 1), 0);
-    const calculatedTotal =
-      totalAmount !== undefined ? Number(totalAmount) : calculatedSubtotal + Number(deliveryFee);
+    const resolvedDeliveryFee =
+      deliveryFee !== undefined
+        ? Number(deliveryFee)
+        : (pharmacyDoc?.deliveryFee !== undefined ? pharmacyDoc.deliveryFee : 15);
+
+    // SECURITY: Server-side price & item verification against DB (Prevent client price tampering)
+    const verifiedItems = [];
+    let calculatedSubtotal = 0;
+
+    for (const item of items) {
+      const qty = Math.max(1, Number(item.quantity) || 1);
+      let realPrice = 25; // Safe fallback price
+      let resolvedMedicineId = item.medicineId;
+      let medicineName = item.name;
+
+      if (resolvedMedicineId) {
+        const medDoc = await Medicine.findById(resolvedMedicineId);
+        if (medDoc) {
+          realPrice = medDoc.price;
+          medicineName = medDoc.nameAr || medDoc.nameEn || medicineName;
+        }
+      } else if (medicineName) {
+        const medDoc = await Medicine.findOne({
+          $or: [{ nameAr: medicineName }, { nameEn: medicineName }],
+        });
+        if (medDoc) {
+          realPrice = medDoc.price;
+          resolvedMedicineId = medDoc._id;
+        }
+      }
+
+      // Check if target pharmacy has a custom inventory price
+      if (targetPharmacyId && resolvedMedicineId) {
+        const inv = await PharmacyInventory.findOne({
+          pharmacyId: targetPharmacyId,
+          medicineId: resolvedMedicineId,
+        });
+        if (inv && inv.customPrice !== undefined && inv.customPrice > 0) {
+          realPrice = inv.customPrice;
+        }
+      }
+
+      calculatedSubtotal += realPrice * qty;
+
+      verifiedItems.push({
+        medicineId: resolvedMedicineId || undefined,
+        name: medicineName || 'دواء علاجي',
+        price: realPrice,
+        quantity: qty,
+        image: item.image || '',
+      });
+
+      // Atomic stock reservation if item belongs to pharmacy inventory
+      if (targetPharmacyId && resolvedMedicineId) {
+        await PharmacyInventory.findOneAndUpdate(
+          {
+            pharmacyId: targetPharmacyId,
+            medicineId: resolvedMedicineId,
+            quantity: { $gte: qty },
+          },
+          { $inc: { quantity: -qty } }
+        );
+      }
+    }
+
+    const calculatedTotal = calculatedSubtotal + Number(resolvedDeliveryFee);
 
     const order = await Order.create({
       patientId: req.user._id,
       pharmacyId: targetPharmacyId || undefined,
-      items,
-      subtotal: calculatedSubtotal,
-      deliveryFee: Number(deliveryFee),
-      totalAmount: calculatedTotal,
+      items: verifiedItems,
+      subtotal: Number(calculatedSubtotal.toFixed(2)),
+      deliveryFee: Number(resolvedDeliveryFee),
+      totalAmount: Number(calculatedTotal.toFixed(2)),
       paymentMethod,
       shippingAddress: shippingAddress || {
         fullName: req.user.name,
@@ -59,7 +123,7 @@ const createOrder = async (req, res, next) => {
     await Notification.create({
       recipientId: req.user._id,
       title: 'تم استلام طلبك بنجاح',
-      message: `تم إنشاء طلبك رقم (${order.orderNumber}) بقيمة ${calculatedTotal} ج.م وهو قيد المراجعة`,
+      message: `تم إنشاء طلبك رقم (${order.orderNumber}) بقيمة ${order.totalAmount} ج.م وهو قيد المراجعة`,
       type: 'order',
       link: `/frontend/pages/public/order-summary.html?orderId=${order._id}`,
     });
@@ -91,8 +155,10 @@ const getMyOrders = async (req, res, next) => {
 const getPharmacyOrders = async (req, res, next) => {
   try {
     const pharmacy = await Pharmacy.findOne({ ownerId: req.user._id });
-    
-    // Find orders for this pharmacy or all pending orders if no specific pharmacy
+    if (!pharmacy && req.user.role !== 'admin') {
+      return errorResponse(res, 404, 'لا توجد صيدلية مسجلة لهذا الحساب');
+    }
+
     let query = {};
     if (pharmacy) {
       query = { $or: [{ pharmacyId: pharmacy._id }, { pharmacyId: null }] };
@@ -113,7 +179,7 @@ const getPharmacyOrders = async (req, res, next) => {
   }
 };
 
-// @desc    Get single order by ID
+// @desc    Get single order by ID with IDOR protection
 // @route   GET /api/orders/:id
 // @access  Private
 const getOrderById = async (req, res, next) => {
@@ -133,6 +199,26 @@ const getOrderById = async (req, res, next) => {
 
     if (!order) {
       return errorResponse(res, 404, 'الطلب غير موجود');
+    }
+
+    // SECURITY: IDOR Protection - Only owner patient, assigned pharmacy, or admin can view order
+    const isPatientOwner =
+      order.patientId && String(order.patientId._id || order.patientId) === String(req.user._id);
+    const isAdmin = req.user.role === 'admin';
+    let isPharmacyOwner = false;
+
+    if (req.user.role === 'pharmacist' && order.pharmacyId) {
+      const userPharmacy = await Pharmacy.findOne({ ownerId: req.user._id });
+      if (
+        userPharmacy &&
+        String(userPharmacy._id) === String(order.pharmacyId._id || order.pharmacyId)
+      ) {
+        isPharmacyOwner = true;
+      }
+    }
+
+    if (!isPatientOwner && !isAdmin && !isPharmacyOwner) {
+      return errorResponse(res, 403, 'غير مصرح لك بالاطلاع على تفاصيل هذا الطلب');
     }
 
     return successResponse(res, 200, 'تم جلب تفاصيل الطلب', order);
@@ -159,10 +245,35 @@ const updateOrderStatus = async (req, res, next) => {
       return errorResponse(res, 404, 'الطلب غير موجود');
     }
 
+    // Verify pharmacist owns this pharmacy's order
+    if (req.user.role === 'pharmacist') {
+      const userPharmacy = await Pharmacy.findOne({ ownerId: req.user._id });
+      if (
+        !userPharmacy ||
+        (order.pharmacyId && String(order.pharmacyId) !== String(userPharmacy._id))
+      ) {
+        return errorResponse(res, 403, 'غير مصرح لك بتعديل طلبات صيدلية أخرى');
+      }
+    }
+
+    const previousStatus = order.status;
     order.status = status;
     if (status === 'completed') {
       order.paymentStatus = 'paid';
     }
+
+    // Restore stock if cancelled
+    if (status === 'cancelled' && previousStatus !== 'cancelled' && order.pharmacyId) {
+      for (const item of order.items) {
+        if (item.medicineId) {
+          await PharmacyInventory.findOneAndUpdate(
+            { pharmacyId: order.pharmacyId, medicineId: item.medicineId },
+            { $inc: { quantity: item.quantity } }
+          );
+        }
+      }
+    }
+
     await order.save();
 
     // Send notification to patient
@@ -204,8 +315,21 @@ const cancelOrder = async (req, res, next) => {
       return errorResponse(res, 400, 'لا يمكن إلغاء الطلب بعد تجهيزه أو خروجه للتوصيل');
     }
 
+    const previousStatus = order.status;
     order.status = 'cancelled';
     await order.save();
+
+    // Restore inventory if previously reserved
+    if (previousStatus !== 'cancelled' && order.pharmacyId) {
+      for (const item of order.items) {
+        if (item.medicineId) {
+          await PharmacyInventory.findOneAndUpdate(
+            { pharmacyId: order.pharmacyId, medicineId: item.medicineId },
+            { $inc: { quantity: item.quantity } }
+          );
+        }
+      }
+    }
 
     return successResponse(res, 200, 'تم إلغاء الطلب بنجاح', order);
   } catch (error) {

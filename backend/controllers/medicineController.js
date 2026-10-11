@@ -3,6 +3,7 @@ const PharmacyInventory = require('../models/PharmacyInventory');
 const Pharmacy = require('../models/Pharmacy');
 const { successResponse, errorResponse } = require('../utils/apiResponse');
 const { searchEgyptianDrugRegistry, fetchOnlineEgyptianDrugs } = require('../utils/egyptianDrugService');
+const { escapeRegex } = require('../utils/regexHelper');
 
 // @desc    Get all medicines with search, category filtering, sorting & pagination
 // @route   GET /api/medicines
@@ -13,9 +14,10 @@ const getMedicines = async (req, res, next) => {
 
     const query = { status: 'active' };
 
-    // Search by Arabic name, English name, or active ingredient
+    // Search by Arabic name, English name, or active ingredient safely
     if (search && search.trim() !== '') {
-      const regex = new RegExp(search.trim(), 'i');
+      const safeSearch = escapeRegex(search.trim());
+      const regex = new RegExp(safeSearch, 'i');
       query.$or = [
         { nameAr: regex },
         { nameEn: regex },
@@ -26,7 +28,8 @@ const getMedicines = async (req, res, next) => {
 
     // Category filter
     if (category && category !== 'all' && category !== 'الكل') {
-      query.category = new RegExp(category.trim(), 'i');
+      const safeCat = escapeRegex(category.trim());
+      query.category = new RegExp(safeCat, 'i');
     }
 
     // Sorting
@@ -82,8 +85,8 @@ const getMedicineById = async (req, res, next) => {
       const cleanQuery = (id || '').trim();
       const sanitized = cleanQuery.replace(/[-_]/g, ' ');
       const tokens = sanitized.split(/\s+/).filter(Boolean);
-      const flexiblePattern = tokens.join('.*');
-      const regex = new RegExp(cleanQuery, 'i');
+      const flexiblePattern = tokens.map(t => escapeRegex(t)).join('.*');
+      const regex = new RegExp(escapeRegex(cleanQuery), 'i');
       const flexRegex = new RegExp(flexiblePattern, 'i');
 
       // Common slug aliases for platform navigation

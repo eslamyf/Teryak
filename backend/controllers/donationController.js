@@ -1,5 +1,6 @@
 const Donation = require('../models/Donation');
 const { successResponse, errorResponse } = require('../utils/apiResponse');
+const { escapeRegex } = require('../utils/regexHelper');
 
 // @desc    Get all public donations and exchanges
 // @route   GET /api/donations
@@ -15,11 +16,11 @@ const getDonations = async (req, res, next) => {
     }
 
     if (city && city !== 'all' && city !== 'الكل') {
-      query.city = new RegExp(city.trim(), 'i');
+      query.city = new RegExp(escapeRegex(city.trim()), 'i');
     }
 
     if (search && search.trim() !== '') {
-      const regex = new RegExp(search.trim(), 'i');
+      const regex = new RegExp(escapeRegex(search.trim()), 'i');
       query.$or = [{ medicineName: regex }, { activeIngredient: regex }];
     }
 

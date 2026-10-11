@@ -76,4 +76,9 @@ const donationSchema = new mongoose.Schema(
   }
 );
 
+// Performance indexes
+donationSchema.index({ userId: 1, createdAt: -1 });
+donationSchema.index({ status: 1, type: 1 });
+donationSchema.index({ city: 1 });
+
 module.exports = mongoose.model('Donation', donationSchema);

@@ -11,6 +11,9 @@ dotenv.config();
 const connectDB = require('./config/db');
 const { notFound, errorHandler } = require('./middlewares/errorMiddleware');
 
+const helmet = require('helmet');
+const { apiLimiter } = require('./middlewares/rateLimiter');
+
 // Import Routes
 const authRoutes = require('./routes/authRoutes');
 const medicineRoutes = require('./routes/medicineRoutes');
@@ -21,8 +24,20 @@ const donationRoutes = require('./routes/donationRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 const app = express();
+
+// Disable Express fingerprinting
+app.disable('x-powered-by');
+
+// Security Headers via Helmet (with relaxed CSP for CDNs)
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
+  })
+);
 
 // Ensure DB is connected
 connectDB().catch((err) => console.error('[Initial DB Error]:', err.message));
@@ -36,6 +51,9 @@ app.use(
 );
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Apply general API rate limiting
+app.use('/api/', apiLimiter);
 
 // Health Check API
 app.get('/api/health', (req, res) => {
@@ -73,6 +91,7 @@ app.use('/api/donations', checkDbConnection, donationRoutes);
 app.use('/api/admin', checkDbConnection, adminRoutes);
 app.use('/api/upload', checkDbConnection, uploadRoutes);
 app.use('/api/notifications', checkDbConnection, notificationRoutes);
+app.use('/api/payment', checkDbConnection, paymentRoutes);
 
 // Serve Frontend Static Files in Local / Fullstack Standalone mode
 const frontendPath = path.join(__dirname, '../frontend');

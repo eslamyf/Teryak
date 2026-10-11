@@ -4,6 +4,7 @@ const Medicine = require('../models/Medicine');
 const Order = require('../models/Order');
 const Donation = require('../models/Donation');
 const { successResponse, errorResponse } = require('../utils/apiResponse');
+const { escapeRegex } = require('../utils/regexHelper');
 
 // @desc    Get Admin Dashboard Stats & Chart Data
 // @route   GET /api/admin/dashboard-stats
@@ -77,7 +78,7 @@ const getAllUsers = async (req, res, next) => {
     }
 
     if (search && search.trim() !== '') {
-      const regex = new RegExp(search.trim(), 'i');
+      const regex = new RegExp(escapeRegex(search.trim()), 'i');
       query.$or = [{ name: regex }, { email: regex }, { phone: regex }];
     }
 

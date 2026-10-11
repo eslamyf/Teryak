@@ -95,4 +95,10 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
+// Performance indexes for fast querying & sorting
+orderSchema.index({ patientId: 1, createdAt: -1 });
+orderSchema.index({ pharmacyId: 1, status: 1 });
+orderSchema.index({ status: 1 });
+orderSchema.index({ createdAt: -1 });
+
 module.exports = mongoose.model('Order', orderSchema);

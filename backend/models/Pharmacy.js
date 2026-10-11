@@ -75,4 +75,8 @@ const pharmacySchema = new mongoose.Schema(
   }
 );
 
+// Performance indexes
+pharmacySchema.index({ ownerId: 1 });
+pharmacySchema.index({ isApproved: 1 });
+
 module.exports = mongoose.model('Pharmacy', pharmacySchema);
