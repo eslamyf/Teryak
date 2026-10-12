@@ -331,19 +331,128 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     const adminFileInput = document.getElementById('adminCsvFileInput');
+    const adminDropZone = document.getElementById('adminCsvDropZone');
+    const adminDropZoneBrowse = document.getElementById('adminDropZoneBrowse');
+    const adminDropZoneFileName = document.getElementById('adminDropZoneFileName');
     const adminTextInput = document.getElementById('adminCsvTextInput');
     const adminExecBtn = document.getElementById('adminExecuteImportBtn');
 
-    if (adminFileInput && adminTextInput) {
-      adminFileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            adminTextInput.value = event.target.result;
-          };
-          reader.readAsText(file, 'UTF-8');
+    function processAdminFile(file) {
+      if (!file) return;
+      const maxSize = 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        if (window.Toast) window.Toast.error('حجم الملف يتجاوز 5 ميجابايت', 'ملف كبير جداً');
+        return;
+      }
+      // Show file name
+      if (adminDropZoneFileName) {
+        adminDropZoneFileName.textContent = `✓ تم اختيار: ${file.name}`;
+        adminDropZoneFileName.style.display = 'block';
+      }
+      if (adminDropZone) {
+        adminDropZone.style.borderColor = '#0d6efd';
+        adminDropZone.style.background = '#eff6ff';
+      }
+
+      const ext = file.name.split('.').pop().toLowerCase();
+      const isExcel = ext === 'xlsx' || ext === 'xls';
+
+      if (isExcel) {
+        if (typeof XLSX === 'undefined') {
+          if (window.Toast) window.Toast.error('مكتبة Excel غير محملة، يرجى استخدام ملف CSV', 'خطأ');
+          return;
         }
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const data = new Uint8Array(event.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+            const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+
+            const firstRow = rows[0] || [];
+            const isHeader = firstRow.some(c => String(c).includes('اسم') || String(c).toLowerCase().includes('name'));
+            const startIdx = isHeader ? 1 : 0;
+
+            const csvLines = [];
+            if (isHeader) csvLines.push(firstRow.join(','));
+            else csvLines.push('الاسم العربي,الاسم الإنجليزي,الفئة,السعر');
+
+            for (let i = startIdx; i < rows.length; i++) {
+              const row = rows[i];
+              if (!String(row[0] || '').trim()) continue;
+              csvLines.push(row.map(c => String(c || '')).join(','));
+            }
+
+            const csvText = csvLines.join('\n');
+            if (adminTextInput) adminTextInput.value = csvText;
+
+            const dataRows = csvLines.length - 1;
+            if (window.Toast) window.Toast.success(`تم تحليل ملف Excel: ${dataRows} دواء`, 'تم قراءة Excel بنجاح');
+          } catch (err) {
+            console.error('Admin Excel parse error:', err);
+            if (window.Toast) window.Toast.error('تعذر قراءة ملف Excel. تأكد من أن الملف غير محمي.', 'خطأ في القراءة');
+          }
+        };
+        reader.onerror = () => {
+          if (window.Toast) window.Toast.error('تعذر قراءة الملف', 'خطأ');
+        };
+        reader.readAsArrayBuffer(file);
+      } else {
+        // CSV / TXT
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          if (adminTextInput) adminTextInput.value = event.target.result;
+          if (window.Toast) {
+            const lines = event.target.result.split(/\r?\n/).filter(l => l.trim() && !l.includes('الاسم') && !l.toLowerCase().includes('name'));
+            window.Toast.success(`تم تحميل الملف: حوالي ${lines.length} صف`, 'تم قراءة الملف');
+          }
+        };
+        reader.onerror = () => {
+          if (window.Toast) window.Toast.error('تعذر قراءة الملف، يرجى المحاولة مرة أخرى', 'خطأ في القراءة');
+        };
+        reader.readAsText(file, 'UTF-8');
+      }
+    }
+
+
+    if (adminFileInput && adminDropZone) {
+      // Click on dropzone → open file picker
+      adminDropZone.addEventListener('click', () => adminFileInput.click());
+
+      if (adminDropZoneBrowse) {
+        adminDropZoneBrowse.addEventListener('click', (e) => {
+          e.stopPropagation();
+          adminFileInput.click();
+        });
+      }
+
+      adminFileInput.addEventListener('change', (e) => {
+        processAdminFile(e.target.files[0]);
+      });
+
+      adminDropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        adminDropZone.style.background = '#dbeaff';
+        adminDropZone.style.borderColor = '#0d6efd';
+      });
+
+      adminDropZone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!adminDropZoneFileName || !adminDropZoneFileName.textContent) {
+          adminDropZone.style.background = '#f0fff4';
+          adminDropZone.style.borderColor = '#198754';
+        }
+      });
+
+      adminDropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const file = e.dataTransfer.files[0];
+        if (file) processAdminFile(file);
       });
     }
 

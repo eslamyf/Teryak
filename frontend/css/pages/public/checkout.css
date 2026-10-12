@@ -22,7 +22,7 @@ body {
   background-color: var(--bg-page);
   padding-top: 75px;
   direction: rtl;
-  font-family: var(--font-arabic, 'Cairo', sans-serif);
+  font-family: var(--font-arabic, 'Tajawal', sans-serif);
   color: var(--text-dark);
   min-height: 100vh;
   display: flex;

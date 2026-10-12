@@ -12,8 +12,8 @@
 
   const request = async (endpoint, options = {}) => {
     const url = `${getBaseUrl()}${endpoint}`;
+    const isFormData = options.body instanceof FormData;
     const headers = {
-      'Content-Type': 'application/json',
       ...options.headers,
     };
 
@@ -22,18 +22,22 @@
       headers['Authorization'] = `Bearer ${token}`;
     }
 
+    if (!isFormData && !headers['Content-Type']) {
+      headers['Content-Type'] = 'application/json';
+    }
+
     try {
       const config = {
         ...options,
         headers,
       };
 
-      if (options.body && typeof options.body === 'object' && !(options.body instanceof FormData)) {
+      if (options.body && typeof options.body === 'object' && !isFormData) {
         config.body = JSON.stringify(options.body);
       }
 
       const response = await fetch(url, config);
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
         throw new Error(data.message || 'حدث خطأ أثناء معالجة الطلب');
@@ -48,6 +52,10 @@
 
   const API = {
     request,
+
+    upload: (endpoint, formData) => {
+      return request(endpoint, { method: 'POST', body: formData });
+    },
 
     get: (endpoint, params = {}) => {
       const query = new URLSearchParams(params).toString();

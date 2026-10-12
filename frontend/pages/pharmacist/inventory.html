@@ -6,8 +6,19 @@
   <title>ترياق | لوحة تحكم الصيدلي - إدارة المخزون</title>
 
   <!-- Vendor CSS -->
+    <!-- High-Performance Typography: Tajawal (Preferred by Egyptian & Modern Pharmacies) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <!-- SheetJS for Excel parsing (Local with CDN fallback) -->
+  <script src="../../js/libs/xlsx.full.min.js"></script>
+  <script>
+    if (typeof XLSX === 'undefined') {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"><\\/script>');
+    }
+  </script>
   <!-- Base & Component CSS -->
   <link rel="stylesheet" href="../../css/base/variables.css">
   <link rel="stylesheet" href="../../css/base/global.css">
@@ -32,32 +43,173 @@
 
     <!-- Main Content Area -->
     <main class="main-content">
-      <!-- Search and Add Bar -->
-      <div class="top-bar d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
-        <div class="d-flex gap-2 align-items-center flex-wrap">
-          <button class="add-btn btn btn-success font-bold" id="addMedBtn">
-            <i class="fa-solid fa-plus me-1"></i> إضافة دواء للمخزون
-          </button>
-          <button class="btn btn-primary font-bold" id="bulkImportBtn" title="استيراد مئات الأدوية دفعة واحدة عبر ملف Excel أو CSV">
-            <i class="fa-solid fa-file-import me-1"></i> استيراد شيت إكسل / CSV
-          </button>
-          <button class="btn btn-outline-secondary font-bold" id="exportInventoryBtn" title="تصدير مخزون الصيدلية الحالي كملف CSV">
-            <i class="fa-solid fa-file-export me-1"></i> تصدير المخزون
-          </button>
-        </div>
-
-        <div class="search flex-grow-1 position-relative" style="min-width: 260px;">
-          <input type="text" id="inventorySearchInput" class="form-control" placeholder="ابحث في المخزون بالاسم أو المادة الفعالة...">
+      <!-- Page Header & Quick Summary -->
+      <div class="inventory-header mb-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+          <div>
+            <h1 class="h3 font-bold mb-1 d-flex align-items-center gap-2">
+              <i class="fa-solid fa-boxes-stacked text-success"></i> إدارة مخزون الصيدلية
+            </h1>
+            <p class="text-muted mb-0" style="font-size: 14px;">
+              تتبع كميات الأدوية، صلاحيات التشغيلات، تنبيهات النواقص، والاستيراد الذكي لشيتات الإكسل
+            </p>
+          </div>
+          <div class="d-flex gap-2 align-items-center flex-wrap">
+            <button class="btn btn-outline-secondary btn-sm font-bold" id="cleanCorruptedBtn" title="تنظيف المخزون من أي بيانات تالفة قديمة">
+              <i class="fa-solid fa-broom text-warning me-1"></i> تنظيف البيانات
+            </button>
+            <button class="btn btn-outline-success btn-sm font-bold" id="exportInventoryBtn" title="تصدير مخزون الصيدلية الحالي كملف CSV أو إكسل">
+              <i class="fa-solid fa-file-export me-1"></i> تصدير المخزون
+            </button>
+            <button class="btn btn-primary btn-sm font-bold" id="bulkImportBtn" title="استيراد مئات الأدوية دفعة واحدة عبر ملف Excel أو CSV">
+              <i class="fa-solid fa-file-import me-1"></i> استيراد شيت إكسل / CSV
+            </button>
+            <button class="btn btn-success btn-sm font-bold" id="addMedBtn">
+              <i class="fa-solid fa-plus me-1"></i> إضافة دواء جديد
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Medicine List Cards Grid -->
-      <div class="medicine-list" id="inventoryList">
-        <!-- Dynamic content rendered by JS -->
+      <!-- Inventory KPI Stats Bar -->
+      <div class="row g-3 mb-4" id="inventoryStatsRow">
+        <div class="col-xl-3 col-sm-6 col-12">
+          <div class="stat-card stat-total">
+            <div class="stat-icon"><i class="fa-solid fa-pills"></i></div>
+            <div class="stat-info">
+              <span class="stat-label">إجمالي الأصناف</span>
+              <h3 class="stat-value" id="statTotalItems">0</h3>
+              <small class="stat-sub text-muted" id="statTotalQty">0 علبة بالمخزن</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12">
+          <div class="stat-card stat-available">
+            <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="stat-info">
+              <span class="stat-label">أصناف متوفرة</span>
+              <h3 class="stat-value text-success" id="statAvailable">0</h3>
+              <small class="stat-sub text-success" id="statAvailablePct">0% من المخزون</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12">
+          <div class="stat-card stat-low">
+            <div class="stat-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="stat-info">
+              <span class="stat-label">أوشكت على النفاد (نواقص)</span>
+              <h3 class="stat-value text-warning" id="statLowStock">0</h3>
+              <small class="stat-sub text-warning">أقل من 5 علب</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12">
+          <div class="stat-card stat-out">
+            <div class="stat-icon"><i class="fa-solid fa-circle-xmark"></i></div>
+            <div class="stat-info">
+              <span class="stat-label">نفدت من المخزون</span>
+              <h3 class="stat-value text-danger" id="statOutOfStock">0</h3>
+              <small class="stat-sub text-danger">تحتاج إعادة طلب فوراً</small>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="add-new-card text-center p-3 border rounded mt-3 font-bold" id="bottomAddMedBtn">
-        <i class="fa-solid fa-plus-circle me-1"></i> + إضافة دواء جديد للمخزون
+      <!-- Controls & Filter Toolbar -->
+      <div class="inventory-toolbar card p-3 mb-4 shadow-sm border-0">
+        <div class="row g-2 align-items-center">
+          <!-- Search Bar -->
+          <div class="col-lg-4 col-md-6 col-12">
+            <div class="search-input-wrapper position-relative">
+              <i class="fa-solid fa-magnifying-glass search-icon"></i>
+              <input type="text" id="inventorySearchInput" class="form-control" placeholder="ابحث بالاسم، المادة الفعالة، مكان الرف...">
+              <button type="button" class="btn-clear-search d-none" id="clearSearchBtn" title="مسح البحث">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Status Filter -->
+          <div class="col-lg-2 col-md-3 col-6">
+            <select id="filterStatus" class="form-select">
+              <option value="all">جميع الحالات</option>
+              <option value="available">متوفر فقط</option>
+              <option value="low">نواقص (محدود)</option>
+              <option value="out">غير متوفر (0)</option>
+            </select>
+          </div>
+
+          <!-- Category Filter -->
+          <div class="col-lg-2 col-md-3 col-6">
+            <select id="filterCategory" class="form-select">
+              <option value="all">جميع الأقسام</option>
+              <option value="مسكنات وخافض حرارة">مسكنات وخافض حرارة</option>
+              <option value="مضادات حيوية">مضادات حيوية</option>
+              <option value="أدوية البرد والإنفلونزا">أدوية البرد</option>
+              <option value="فيتامينات ومكملات">فيتامينات ومكملات</option>
+              <option value="أدوية الضغط والقلب">أدوية الضغط والقلب</option>
+              <option value="أدوية السكري">أدوية السكري</option>
+              <option value="جهاز هضمي ومعدة">جهاز هضمي</option>
+              <option value="أدوية عامة">أدوية عامة</option>
+            </select>
+          </div>
+
+          <!-- Sort Select -->
+          <div class="col-lg-2 col-md-6 col-6">
+            <select id="filterSort" class="form-select">
+              <option value="newest">الأحدث إضافة</option>
+              <option value="name_asc">الاسم (أ - ي)</option>
+              <option value="qty_asc">الكمية (الأقل أولاً)</option>
+              <option value="qty_desc">الكمية (الأكثر أولاً)</option>
+              <option value="price_desc">السعر (الأعلى أولاً)</option>
+              <option value="price_asc">السعر (الأقل أولاً)</option>
+              <option value="expiry_asc">الصلاحية (الأقرب انتهاءً)</option>
+            </select>
+          </div>
+
+          <!-- View Toggle Mode -->
+          <div class="col-lg-2 col-md-6 col-6 d-flex justify-content-end">
+            <div class="btn-group view-toggle-group w-100" role="group">
+              <button type="button" class="btn btn-outline-secondary active" id="viewModeTableBtn" title="عرض كجدول منظم سريع">
+                <i class="fa-solid fa-table-list me-1"></i> جدول
+              </button>
+              <button type="button" class="btn btn-outline-secondary" id="viewModeCardsBtn" title="عرض كشبكة بطاقات">
+                <i class="fa-solid fa-grip me-1"></i> بطاقات
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inventory Table / Cards Container -->
+      <div id="inventoryContainer" class="inventory-container">
+        <!-- Rendered dynamically by JS -->
+      </div>
+
+      <!-- Pagination and Page Size Footer -->
+      <div class="inventory-pagination-wrapper card p-3 mt-3 shadow-sm border-0 d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div class="d-flex align-items-center gap-2">
+          <span class="text-muted" style="font-size: 13.5px;" id="paginationSummary">عرض 0 من 0 دواء</span>
+          <div class="d-inline-flex align-items-center gap-1 ms-3">
+            <label class="text-muted small m-0" for="itemsPerPageSelect">لكل صفحة:</label>
+            <select id="itemsPerPageSelect" class="form-select form-select-sm" style="width: 75px;">
+              <option value="15" selected>15</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+        </div>
+
+        <nav aria-label="تنقل صفحات المخزون">
+          <ul class="pagination pagination-sm m-0" id="inventoryPagination">
+            <!-- Dynamic page buttons -->
+          </ul>
+        </nav>
+      </div>
+
+      <div class="add-new-card text-center p-3 border rounded mt-3 font-bold" id="bottomAddMedBtn" style="cursor: pointer; background: #fff;">
+        <i class="fa-solid fa-plus-circle me-1 text-success"></i> + إضافة دواء جديد للمخزون
       </div>
     </main>
   </div>

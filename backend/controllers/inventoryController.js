@@ -264,9 +264,15 @@ const bulkImportInventory = async (req, res, next) => {
 
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
-      const name = (item.medicineName || item.nameAr || item.name || '').trim();
+      let name = (item.medicineName || item.nameAr || item.name || '').trim();
       if (!name && !item.medicineId) {
         errors.push(`الصف #${i + 1}: اسم الدواء أو معرّفه مطلوب`);
+        continue;
+      }
+
+      // Guard against binary/ZIP strings from corrupted imports
+      if (name.includes('xl/') || name.includes('docProps') || name.includes('[Content_Types]') || name.includes('.xmlPK') || /[\x00-\x08\x0E-\x1F]/.test(name)) {
+        errors.push(`الصف #${i + 1}: تم تخطي سطر تالف يحتوي على محتوى ثنائي غير صالح`);
         continue;
       }
 

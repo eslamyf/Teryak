@@ -7,7 +7,7 @@
 }
 
 body, button, input, select, textarea {
-    font-family: 'Cairo', sans-serif;
+    font-family: var(--font-arabic, 'Tajawal', sans-serif);
 }
 
 html {
@@ -336,179 +336,488 @@ header {
 }
 
 
-/*MEDICINE LIST*/
+/* ====================================================================
+   INVENTORY STATS CARDS (KPIs)
+   ==================================================================== */
 
-.medicine-list {
-    width: 100%;
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 18px;
-}
-
-
-/* MEDICINE CARD*/
-
-.medicine-card {
-    width: 100%;
-
-    min-height: 125px;
-
+.stat-card {
     background: #fff;
-
-    border: 1px solid var(--border);
-
-    border-radius: 22px;
-
-    padding: 18px 24px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 20px;
-
-    direction: rtl;
-
-    overflow: hidden;
-
-    box-shadow: 0 3px 10px rgba(0,0,0,.03);
-
-    transition: .35s ease;
-
-    animation: fadeUp .45s ease;
-}
-
-.medicine-card:hover {
-    transform: translateY(-3px);
-
-    box-shadow: 0 15px 30px rgba(0,0,0,.07);
-}
-
-
-/*MEDICINE INFO */
-
-.medicine-info {
-    display: flex;
-
-    align-items: center;
-
-    gap: 18px;
-
-    flex: 1;
-
-    min-width: 0;
-
-    direction: rtl;
-}
-
-
-/*MEDICINE IMAGE*/
-
-.medicine-card img {
-    width: 78px;
-    height: 78px;
-
-    object-fit: cover;
-
     border-radius: 18px;
-
-    flex-shrink: 0;
-
-    transition: .4s ease;
-}
-
-.medicine-card:hover img {
-    transform: scale(1.05);
-}
-
-
-/*MEDICINE DETAILS */
-
-.details {
-    flex: 1;
-
-    min-width: 0;
-
-    display: flex;
-
-    flex-direction: column;
-
-    justify-content: center;
-
-    text-align: right;
-
-    direction: rtl;
-}
-
-.details h3 {
-    font-size: 18px;
-
-    color: #111;
-
-    margin-bottom: 5px;
-
-    font-weight: 550;
-
-    transition: .3s;
-
-    line-height: 1.5;
-
-    overflow-wrap: break-word;
-}
-
-.details p {
-    color: #666;
-
-    font-size: 15px;
-
-    line-height: 1.8;
-
-    white-space: normal;
-
-    overflow-wrap: break-word;
-}
-
-
-/*ACTIONS / BADGE */
-
-.actions {
+    padding: 20px;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    gap: 8px;
-    flex-shrink: 0;
-    order: 2;
+    gap: 16px;
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
-.action-btn {
-    width: 36px;
-    height: 36px;
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.07);
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 4px;
+    height: 100%;
+}
+
+.stat-total::before { background: #3b82f6; }
+.stat-available::before { background: var(--primary, #0a9c6b); }
+.stat-low::before { background: #f59e0b; }
+.stat-out::before { background: #ef4444; }
+
+.stat-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.stat-total .stat-icon { background: #eff6ff; color: #3b82f6; }
+.stat-available .stat-icon { background: #ecfdf5; color: var(--primary, #0a9c6b); }
+.stat-low .stat-icon { background: #fffbeb; color: #f59e0b; }
+.stat-out .stat-icon { background: #fef2f2; color: #ef4444; }
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #64748b;
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+.stat-value {
+    font-size: 26px;
+    font-weight: 800;
+    margin: 0;
+    line-height: 1.1;
+    color: #0f172a;
+}
+
+.stat-sub {
+    font-size: 12px;
+    margin-top: 4px;
+    font-weight: 600;
+}
+
+/* ====================================================================
+   INVENTORY TOOLBAR & CONTROLS
+   ==================================================================== */
+
+.inventory-toolbar {
+    background: #fff;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+}
+
+.search-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.search-input-wrapper .search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 15px;
+    pointer-events: none;
+}
+
+.search-input-wrapper input {
+    padding-right: 42px !important;
+    padding-left: 36px !important;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    font-size: 14px;
+    background: #f8fafc;
+    transition: all 0.2s;
+}
+
+.search-input-wrapper input:focus {
+    background: #fff;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(10, 156, 107, 0.15);
+}
+
+.btn-clear-search {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+}
+
+.btn-clear-search:hover {
+    color: #ef4444;
+}
+
+.inventory-toolbar .form-select {
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    font-size: 13.5px;
+    font-weight: 600;
+    background-color: #f8fafc;
+}
+
+.inventory-toolbar .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(10, 156, 107, 0.15);
+}
+
+.view-toggle-group .btn {
+    border-radius: 10px !important;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 9px 14px;
+    border-color: #e2e8f0;
+    color: #64748b;
+}
+
+.view-toggle-group .btn.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+/* ====================================================================
+   DATA TABLE VIEW (HIGH PERFORMANCE & ZERO LAG)
+   ==================================================================== */
+
+.inventory-table-card {
+    background: #fff;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.03);
+}
+
+.inventory-table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.inventory-table {
+    width: 100%;
+    margin-bottom: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.inventory-table thead {
+    background: #f8fafc;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.inventory-table th {
+    padding: 14px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #475569;
+    border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
+    text-align: right;
+}
+
+.inventory-table tbody tr {
+    transition: background 0.15s ease;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.inventory-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.inventory-table td {
+    padding: 12px 16px;
+    vertical-align: middle;
+    font-size: 14px;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* Medicine Cell inside Table */
+.med-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 240px;
+}
+
+.med-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 1px solid #e2e8f0;
+    flex-shrink: 0;
+    background: #f8fafc;
+}
+
+.med-info-box {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.med-title {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 2px;
+    line-height: 1.3;
+}
+
+.med-meta {
+    font-size: 12px;
+    color: #64748b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 280px;
+}
+
+/* Quick Quantity Stepper */
+.qty-stepper {
+    display: inline-flex;
+    align-items: center;
+    background: #f1f5f9;
     border-radius: 10px;
+    padding: 3px;
+    gap: 4px;
+}
+
+.qty-step-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    border: none;
+    background: #fff;
+    color: #334155;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.qty-step-btn:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+.qty-step-val {
+    min-width: 38px;
+    text-align: center;
+    font-weight: 800;
+    font-size: 13.5px;
+    color: #0f172a;
+}
+
+/* Status Badges */
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12.5px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.status-pill.available {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.status-pill.low {
+    background: #fffbeb;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+.status-pill.out {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+}
+
+.status-pill.available .status-dot { background: #10b981; }
+.status-pill.low .status-dot { background: #f59e0b; }
+.status-pill.out .status-dot { background: #ef4444; }
+
+/* Expiry & Shelf Tags */
+.expiry-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 4px 9px;
+    border-radius: 8px;
+}
+
+.expiry-tag.normal {
+    background: #f8fafc;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+}
+
+.expiry-tag.urgent {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+    font-weight: 700;
+}
+
+.shelf-tag {
+    background: #f1f5f9;
+    color: #334155;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ====================================================================
+   CARDS GRID VIEW
+   ==================================================================== */
+
+.inventory-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 16px;
+}
+
+.med-grid-card {
+    background: #fff;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.03);
+    transition: all 0.25s ease;
+    position: relative;
+}
+
+.med-grid-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.med-grid-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.med-grid-thumb {
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    object-fit: cover;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    flex-shrink: 0;
+}
+
+.med-grid-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.med-grid-body h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    line-height: 1.35;
+}
+
+.med-grid-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #475569;
+    padding: 6px 0;
+    border-top: 1px dashed #e2e8f0;
+}
+
+.med-grid-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+    border-top: 1px solid #f1f5f9;
+}
+
+/* Action Buttons */
+.action-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
     border: 1px solid #e2e8f0;
     background: #ffffff;
     color: #475569;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 15px;
+    font-size: 14px;
     cursor: pointer;
     transition: all 0.2s ease;
     padding: 0;
-    line-height: 1;
-}
-
-.action-btn i {
-    pointer-events: none;
 }
 
 .action-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
 }
 
 .action-btn.btn-edit-item:hover {
@@ -523,81 +832,73 @@ header {
     border-color: #fecaca;
 }
 
-.badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 7px 16px;
-    min-width: 78px;
-    min-height: 34px;
-    border-radius: 30px;
-    font-size: 13px;
-    font-weight: 700;
-    white-space: nowrap;
-}
+/* ====================================================================
+   PAGINATION CONTROLS
+   ==================================================================== */
 
-
-/*BADGE COLORS */
-
-.available {
-    background: #EAF8F3;
-    color: #00A66A;
-}
-
-.limited {
-    background: #FFF3D8;
-    color: #D48A00;
-}
-
-.unavailable {
-    background: #FDECEC;
-    color: #E53935;
-}
-
-
-/*ADD NEW CARD */
-
-.add-new-card {
-    width: 100%;
-
-    margin-top: 20px;
-
-    border: 2px dashed #D8D8D8;
-
-    border-radius: 22px;
-
+.inventory-pagination-wrapper {
     background: #fff;
+    border-radius: 16px;
+}
 
-    min-height: 85px;
+.pagination {
+    gap: 4px;
+}
 
-    display: flex;
-
-    justify-content: center;
-    align-items: center;
-
-    font-size: 18px;
-
+.pagination .page-item .page-link {
+    border-radius: 8px !important;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+    padding: 6px 12px;
     font-weight: 700;
+    font-size: 13px;
+    background: #f8fafc;
+}
 
-    color: #666;
+.pagination .page-item.active .page-link {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
 
-    cursor: pointer;
+.pagination .page-item.disabled .page-link {
+    opacity: 0.5;
+    pointer-events: none;
+}
 
-    transition: .35s;
+/* ADD NEW CARD */
+.add-new-card {
+    border: 2px dashed #cbd5e1 !important;
+    background: #f8fafc !important;
+    color: #475569 !important;
+    transition: all 0.2s ease;
 }
 
 .add-new-card:hover {
-    border-color: var(--primary);
-
-    color: var(--primary);
-
-    background: #F8FFFC;
+    border-color: var(--primary) !important;
+    background: #f0fdf4 !important;
+    color: var(--primary) !important;
+    transform: translateY(-2px);
 }
 
-
-/*SCROLLBAR*/
-
+/* SCROLLBAR */
 ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
     width: 8px;
 }
 
@@ -1070,6 +1371,116 @@ body.dark-theme .search i,
 [data-theme="dark"] .search i {
   color: #94a3b8 !important;
 }
+
+/* ====================================================================
+   DARK THEME SUPPORT FOR STATS, TABLE, TOOLBAR & CARDS
+   ==================================================================== */
+
+body.dark-theme .stat-card,
+[data-theme="dark"] .stat-card,
+body.dark-theme .inventory-toolbar,
+[data-theme="dark"] .inventory-toolbar,
+body.dark-theme .inventory-table-card,
+[data-theme="dark"] .inventory-table-card,
+body.dark-theme .med-grid-card,
+[data-theme="dark"] .med-grid-card,
+body.dark-theme .inventory-pagination-wrapper,
+[data-theme="dark"] .inventory-pagination-wrapper {
+  background: #111827 !important;
+  border-color: #1f2937 !important;
+  color: #f1f5f9 !important;
+}
+
+body.dark-theme .stat-value,
+[data-theme="dark"] .stat-value,
+body.dark-theme .med-title,
+[data-theme="dark"] .med-title,
+body.dark-theme .med-grid-body h4,
+[data-theme="dark"] .med-grid-body h4,
+body.dark-theme .qty-step-val,
+[data-theme="dark"] .qty-step-val {
+  color: #f8fafc !important;
+}
+
+body.dark-theme .inventory-table thead,
+[data-theme="dark"] .inventory-table thead {
+  background: #161f30 !important;
+}
+
+body.dark-theme .inventory-table th,
+[data-theme="dark"] .inventory-table th {
+  color: #94a3b8 !important;
+  border-color: #1f2937 !important;
+}
+
+body.dark-theme .inventory-table td,
+[data-theme="dark"] .inventory-table td {
+  color: #e2e8f0 !important;
+  border-color: #1f2937 !important;
+}
+
+body.dark-theme .inventory-table tbody tr:hover,
+[data-theme="dark"] .inventory-table tbody tr:hover {
+  background: #1e293b !important;
+}
+
+body.dark-theme .search-input-wrapper input,
+[data-theme="dark"] .search-input-wrapper input,
+body.dark-theme .inventory-toolbar .form-select,
+[data-theme="dark"] .inventory-toolbar .form-select {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+body.dark-theme .qty-stepper,
+[data-theme="dark"] .qty-stepper,
+body.dark-theme .shelf-tag,
+[data-theme="dark"] .shelf-tag {
+  background: #1e293b !important;
+  color: #cbd5e1 !important;
+}
+
+body.dark-theme .qty-step-btn,
+[data-theme="dark"] .qty-step-btn {
+  background: #334155 !important;
+  color: #f8fafc !important;
+}
+
+body.dark-theme .view-toggle-group .btn,
+[data-theme="dark"] .view-toggle-group .btn {
+  border-color: #334155 !important;
+  color: #94a3b8 !important;
+}
+
+body.dark-theme .view-toggle-group .btn.active,
+[data-theme="dark"] .view-toggle-group .btn.active {
+  background: var(--primary) !important;
+  color: #ffffff !important;
+}
+
+body.dark-theme .pagination .page-item .page-link,
+[data-theme="dark"] .pagination .page-item .page-link {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #94a3b8 !important;
+}
+
+body.dark-theme .pagination .page-item.active .page-link,
+[data-theme="dark"] .pagination .page-item.active .page-link {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #ffffff !important;
+}
+
+body.dark-theme .med-thumb,
+body.dark-theme .med-grid-thumb,
+[data-theme="dark"] .med-thumb,
+[data-theme="dark"] .med-grid-thumb {
+  border-color: #334155 !important;
+  background: #1e293b !important;
+}
+
 
 
 

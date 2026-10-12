@@ -15,7 +15,7 @@
   box-sizing: border-box;
   border-top: 1px solid rgba(16, 185, 129, 0.25);
   box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.08);
-  font-family: var(--font-arabic, 'Cairo', sans-serif);
+  font-family: var(--font-arabic, 'Tajawal', sans-serif);
 }
 
 .footer-container {

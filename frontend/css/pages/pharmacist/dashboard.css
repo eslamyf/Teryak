@@ -5,7 +5,7 @@
 }
 
 body, button, input, select, textarea {
-    font-family: 'Cairo', sans-serif;
+    font-family: var(--font-arabic, 'Tajawal', sans-serif);
 }
 
 body{
@@ -299,7 +299,7 @@ body{
 }
 
 body, button, input, select, textarea {
-    font-family: 'Cairo', sans-serif;
+    font-family: var(--font-arabic, 'Tajawal', sans-serif);
 }
 
 html {
@@ -716,7 +716,7 @@ body {
 
     cursor: pointer;
 
-    font-family: 'Cairo', sans-serif;
+    font-family: var(--font-arabic, 'Tajawal', sans-serif);
 
     font-weight: 600;
 

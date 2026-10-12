@@ -147,6 +147,17 @@ async function runTestSuite() {
     }, tokenA);
     assert(payRes.status === 200 && payRes.data?.data?.orderNumber, 'Payment initiation endpoint generates valid checkout payload');
 
+    // 9. Upload endpoint accepts multipart/form-data file uploads
+    const uploadForm = new FormData();
+    uploadForm.append('file', new Blob(['hello-world'], { type: 'image/png' }), 'upload-test.png');
+    const uploadRes = await fetch(`http://127.0.0.1:${TEST_PORT}/api/upload`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${tokenA}` },
+      body: uploadForm,
+    });
+    const uploadJson = await uploadRes.json();
+    assert(uploadRes.status === 200 && uploadJson?.data?.filename === 'upload-test.png', 'File upload endpoint accepts valid multipart upload and returns file metadata');
+
     // Clean up test data
     await User.deleteMany({ email: new RegExp(testEmailPrefix) });
     await Order.deleteMany({ _id: orderIdA });
