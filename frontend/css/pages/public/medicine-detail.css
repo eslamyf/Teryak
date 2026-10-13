@@ -42,10 +42,27 @@ body {
 /* ---------------- Main Layout ---------------- */
 .d-flexMain {
   display: grid;
-  grid-template-columns: 1fr 340px;
+  grid-template-columns: 1fr;
   gap: 24px;
   align-items: start;
   width: 100%;
+}
+
+#availablePharmaciesList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pharmacy-stock-card {
+  margin: 0;
+}
+
+.DIV1,
+.DIV2,
+.DIV3,
+.left {
+  display: none;
 }
 
 .mainDIV {

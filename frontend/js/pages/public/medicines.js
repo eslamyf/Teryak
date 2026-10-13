@@ -201,18 +201,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     },
   ];
 
+  DEFAULT_CATALOG.forEach((medicine) => {
+    medicine.pharmaciesCount = 0;
+    medicine.status = 'unavailable';
+    medicine.image = '';
+  });
   let rawMedicinesList = [...DEFAULT_CATALOG];
 
-  // Helper Image mapper
-  function getMedicineImage(nameEn, category, dosageForm) {
-    const combined = `${nameEn || ''} ${category || ''} ${dosageForm || ''}`.toLowerCase();
-    if (combined.includes('syrup') || combined.includes('شراب') || combined.includes('susp') || combined.includes('معلق')) return '../../assets/images/syrup.jpg';
-    if (combined.includes('amp') || combined.includes('vial') || combined.includes('inj') || combined.includes('حقن') || combined.includes('أمبول')) return '../../assets/images/injection.jpg';
-    if (combined.includes('cream') || combined.includes('oint') || combined.includes('مرهم') || combined.includes('كريم') || combined.includes('gel')) return '../../assets/images/ointment.jpg';
-    if (combined.includes('drop') || combined.includes('قطرة') || combined.includes('نقط')) return '../../assets/images/drops.jpg';
-    if (combined.includes('spray') || combined.includes('بخاخ') || combined.includes('inhal')) return '../../assets/images/spray.jpg';
-    if (combined.includes('cap') || combined.includes('كبسول') || combined.includes('omega')) return '../../assets/images/capsules.jpg';
-    return '../../assets/images/tablets.jpg';
+  function escapeHTML(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 
   // Fetch Live Data from Backend API
@@ -220,16 +222,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (window.API && window.API.medicines) {
       try {
         const res = await window.API.medicines.getAll({ limit: 50 });
-        if (res && res.data && Array.isArray(res.data) && res.data.length > 0) {
+        if (res && Array.isArray(res.data)) {
           rawMedicinesList = res.data.map((m) => {
-            let cat = 'مسكنات';
+            let cat = m.category || 'منتجات صحية';
             const cLower = (m.category || '').toLowerCase();
-            if (cLower.includes('مضاد') || cLower.includes('antibiotic')) cat = 'مضادات حيوية';
-            else if (cLower.includes('فيتامين') || cLower.includes('vitamin')) cat = 'فيتامينات';
-            else if (cLower.includes('مكمل') || cLower.includes('omega')) cat = 'مكملات غذائية';
-            else if (cLower.includes('برد') || cLower.includes('cold')) cat = 'نزلات برد';
-            else if (cLower.includes('هضم') || cLower.includes('معدة')) cat = 'هضمي';
-            else if (cLower.includes('مسكن') || cLower.includes('سيولة') || cLower.includes('قلب')) cat = 'مسكنات';
+            if (m.productType !== 'product') {
+              if (cLower.includes('مضاد') || cLower.includes('antibiotic')) cat = 'مضادات حيوية';
+              else if (cLower.includes('فيتامين') || cLower.includes('vitamin')) cat = 'فيتامينات';
+              else if (cLower.includes('مكمل') || cLower.includes('omega')) cat = 'مكملات غذائية';
+              else if (cLower.includes('برد') || cLower.includes('cold')) cat = 'نزلات برد';
+              else if (cLower.includes('هضم') || cLower.includes('معدة')) cat = 'هضمي';
+              else if (cLower.includes('مسكن') || cLower.includes('سيولة') || cLower.includes('قلب')) cat = 'مسكنات';
+            }
 
             const firstWord = (m.nameEn || m.nameAr || 'medicine').split(' ')[0].toLowerCase();
 
@@ -238,12 +242,13 @@ document.addEventListener('DOMContentLoaded', async () => {
               nameAr: m.nameAr,
               nameEn: m.nameEn || m.nameAr,
               category: cat,
+              productType: m.productType || 'medicine',
               activeIngredient: m.activeIngredient || '',
               price: Number(m.price) || 25.0,
               rating: 4.8,
-              status: 'available',
-              pharmaciesCount: Math.floor(Math.random() * 35) + 10,
-              image: m.image && !m.image.startsWith('assets') ? m.image : getMedicineImage(m.nameEn, m.category, m.dosageForm),
+              status: Number(m.pharmaciesCount) > 0 ? 'available' : 'unavailable',
+              pharmaciesCount: Number(m.pharmaciesCount) || 0,
+              image: m.image || '',
               slug: firstWord,
             };
           });
@@ -405,21 +410,27 @@ document.addEventListener('DOMContentLoaded', async () => {
           ? '<span class="limited">كمية محدودة</span>'
           : '<span class="unavailable">غير متوفر</span>';
 
-      const detailUrl = `medicine-detail.html?med=${encodeURIComponent(med.slug || med.nameEn || med.nameAr)}`;
+      const detailUrl = `medicine-detail.html?med=${encodeURIComponent(med.id || med.slug || med.nameEn || med.nameAr)}`;
+      const safeName = escapeHTML(med.nameAr);
+      const safeNameEn = escapeHTML(med.nameEn);
+      const safeCategory = escapeHTML(med.category);
+      const safeIngredient = escapeHTML(med.productType === 'product' ? med.category : (med.activeIngredient || med.nameEn));
+      const safeImage = escapeHTML(med.image || '');
+      const safeId = escapeHTML(med.id);
 
       col.innerHTML = `
         <div class="card">
           <div class="img-box">
             <a href="${detailUrl}">
-              <img src="${med.image}" class="card-img-top" alt="${med.nameAr}" loading="lazy">
+              ${safeImage ? `<img src="${safeImage}" class="card-img-top" alt="${safeName}" loading="lazy" onerror="this.remove()">` : '<span class="medicine-image-placeholder" aria-label="لا توجد صورة للمنتج"><i class="fa-solid fa-box-open"></i></span>'}
             </a>
             <span class="rate"><i class="fa-solid fa-star"></i> ${med.rating}</span>
             ${statusBadge}
           </div>
           <div class="card-body">
-            <small>${med.nameEn} · ${med.category}</small>
-            <p class="card-title"><a href="${detailUrl}">${med.nameAr}</a></p>
-            <small class="text-truncate" style="max-width: 100%;">${med.activeIngredient || med.nameEn}</small>
+            <small>${med.productType === 'product' ? 'منتج صحي' : safeNameEn} · ${safeCategory}</small>
+            <p class="card-title"><a href="${detailUrl}">${safeName}</a></p>
+            <small class="text-truncate" style="max-width: 100%;">${safeIngredient}</small>
             <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
               <div>
                 <small class="text-muted">السعر الرسمي</small>
@@ -430,8 +441,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <small class="sml ${med.pharmaciesCount === 0 ? 'text-danger' : ''}">${med.pharmaciesCount} صيدلية</small>
               </div>
             </div>
-            <button class="addCart w-100" data-id="${med.id}" data-name="${med.nameAr}" data-price="${med.price}" data-img="${med.image}">
-              <i class="fa-solid fa-cart-plus me-1"></i> <span>أضف للسلة</span>
+            <button class="addCart w-100" data-id="${safeId}" data-name="${safeName}">
+              <i class="fa-solid fa-store me-1"></i> <span>اختر صيدلية للطلب</span>
             </button>
           </div>
         </div>
@@ -444,28 +455,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         addBtn.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
-          if (window.Cart) {
-            window.Cart.addItem({
-              id: med.id || Date.now(),
-              name: med.nameAr,
-              price: med.price,
-              quantity: 1,
-              image: med.image,
-            });
-
-            if (window.Toast) {
-              window.Toast.success(`تمت إضافة (${med.nameAr}) إلى سلة المشتريات بنجاح`, 'سلة المشتريات', 3500, {
-                text: 'عرض السلة',
-                onClick: () => {
-                  const modalEl = document.getElementById('exampleModalToggle');
-                  if (modalEl && typeof bootstrap !== 'undefined') {
-                    const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-                    modalInstance.show();
-                  }
-                },
-              });
-            }
-          }
+          window.location.href = detailUrl;
         });
       }
 
@@ -746,4 +736,3 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Initial Filter & Render Application
   applyFilters(true);
 });
-

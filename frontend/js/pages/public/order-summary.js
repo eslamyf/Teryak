@@ -66,8 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const confirmBtnText = document.getElementById('confirmBtnText');
   const confirmOrderBtn = document.getElementById('confirmOrderBtn');
 
-  const deliveryFee = 15.00;
   const cartItems = (window.Cart && typeof window.Cart.getItems === 'function') ? window.Cart.getItems() : [];
+  const pharmacyIds = [...new Set(cartItems.map((item) => item.pharmacyId).filter(Boolean).map(String))];
+  const hasUnassignedItems = cartItems.some((item) => !item.pharmacyId);
+  const hasMixedPharmacies = pharmacyIds.length > 1;
+  const canPlaceOrder = cartItems.length > 0 && !hasUnassignedItems && !hasMixedPharmacies && pharmacyIds.length === 1;
+  const deliveryFee = canPlaceOrder ? Number(cartItems[0].deliveryFee) || 15 : 15;
   const subtotal = (window.Cart && typeof window.Cart.getTotal === 'function') ? window.Cart.getTotal() : 0;
   const count = (window.Cart && typeof window.Cart.getCount === 'function') ? window.Cart.getCount() : cartItems.length;
   const finalTotal = subtotal > 0 ? subtotal + deliveryFee : 0;
@@ -95,15 +99,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let itemsHtml = '';
   cartItems.forEach((item) => {
-    const img = item.image || item.img || '../../assets/images/parst.jpg';
+    const img = item.image || item.img || '';
+    const imageMarkup = img
+      ? `<img src="${img}" alt="${item.name}" class="summary-item-img" loading="lazy" onerror="this.remove()">`
+      : '<span class="summary-item-img med-thumb-placeholder" aria-label="لا توجد صورة"><i class="fa-solid fa-box-open"></i></span>';
     const qty = Number(item.quantity) || 1;
     const price = typeof item.price === 'number' ? item.price : parseFloat(String(item.price).replace(/[^0-9.]/g, '')) || 25;
     const itemSubtotal = (price * qty).toFixed(2);
-    const pharmacy = item.pharmacy || 'صيدلية النهضة';
+    const pharmacy = item.pharmacy || 'صيدلية غير محددة';
 
     itemsHtml += `
       <div class="summary-item-row">
-        <img src="${img}" alt="${item.name}" class="summary-item-img" onerror="this.src='../../assets/images/parst.jpg'">
+        ${imageMarkup}
         <div class="summary-item-info">
           <div class="summary-item-name" title="${item.name}">${item.name}</div>
           <div class="summary-item-meta d-flex justify-content-between align-items-center">
@@ -117,17 +124,26 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   if (itemsContainer) itemsContainer.innerHTML = itemsHtml;
+  if (!canPlaceOrder && itemsContainer) {
+    const message = hasMixedPharmacies
+      ? 'لا يمكن إتمام طلب واحد من أكثر من صيدلية. أفرغ السلة واختر منتجات من صيدلية واحدة.'
+      : 'يجب اختيار صيدلية مسجلة لكل منتج قبل إتمام الطلب.';
+    itemsContainer.insertAdjacentHTML('beforeend', `<div class="alert alert-warning mt-3" role="alert">${message}</div>`);
+  }
+  if (confirmOrderBtn && !canPlaceOrder) confirmOrderBtn.disabled = true;
 
   // 4. Handle Final Order Placement to Database
   if (confirmOrderBtn) {
     confirmOrderBtn.addEventListener('click', async (e) => {
       e.preventDefault();
 
+      if (!canPlaceOrder) return;
       if (confirmOrderBtn.disabled) return;
       confirmOrderBtn.disabled = true;
       confirmOrderBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> جاري تأكيد الطلب وإرساله للصيدلية...';
 
       const orderPayload = {
+        pharmacyId: pharmacyIds[0],
         items: cartItems.map(item => ({
           medicineId: (item.medicineId && String(item.medicineId).length === 24) ? item.medicineId : undefined,
           name: item.name,
@@ -151,34 +167,17 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       try {
-        let createdOrder = null;
-        let orderNumber = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+        if (!window.API?.orders) throw new Error('تعذر الاتصال بالخادم. لم يتم إرسال الطلب.');
+        const response = await window.API.orders.create(orderPayload);
+        const createdOrder = response?.data;
+        if (!createdOrder) throw new Error('لم يؤكد الخادم حفظ الطلب.');
+        const orderNumber = createdOrder.orderNumber;
 
-        if (window.API && window.API.orders) {
-          const response = await window.API.orders.create(orderPayload);
-          createdOrder = response.data;
-          if (createdOrder && createdOrder.orderNumber) {
-            orderNumber = createdOrder.orderNumber;
-          }
-        }
-
-        // Save order in local history for instant display across tabs
+        // Save confirmed orders in local history for instant display across tabs
         const existingOrders = JSON.parse(localStorage.getItem('myOrders') || '[]');
-        const newOrderRecord = createdOrder || {
-          _id: `ord_${Date.now()}`,
-          orderNumber,
-          items: orderPayload.items,
-          shippingAddress: orderPayload.shippingAddress,
-          paymentMethod: paymentMethodName,
-          subtotal,
-          deliveryFee,
-          totalAmount: finalTotal,
-          status: 'pending',
-          createdAt: new Date().toISOString()
-        };
-        existingOrders.unshift(newOrderRecord);
+        existingOrders.unshift(createdOrder);
         localStorage.setItem('myOrders', JSON.stringify(existingOrders));
-        sessionStorage.setItem('lastCreatedOrder', JSON.stringify(newOrderRecord));
+        sessionStorage.setItem('lastCreatedOrder', JSON.stringify(createdOrder));
 
         // Clear Cart
         if (window.Cart) {
@@ -195,40 +194,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       } catch (error) {
         console.error('Order creation error:', error);
-        
-        // Graceful fallback for offline demo mode
-        const fallbackOrderNumber = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
-        const fallbackOrder = {
-          _id: `ord_${Date.now()}`,
-          orderNumber: fallbackOrderNumber,
-          items: orderPayload.items,
-          shippingAddress: orderPayload.shippingAddress,
-          paymentMethod: paymentMethodName,
-          subtotal,
-          deliveryFee,
-          totalAmount: finalTotal,
-          status: 'pending',
-          createdAt: new Date().toISOString()
-        };
-
-        const existingOrders = JSON.parse(localStorage.getItem('myOrders') || '[]');
-        existingOrders.unshift(fallbackOrder);
-        localStorage.setItem('myOrders', JSON.stringify(existingOrders));
-        sessionStorage.setItem('lastCreatedOrder', JSON.stringify(fallbackOrder));
-
-        if (window.Cart) {
-          window.Cart.clearCart();
-        }
-
-        if (window.Toast) {
-          window.Toast.success(`تم تأكيد طلبك رقم #${fallbackOrderNumber} بنجاح!`, 'تم الطلب بنجاح', 3000);
-        }
-
-        setTimeout(() => {
-          window.location.href = `order-success.html?orderId=${encodeURIComponent(fallbackOrderNumber)}`;
-        }, 800);
+        window.Toast?.error(error.message || 'تعذر تأكيد الطلب. لم يتم حذف محتويات السلة.', 'فشل إرسال الطلب');
+        confirmOrderBtn.disabled = false;
+        confirmOrderBtn.innerHTML = confirmBtnText?.textContent || 'تأكيد الطلب';
       }
     });
   }
 });
-

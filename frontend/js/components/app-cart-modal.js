@@ -148,13 +148,9 @@ class AppCartModal extends HTMLElement {
     }
 
     let html = '';
-    const base = this.getBasePath();
 
     cart.forEach(item => {
-      let imgSrc = item.img || item.image;
-      if (!imgSrc || imgSrc.includes('undefined')) {
-        imgSrc = base + 'assets/images/parst.jpg';
-      }
+      const imgSrc = item.img || item.image || '';
 
       let numPrice = typeof item.price === 'number'
         ? item.price
@@ -166,7 +162,7 @@ class AppCartModal extends HTMLElement {
       html += `
         <div class="modalDiv" data-id="${itemId}" data-name="${item.name}">
           <div class="cart-item-info-group">
-            <img src="${imgSrc}" alt="${item.name}" class="cart-item-thumb" onerror="this.src='${base}assets/images/parst.jpg'">
+            ${imgSrc ? `<img src="${imgSrc}" alt="${item.name}" class="cart-item-thumb" loading="lazy" onerror="this.remove()">` : '<span class="cart-item-thumb med-thumb-placeholder" aria-label="لا توجد صورة"><i class="fa-solid fa-box-open"></i></span>'}
             <div>
               <p class="NameOfMedicine">${item.name}</p>
               <div class="d-flex align-items-center gap-2">

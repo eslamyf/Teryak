@@ -264,9 +264,17 @@ body {
   width: 52px;
   height: 52px;
   border-radius: var(--radius-sm);
-  object-fit: cover;
+  object-fit: contain;
+  padding: 2px;
   border: 1px solid #e2e8f0;
   flex-shrink: 0;
+}
+
+.summary-item-img.med-thumb-placeholder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
 }
 
 .summary-item-info {
@@ -484,6 +492,4 @@ body.dark-theme textarea:-webkit-autofill,
   -webkit-text-fill-color: #f1f5f9 !important;
   caret-color: #f1f5f9 !important;
 }
-
-
 

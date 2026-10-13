@@ -51,12 +51,15 @@
               <i class="fa-solid fa-boxes-stacked text-success"></i> إدارة مخزون الصيدلية
             </h1>
             <p class="text-muted mb-0" style="font-size: 14px;">
-              تتبع كميات الأدوية، صلاحيات التشغيلات، تنبيهات النواقص، والاستيراد الذكي لشيتات الإكسل
+              تتبع الأدوية والمنتجات الصحية والكميات المتوفرة
             </p>
           </div>
           <div class="d-flex gap-2 align-items-center flex-wrap">
-            <button class="btn btn-outline-secondary btn-sm font-bold" id="cleanCorruptedBtn" title="تنظيف المخزون من أي بيانات تالفة قديمة">
-              <i class="fa-solid fa-broom text-warning me-1"></i> تنظيف البيانات
+            <button class="btn btn-outline-danger btn-sm font-bold" id="wipeAllInventoryBtn" title="مسح وتفريغ كافة بيانات المخزون الحالية">
+              <i class="fa-solid fa-trash-can me-1"></i> مسح المخزون بالكامل
+            </button>
+            <button class="btn btn-outline-primary btn-sm font-bold" id="loadSample25Btn" title="تعبئة فورية بـ 25 دواء تجريبي مع الصور">
+              <i class="fa-solid fa-wand-magic-sparkles me-1"></i> تعبئة 25 دواء تجريبي
             </button>
             <button class="btn btn-outline-success btn-sm font-bold" id="exportInventoryBtn" title="تصدير مخزون الصيدلية الحالي كملف CSV أو إكسل">
               <i class="fa-solid fa-file-export me-1"></i> تصدير المخزون
@@ -65,7 +68,7 @@
               <i class="fa-solid fa-file-import me-1"></i> استيراد شيت إكسل / CSV
             </button>
             <button class="btn btn-success btn-sm font-bold" id="addMedBtn">
-              <i class="fa-solid fa-plus me-1"></i> إضافة دواء جديد
+              <i class="fa-solid fa-plus me-1"></i> إضافة منتج جديد
             </button>
           </div>
         </div>
@@ -151,6 +154,8 @@
               <option value="أدوية السكري">أدوية السكري</option>
               <option value="جهاز هضمي ومعدة">جهاز هضمي</option>
               <option value="أدوية عامة">أدوية عامة</option>
+              <option value="عناية شخصية">عناية شخصية</option>
+              <option value="مستلزمات طبية">مستلزمات طبية</option>
             </select>
           </div>
 
@@ -167,9 +172,9 @@
             </select>
           </div>
 
-          <!-- View Toggle Mode -->
-          <div class="col-lg-2 col-md-6 col-6 d-flex justify-content-end">
-            <div class="btn-group view-toggle-group w-100" role="group">
+          <!-- View Toggle & Quick Wipe Mode -->
+          <div class="col-lg-2 col-md-6 col-6 d-flex justify-content-end gap-2">
+            <div class="btn-group view-toggle-group flex-grow-1" role="group">
               <button type="button" class="btn btn-outline-secondary active" id="viewModeTableBtn" title="عرض كجدول منظم سريع">
                 <i class="fa-solid fa-table-list me-1"></i> جدول
               </button>
@@ -177,6 +182,32 @@
                 <i class="fa-solid fa-grip me-1"></i> بطاقات
               </button>
             </div>
+            <button type="button" class="btn btn-outline-danger btn-sm font-bold" id="quickWipeAllBtn" title="حذف كل المخزون الحالي">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bulk Selection & Action Floating Bar -->
+      <div id="bulkActionBar" class="card p-3 mb-3 shadow-sm border-0 d-none">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+          <div class="d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge bg-danger fs-6" id="selectedCountBadge">0</span>
+              <strong class="text-danger fs-6" id="selectedCountText">أصناف محددة</strong>
+            </div>
+            <button type="button" class="btn btn-sm btn-link text-primary p-0 text-decoration-none font-bold" id="selectAllMatchingBtn">
+              تحديد كل الأصناف في المخزون
+            </button>
+          </div>
+          <div class="d-flex gap-2 align-items-center">
+            <button type="button" class="btn btn-outline-secondary btn-sm" id="cancelSelectionBtn">
+              إلغاء التحديد
+            </button>
+            <button type="button" class="btn btn-danger btn-sm font-bold px-3" id="deleteSelectedBtn">
+              <i class="fa-solid fa-trash-can me-1"></i> حذف الأصناف المحددة (<span id="deleteSelectedBtnCount">0</span>)
+            </button>
           </div>
         </div>
       </div>
@@ -189,7 +220,7 @@
       <!-- Pagination and Page Size Footer -->
       <div class="inventory-pagination-wrapper card p-3 mt-3 shadow-sm border-0 d-flex flex-wrap justify-content-between align-items-center gap-3">
         <div class="d-flex align-items-center gap-2">
-          <span class="text-muted" style="font-size: 13.5px;" id="paginationSummary">عرض 0 من 0 دواء</span>
+          <span class="text-muted" style="font-size: 13.5px;" id="paginationSummary">عرض 0 من 0 منتج</span>
           <div class="d-inline-flex align-items-center gap-1 ms-3">
             <label class="text-muted small m-0" for="itemsPerPageSelect">لكل صفحة:</label>
             <select id="itemsPerPageSelect" class="form-select form-select-sm" style="width: 75px;">
@@ -209,7 +240,7 @@
       </div>
 
       <div class="add-new-card text-center p-3 border rounded mt-3 font-bold" id="bottomAddMedBtn" style="cursor: pointer; background: #fff;">
-        <i class="fa-solid fa-plus-circle me-1 text-success"></i> + إضافة دواء جديد للمخزون
+        <i class="fa-solid fa-plus-circle me-1 text-success"></i> + إضافة منتج جديد للمخزون
       </div>
     </main>
   </div>

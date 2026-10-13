@@ -47,6 +47,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   const bulkImportBtn = document.getElementById('bulkImportBtn');
   const exportInventoryBtn = document.getElementById('exportInventoryBtn');
   const cleanCorruptedBtn = document.getElementById('cleanCorruptedBtn');
+  const wipeAllInventoryBtn = document.getElementById('wipeAllInventoryBtn');
+  const quickWipeAllBtn = document.getElementById('quickWipeAllBtn');
+  const loadSample25Btn = document.getElementById('loadSample25Btn');
+
+  // Bulk Selection Bar Elements
+  const bulkActionBar = document.getElementById('bulkActionBar');
+  const selectedCountBadge = document.getElementById('selectedCountBadge');
+  const selectedCountText = document.getElementById('selectedCountText');
+  const selectAllMatchingBtn = document.getElementById('selectAllMatchingBtn');
+  const cancelSelectionBtn = document.getElementById('cancelSelectionBtn');
+  const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
+  const deleteSelectedBtnCount = document.getElementById('deleteSelectedBtnCount');
 
   // KPI Stats Elements
   const statTotalItems = document.getElementById('statTotalItems');
@@ -60,86 +72,362 @@ document.addEventListener('DOMContentLoaded', async () => {
   let currentInventory = [];
   let filteredInventory = [];
   let catalogMedicines = [];
+  let selectedItemIds = new Set();
   let currentPage = 1;
   let itemsPerPage = 15;
   let currentViewMode = 'table'; // 'table' | 'cards'
 
-  // Clean Default Mock Inventory
-  const defaultInventory = [
+  // Curated 25 Real Egyptian Medicines with Photos & Full Data
+  const sample25Medicines = [
     {
-      _id: 'inv_1',
-      nameAr: 'باراسيتامول 500 مجم أقراص',
-      nameEn: 'Paracetamol 500mg',
-      activeIngredient: 'Paracetamol',
-      category: 'مسكنات وخافض حرارة',
-      dosageForm: 'أقراص',
+      _id: 'inv_s1',
+      nameAr: 'بانادول إكسترا 500 مجم أقراص',
+      nameEn: 'Panadol Extra Tablets',
       quantity: 45,
-      customPrice: 24.50,
-      costPrice: 18.00,
+      customPrice: 45.00,
+      costPrice: 35.00,
+      expiryDate: '2027-12-31',
       shelfLocation: 'رف A1',
-      batchNumber: 'BCH-2026-101',
-      expiryDate: '2027-03-01',
+      activeIngredient: 'Paracetamol + Caffeine',
+      dosageForm: 'أقراص',
+      category: 'مسكنات وخافض حرارة',
+      image: '../../assets/images/parst.jpg'
+    },
+    {
+      _id: 'inv_s2',
+      nameAr: 'أوجمنتين 1 جم أقراص مضاد حيوي',
+      nameEn: 'Augmentin 1g Tablets',
+      quantity: 28,
+      customPrice: 110.00,
+      costPrice: 88.00,
+      expiryDate: '2026-11-15',
+      shelfLocation: 'رف B2',
+      activeIngredient: 'Amoxicillin + Clavulanate',
+      dosageForm: 'أقراص',
+      category: 'مضادات حيوية',
+      image: '../../assets/images/amoc.jpg'
+    },
+    {
+      _id: 'inv_s3',
+      nameAr: 'كونجستال أقراص للبرد والإنفلونزا',
+      nameEn: 'Congestal Tablets',
+      quantity: 35,
+      customPrice: 35.00,
+      costPrice: 26.00,
+      expiryDate: '2027-06-30',
+      shelfLocation: 'رف C1',
+      activeIngredient: 'Paracetamol + Pseudoephedrine',
+      dosageForm: 'أقراص',
+      category: 'أدوية البرد والإنفلونزا',
+      image: '../../assets/images/congestal.jpg'
+    },
+    {
+      _id: 'inv_s4',
+      nameAr: 'ريفو 75 مجم أقراص أسبرين للسيولة',
+      nameEn: 'Rivo 75mg Tablets',
+      quantity: 60,
+      customPrice: 20.00,
+      costPrice: 14.00,
+      expiryDate: '2028-01-10',
+      shelfLocation: 'رف A2',
+      activeIngredient: 'Acetylsalicylic Acid',
+      dosageForm: 'أقراص',
+      category: 'أدوية الضغط والقلب',
+      image: '../../assets/images/aspirin.jpg'
+    },
+    {
+      _id: 'inv_s5',
+      nameAr: 'أوميجا 3 بلس كبسولات جيلاتينية',
+      nameEn: 'Omega 3 Plus Capsules',
+      quantity: 22,
+      customPrice: 120.00,
+      costPrice: 92.00,
+      expiryDate: '2027-08-20',
+      shelfLocation: 'رف A3',
+      activeIngredient: 'Fish Oil + Wheat Germ Oil',
+      dosageForm: 'كبسولات',
+      category: 'فيتامينات ومكملات',
+      image: '../../assets/images/omega.jpg'
+    },
+    {
+      _id: 'inv_s6',
+      nameAr: 'فيتامين د 1000 وحدة دولية نقط',
+      nameEn: 'Vitamin D3 Drops',
+      quantity: 4,
+      customPrice: 85.00,
+      costPrice: 65.00,
+      expiryDate: '2026-12-05',
+      shelfLocation: 'ثلاجة 1',
+      activeIngredient: 'Cholecalciferol',
+      dosageForm: 'نقط / قطرة',
+      category: 'فيتامينات ومكملات',
+      image: '../../assets/images/vitamine.jpg'
+    },
+    {
+      _id: 'inv_s7',
+      nameAr: 'كاتافلام 50 مجم مسكن ومضاد للالتهاب',
+      nameEn: 'Cataflam 50mg Tablets',
+      quantity: 30,
+      customPrice: 52.00,
+      costPrice: 40.00,
+      expiryDate: '2027-09-15',
+      shelfLocation: 'رف A1',
+      activeIngredient: 'Diclofenac Potassium',
+      dosageForm: 'أقراص',
+      category: 'مسكنات وخافض حرارة',
+      image: '../../assets/images/tablets.jpg'
+    },
+    {
+      _id: 'inv_s8',
+      nameAr: 'أنتينال 200 مجم كبسولات مطهر معوي',
+      nameEn: 'Antinal 200mg Capsules',
+      quantity: 18,
+      customPrice: 30.00,
+      costPrice: 22.00,
+      expiryDate: '2027-04-10',
+      shelfLocation: 'رف D2',
+      activeIngredient: 'Nifuroxazide',
+      dosageForm: 'كبسولات',
+      category: 'جهاز هضمي ومعدة',
+      image: '../../assets/images/capsules.jpg'
+    },
+    {
+      _id: 'inv_s9',
+      nameAr: 'بروفين 400 مجم أقراص مسكن وخافض حرارة',
+      nameEn: 'Brufen 400mg Tablets',
+      quantity: 50,
+      customPrice: 38.00,
+      costPrice: 29.00,
+      expiryDate: '2027-11-20',
+      shelfLocation: 'رف A2',
+      activeIngredient: 'Ibuprofen',
+      dosageForm: 'أقراص',
+      category: 'مسكنات وخافض حرارة',
       image: '../../assets/images/1.jpg'
     },
     {
-      _id: 'inv_2',
-      nameAr: 'أموكسيسيلين 500 مجم كبسولات',
-      nameEn: 'Amoxicillin 500mg',
-      activeIngredient: 'Amoxicillin',
+      _id: 'inv_s10',
+      nameAr: 'سيتال شراب خافض حرارة للأطفال',
+      nameEn: 'Cetal Syrup',
+      quantity: 14,
+      customPrice: 18.00,
+      costPrice: 13.50,
+      expiryDate: '2027-03-01',
+      shelfLocation: 'رف S1',
+      activeIngredient: 'Paracetamol',
+      dosageForm: 'شراب',
+      category: 'مسكنات وخافض حرارة',
+      image: '../../assets/images/syrup.jpg'
+    },
+    {
+      _id: 'inv_s11',
+      nameAr: 'ألفينترن أقراص مضاد للتورم والارتشاح',
+      nameEn: 'Alphintern Tablets',
+      quantity: 2,
+      customPrice: 45.00,
+      costPrice: 34.00,
+      expiryDate: '2026-10-30',
+      shelfLocation: 'رف B1',
+      activeIngredient: 'Chymotrypsin + Trypsin',
+      dosageForm: 'أقراص',
+      category: 'أدوية عامة',
+      image: '../../assets/images/tablets.jpg'
+    },
+    {
+      _id: 'inv_s12',
+      nameAr: 'بانتوزول 40 مجم لعلاج قرحة وحموضة المعدة',
+      nameEn: 'Pantozol 40mg Tablets',
+      quantity: 12,
+      customPrice: 95.00,
+      costPrice: 72.00,
+      expiryDate: '2028-02-15',
+      shelfLocation: 'رف D1',
+      activeIngredient: 'Pantoprazole',
+      dosageForm: 'أقراص',
+      category: 'جهاز هضمي ومعدة',
+      image: '../../assets/images/1.jpg'
+    },
+    {
+      _id: 'inv_s13',
+      nameAr: 'أوتريفين بخاخ أنف للكبار لإزالة الاحتقان',
+      nameEn: 'Otrivin Nasal Spray',
+      quantity: 0,
+      customPrice: 25.00,
+      costPrice: 19.00,
+      expiryDate: '2026-09-10',
+      shelfLocation: 'رف N1',
+      activeIngredient: 'Xylometazoline',
+      dosageForm: 'بخاخ',
+      category: 'حساسية وجهاز تنفسي',
+      image: '../../assets/images/spray.jpg'
+    },
+    {
+      _id: 'inv_s14',
+      nameAr: 'ميبو مرهم لعلاج الحروق والجروح',
+      nameEn: 'Mebo Ointment',
+      quantity: 16,
+      customPrice: 68.00,
+      costPrice: 52.00,
+      expiryDate: '2027-10-01',
+      shelfLocation: 'رف M3',
+      activeIngredient: 'B-Sitosterol',
+      dosageForm: 'مرهم / كريم',
+      category: 'جلدية وتجميل',
+      image: '../../assets/images/ointment.jpg'
+    },
+    {
+      _id: 'inv_s15',
+      nameAr: 'كولونا أقراص لعلاج تقلصات القولون العصبي',
+      nameEn: 'Colona Tablets',
+      quantity: 25,
+      customPrice: 42.00,
+      costPrice: 32.00,
+      expiryDate: '2027-07-25',
+      shelfLocation: 'رف D2',
+      activeIngredient: 'Mebeverine + Sulpiride',
+      dosageForm: 'أقراص',
+      category: 'جهاز هضمي ومعدة',
+      image: '../../assets/images/tablets.jpg'
+    },
+    {
+      _id: 'inv_s16',
+      nameAr: 'فلاجيل 500 مجم أقراص مطهر ومضاد للطفيليات',
+      nameEn: 'Flagyl 500mg Tablets',
+      quantity: 40,
+      customPrice: 26.00,
+      costPrice: 19.50,
+      expiryDate: '2027-05-15',
+      shelfLocation: 'رف B3',
+      activeIngredient: 'Metronidazole',
+      dosageForm: 'أقراص',
       category: 'مضادات حيوية',
-      dosageForm: 'كبسولات',
-      quantity: 4,
-      customPrice: 78.00,
-      costPrice: 58.00,
-      shelfLocation: 'رف B2',
-      batchNumber: 'BCH-2026-102',
-      expiryDate: '2026-11-01',
+      image: '../../assets/images/2.jpg'
+    },
+    {
+      _id: 'inv_s17',
+      nameAr: 'فولتارين 75 مجم أمبول حقن مسكن قوي',
+      nameEn: 'Voltaren 75mg Injection',
+      quantity: 3,
+      customPrice: 55.00,
+      costPrice: 42.00,
+      expiryDate: '2026-11-20',
+      shelfLocation: 'درج الحقن',
+      activeIngredient: 'Diclofenac Sodium',
+      dosageForm: 'حقن',
+      category: 'مسكنات وخافض حرارة',
+      image: '../../assets/images/injection.jpg'
+    },
+    {
+      _id: 'inv_s18',
+      nameAr: 'جلوكوفاج 1000 مجم أقراص لتنظيم السكر',
+      nameEn: 'Glucophage 1000mg Tablets',
+      quantity: 35,
+      customPrice: 60.00,
+      costPrice: 46.00,
+      expiryDate: '2028-03-30',
+      shelfLocation: 'رف G1',
+      activeIngredient: 'Metformin',
+      dosageForm: 'أقراص',
+      category: 'أدوية السكري',
+      image: '../../assets/images/1.jpg'
+    },
+    {
+      _id: 'inv_s19',
+      nameAr: 'كونكور 5 مجم أقراص لعلاج ضغط الدم',
+      nameEn: 'Concor 5mg Tablets',
+      quantity: 20,
+      customPrice: 58.00,
+      costPrice: 44.00,
+      expiryDate: '2027-12-10',
+      shelfLocation: 'رف A2',
+      activeIngredient: 'Bisoprolol',
+      dosageForm: 'أقراص',
+      category: 'أدوية الضغط والقلب',
+      image: '../../assets/images/tablets.jpg'
+    },
+    {
+      _id: 'inv_s20',
+      nameAr: 'بريزولين قطرة معقمة للعين والحساسية',
+      nameEn: 'Prisoline Eye Drops',
+      quantity: 15,
+      customPrice: 22.00,
+      costPrice: 16.50,
+      expiryDate: '2027-04-01',
+      shelfLocation: 'ثلاجة 2',
+      activeIngredient: 'Naphazoline + Chlorpheniramine',
+      dosageForm: 'نقط / قطرة',
+      category: 'حساسية وجهاز تنفسي',
+      image: '../../assets/images/drops.jpg'
+    },
+    {
+      _id: 'inv_s21',
+      nameAr: 'كارباميد كريم مرطب ومجدد لخلايا الجلد',
+      nameEn: 'Carbamide Cream',
+      quantity: 30,
+      customPrice: 20.00,
+      costPrice: 15.00,
+      expiryDate: '2027-08-15',
+      shelfLocation: 'رف M1',
+      activeIngredient: 'Urea 10%',
+      dosageForm: 'مرهم / كريم',
+      category: 'جلدية وتجميل',
+      image: '../../assets/images/ointment.jpg'
+    },
+    {
+      _id: 'inv_s22',
+      nameAr: 'سيبتازول أقراص مضاد حيوي واسع المجال',
+      nameEn: 'Septazole Tablets',
+      quantity: 18,
+      customPrice: 24.00,
+      costPrice: 18.00,
+      expiryDate: '2027-01-20',
+      shelfLocation: 'رف B1',
+      activeIngredient: 'Sulfamethoxazole + Trimethoprim',
+      dosageForm: 'أقراص',
+      category: 'مضادات حيوية',
       image: '../../assets/images/3.jpg'
     },
     {
-      _id: 'inv_3',
-      nameAr: 'فيتامين د 1000 وحدة دولية',
-      nameEn: 'Vitamin D3 1000 IU',
-      activeIngredient: 'Cholecalciferol',
-      category: 'فيتامينات ومكملات',
-      dosageForm: 'نقط / قطرة',
-      quantity: 0,
+      _id: 'inv_s23',
+      nameAr: 'ميجاموكس 625 مجم أقراص مضاد حيوي',
+      nameEn: 'Megamox 625mg Tablets',
+      quantity: 1,
       customPrice: 85.00,
       costPrice: 65.00,
-      shelfLocation: 'ثلاجة 1',
-      batchNumber: 'BCH-2026-103',
-      expiryDate: '2027-06-01',
-      image: '../../assets/images/6.jpg'
-    },
-    {
-      _id: 'inv_4',
-      nameAr: 'أوميجا 3 بلس كبسولات',
-      nameEn: 'Omega 3 Plus',
-      activeIngredient: 'Fish Oil + Vitamin E',
-      category: 'فيتامينات ومكملات',
-      dosageForm: 'كبسولات',
-      quantity: 20,
-      customPrice: 120.00,
-      costPrice: 90.00,
-      shelfLocation: 'رف A3',
-      batchNumber: 'BCH-2026-104',
-      expiryDate: '2026-09-01',
-      image: '../../assets/images/3.jpg'
-    },
-    {
-      _id: 'inv_5',
-      nameAr: 'كونجستال أقراص للبرد والإنفلونزا',
-      nameEn: 'Congestal Tablets',
-      activeIngredient: 'Paracetamol + Pseudoephedrine',
-      category: 'أدوية البرد والإنفلونزا',
+      expiryDate: '2026-10-15',
+      shelfLocation: 'رف B2',
+      activeIngredient: 'Amoxicillin + Clavulanate',
       dosageForm: 'أقراص',
-      quantity: 8,
-      customPrice: 35.00,
-      costPrice: 26.00,
-      shelfLocation: 'رف C1',
-      batchNumber: 'BCH-2026-105',
-      expiryDate: '2026-12-01',
-      image: '../../assets/images/5.jpg'
+      category: 'مضادات حيوية',
+      image: '../../assets/images/amoc.jpg'
+    },
+    {
+      _id: 'inv_s24',
+      nameAr: 'جافيسكون شراب لعلاج الحموضة وحرقة المعدة',
+      nameEn: 'Gaviscon Liquid',
+      quantity: 10,
+      customPrice: 65.00,
+      costPrice: 50.00,
+      expiryDate: '2027-06-15',
+      shelfLocation: 'رف S2',
+      activeIngredient: 'Sodium Alginate + Sodium Bicarbonate',
+      dosageForm: 'شراب',
+      category: 'جهاز هضمي ومعدة',
+      image: '../../assets/images/syrup.jpg'
+    },
+    {
+      _id: 'inv_s25',
+      nameAr: 'ستربسلز أقراص استحلاب بنكهة العسل والليمون',
+      nameEn: 'Strepsils Honey & Lemon',
+      quantity: 50,
+      customPrice: 75.00,
+      costPrice: 57.00,
+      expiryDate: '2028-06-30',
+      shelfLocation: 'رف C2',
+      activeIngredient: 'Dichlorobenzyl Alcohol',
+      dosageForm: 'أقراص',
+      category: 'أدوية البرد والإنفلونزا',
+      image: '../../assets/images/4.jpg'
     }
   ];
 
@@ -164,29 +452,49 @@ document.addEventListener('DOMContentLoaded', async () => {
     const name = String(item.nameAr || item.medicineName || '').trim();
     if (!name) return true;
 
-    // Check for ZIP/XLSX binary file headers that got read as plain text
+    // 1. Unicode replacement character (diamond question mark )
+    if (name.includes('\uFFFD')) {
+      return true;
+    }
+
+    // 2. Binary / ZIP / XML tokens from corrupted spreadsheet reading
     if (name.includes('xl/') || 
         name.includes('docProps') || 
         name.includes('[Content_Types]') || 
         name.includes('.xmlPK') || 
         name.includes('word/') || 
         name.includes('PK\x03\x04') ||
-        name.includes('PK!')) {
+        name.includes('PK!') ||
+        name.includes('PK')) {
       return true;
     }
 
-    // Check for broken HTML injection markers
+    // 3. HTML injection remnants
     if (name.includes('class=') || name.includes('onerror=') || name.includes('<') || name.includes('>')) {
       return true;
     }
 
-    // Check for unprintable binary control characters
-    if (/[\x00-\x08\x0E-\x1F\x7F]/.test(name)) {
+    // 4. Binary unprintable chars
+    if (/[\x00-\x1F\x7F]/.test(name)) {
       return true;
     }
 
-    // Name abnormally long without standard spaces (binary chunks)
-    if (name.length > 180 && !name.includes(' ')) {
+    // 5. Must contain valid Arabic or English letters (at least 3 letters)
+    const arabicLetters = (name.match(/[\u0600-\u06FF]/g) || []).length;
+    const englishLetters = (name.match(/[a-zA-Z]/g) || []).length;
+    if (arabicLetters === 0 && englishLetters < 3) {
+      return true;
+    }
+
+    // 6. Suspicious strings with weird non-letter characters and no Arabic
+    if (arabicLetters === 0) {
+      if (/[*#&^%$@!~`+=\\/{}\[\]|;?]/.test(name) || name.length <= 2) {
+        return true;
+      }
+    }
+
+    // 7. Long continuous strings without spaces
+    if (name.length > 70 && !name.includes(' ')) {
       return true;
     }
 
@@ -226,16 +534,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 4. Load Inventory from Server / Cache
   async function loadInventory() {
     let items = [];
+    let loadedFromServer = false;
+    let apiError = null;
 
     try {
       if (window.API && window.API.inventory) {
         const res = await window.API.inventory.getAll();
-        if (res && res.data && Array.isArray(res.data) && res.data.length > 0) {
+        if (res && Array.isArray(res.data)) {
+          loadedFromServer = true;
           items = res.data.map(item => ({
             _id: item._id,
             medicineId: item.medicineId?._id || item.medicineId,
             nameAr: item.medicineId?.nameAr || item.medicineName || 'دواء',
             nameEn: item.medicineId?.nameEn || '',
+            productType: item.medicineId?.productType || 'medicine',
             quantity: Number(item.quantity) || 0,
             customPrice: Number(item.customPrice || item.medicineId?.price || 25),
             costPrice: item.costPrice ? Number(item.costPrice) : undefined,
@@ -245,15 +557,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             category: item.medicineId?.category || 'أدوية عامة',
             dosageForm: item.medicineId?.dosageForm || 'أقراص',
             expiryDate: item.expiryDate ? String(item.expiryDate).split('T')[0] : '2027-01-01',
-            image: item.medicineId?.image || item.image || '../../assets/images/1.jpg'
+            image: item.medicineId?.image || item.image || ''
           }));
         }
       }
     } catch (e) {
+      apiError = e;
       console.warn('[Inventory API Fallback]:', e.message);
     }
 
-    if (!items || items.length === 0) {
+    if (!loadedFromServer) {
       try {
         const rawLocal = localStorage.getItem('pharmacist_inventory');
         if (rawLocal) {
@@ -262,26 +575,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             items = parsed;
           }
         }
-      } catch (e) {
-        items = defaultInventory;
-      }
+      } catch (e) {}
     }
 
-    // Auto-Sanitize corrupted data
-    const initialCount = items.length;
-    const cleanItems = sanitizeInventoryList(items);
-
-    if (cleanItems.length < initialCount) {
-      console.warn(`[Auto-Clean]: Removed ${initialCount - cleanItems.length} corrupted entries.`);
-      if (window.Toast) {
-        window.Toast.info(`تم تطهير المخزون تلقائياً وإزالة ${initialCount - cleanItems.length} عنصر تالف.`, 'تنظيف تلقائي');
-      }
+    if (!loadedFromServer && apiError && window.Toast) {
+      window.Toast.warning('تعذر تحديث المخزون من الخادم؛ المعروض نسخة محفوظة محلياً وقد لا تعكس آخر التغييرات.', 'المخزون غير محدث');
     }
 
-    currentInventory = cleanItems.length > 0 ? cleanItems : [...defaultInventory];
-    saveLocalInventory();
-
+    currentInventory = items;
+    if (loadedFromServer) saveLocalInventory();
     applyFilters();
+    return loadedFromServer;
   }
 
   // ====================================================================
@@ -412,11 +716,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
+  // Selection Management Functions
+  function updateSelectionUI() {
+    const count = selectedItemIds.size;
+    if (count > 0) {
+      bulkActionBar?.classList.remove('d-none');
+      if (selectedCountBadge) selectedCountBadge.textContent = count.toLocaleString('ar-EG');
+      if (selectedCountText) selectedCountText.textContent = `أصناف محددة (${count} من أصل ${currentInventory.length})`;
+      if (deleteSelectedBtnCount) deleteSelectedBtnCount.textContent = count.toLocaleString('ar-EG');
+    } else {
+      bulkActionBar?.classList.add('d-none');
+    }
+
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+    if (selectAllCheckbox) {
+      const pageCheckboxes = document.querySelectorAll('.row-checkbox');
+      const allChecked = pageCheckboxes.length > 0 && Array.from(pageCheckboxes).every(cb => cb.checked);
+      const someChecked = Array.from(pageCheckboxes).some(cb => cb.checked);
+      selectAllCheckbox.checked = allChecked;
+      selectAllCheckbox.indeterminate = !allChecked && someChecked;
+    }
+  }
+
   // 1) Modern Table View (Ultra-fast, dense, professional)
   function renderTableView(items) {
     let rowsHtml = '';
 
     items.forEach(item => {
+      const isSelected = selectedItemIds.has(String(item._id));
       const qty = Number(item.quantity) || 0;
       let statusClass = 'available';
       let statusText = 'متوفر';
@@ -440,17 +767,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (diffMonths <= 3) expiryClass = 'urgent';
       } catch (e) {}
 
-      const img = escapeHtml(item.image || '../../assets/images/1.jpg');
+      const img = escapeHtml(item.image || '');
       const name = escapeHtml(item.nameAr || 'دواء');
-      const active = escapeHtml(item.activeIngredient || item.dosageForm || '—');
+      const active = escapeHtml(item.productType === 'product' ? 'منتج صحي' : item.activeIngredient || item.dosageForm || '—');
       const category = escapeHtml(item.category || 'أدوية عامة');
       const shelf = escapeHtml(item.shelfLocation || '—');
 
       rowsHtml += `
-        <tr data-id="${item._id}">
+        <tr data-id="${item._id}" class="${isSelected ? 'selected-row' : ''}">
+          <td style="width: 44px; text-align: center;">
+            <input type="checkbox" class="item-checkbox row-checkbox" data-id="${item._id}" ${isSelected ? 'checked' : ''} title="تحديد الصنف">
+          </td>
           <td>
             <div class="med-cell">
-              <img src="${img}" alt="${name}" class="med-thumb" onerror="this.src='../../assets/images/1.jpg'">
+              ${img ? `<img src="${img}" alt="${name}" class="med-thumb" loading="lazy" onerror="this.remove()">` : '<span class="med-thumb med-thumb-placeholder" aria-label="لا توجد صورة"><i class="fa-solid fa-box-open"></i></span>'}
               <div class="med-info-box">
                 <span class="med-title">${name}</span>
                 <span class="med-meta">${active} • <span class="badge bg-light text-secondary border py-0 px-1" style="font-size: 11px;">${category}</span></span>
@@ -498,13 +828,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       `;
     });
 
+    const isAllChecked = items.length > 0 && items.every(i => selectedItemIds.has(String(i._id)));
+
     inventoryContainer.innerHTML = `
       <div class="inventory-table-card">
         <div class="inventory-table-responsive">
           <table class="inventory-table">
             <thead>
               <tr>
-                <th style="min-width: 250px;">الدواء والتفاصيل</th>
+                <th style="width: 44px; text-align: center;">
+                  <input type="checkbox" class="item-checkbox" id="selectAllCheckbox" ${isAllChecked ? 'checked' : ''} title="تحديد كل أصناف الصفحة">
+                </th>
+                <th style="min-width: 240px;">الدواء والتفاصيل</th>
                 <th style="min-width: 130px;">الكمية (علبة)</th>
                 <th style="min-width: 100px;">سعر البيع</th>
                 <th style="min-width: 90px;">التكلفة</th>
@@ -521,6 +856,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         </div>
       </div>
     `;
+
+    updateSelectionUI();
   }
 
   // 2) Modern Grid Cards View
@@ -528,6 +865,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let cardsHtml = '';
 
     items.forEach(item => {
+      const isSelected = selectedItemIds.has(String(item._id));
       const qty = Number(item.quantity) || 0;
       let statusClass = 'available';
       let statusText = 'متوفر';
@@ -541,15 +879,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       const price = (Number(item.customPrice) || 25).toFixed(2);
       const expiry = item.expiryDate || '2027-06-01';
-      const img = escapeHtml(item.image || '../../assets/images/1.jpg');
+      const img = escapeHtml(item.image || '');
       const name = escapeHtml(item.nameAr || 'دواء');
-      const active = escapeHtml(item.activeIngredient || item.dosageForm || '—');
+      const active = escapeHtml(item.productType === 'product' ? 'منتج صحي' : item.activeIngredient || item.dosageForm || '—');
       const shelf = escapeHtml(item.shelfLocation || '—');
 
       cardsHtml += `
-        <div class="med-grid-card" data-id="${item._id}">
+        <div class="med-grid-card ${isSelected ? 'selected-row' : ''}" data-id="${item._id}">
           <div class="med-grid-header">
-            <img src="${img}" alt="${name}" class="med-grid-thumb" onerror="this.src='../../assets/images/1.jpg'">
+            <div class="d-flex align-items-center gap-2">
+              <input type="checkbox" class="item-checkbox card-checkbox" data-id="${item._id}" ${isSelected ? 'checked' : ''} title="تحديد الصنف">
+              ${img ? `<img src="${img}" alt="${name}" class="med-grid-thumb" loading="lazy" onerror="this.remove()">` : '<span class="med-grid-thumb med-thumb-placeholder" aria-label="لا توجد صورة"><i class="fa-solid fa-box-open"></i></span>'}
+            </div>
             <span class="status-pill ${statusClass}">
               <span class="status-dot"></span>
               ${statusText}
@@ -604,6 +945,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         ${cardsHtml}
       </div>
     `;
+
+    updateSelectionUI();
   }
 
   // ====================================================================
@@ -740,20 +1083,24 @@ document.addEventListener('DOMContentLoaded', async () => {
       const item = currentInventory.find(i => String(i._id) === String(itemId));
       if (!item) return;
 
+      const previousQuantity = Number(item.quantity) || 0;
       if (btnPlus) {
-        item.quantity = (Number(item.quantity) || 0) + 1;
+        item.quantity = previousQuantity + 1;
       } else if (btnMinus) {
-        const q = Number(item.quantity) || 0;
-        if (q > 0) item.quantity = q - 1;
+        if (previousQuantity > 0) item.quantity = previousQuantity - 1;
         else return;
       }
 
-      // Sync to API in background
-      try {
-        if (window.API && window.API.inventory && item._id && item._id.length === 24) {
-          window.API.inventory.update(item._id, { quantity: item.quantity }).catch(() => {});
+      if (item._id && item._id.length === 24) {
+        try {
+          if (!window.API || !window.API.inventory) throw new Error('تعذر الاتصال بالخادم.');
+          await window.API.inventory.update(item._id, { quantity: item.quantity });
+        } catch (err) {
+          item.quantity = previousQuantity;
+          if (window.Toast) window.Toast.error(err.message || 'تعذر تحديث الكمية.', 'فشل تحديث المخزون');
+          return;
         }
-      } catch (err) {}
+      }
 
       saveLocalInventory();
       updateKPIStats();
@@ -798,11 +1145,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (confirmed) {
         try {
-          if (window.API && window.API.inventory && itemId && itemId.length === 24) {
+          if (itemId && itemId.length === 24) {
+            if (!window.API || !window.API.inventory) throw new Error('تعذر الاتصال بالخادم.');
             await window.API.inventory.delete(itemId);
           }
         } catch (err) {
-          console.warn('API delete fallback:', err.message);
+          console.error('Inventory delete failed:', err);
+          if (window.Toast) window.Toast.error(err.message || 'تعذر حذف المنتج. لم يتم إجراء أي تغيير.', 'فشل الحذف');
+          return;
         }
 
         currentInventory = currentInventory.filter(i => String(i._id) !== String(itemId));
@@ -816,6 +1166,59 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
   });
+
+  // ====================================================================
+  // ====================================================================
+  // Wipe All Inventory Button Handler (تفريغ المخزون بالكامل)
+  // ====================================================================
+  if (wipeAllInventoryBtn) {
+    wipeAllInventoryBtn.addEventListener('click', async () => {
+      let confirmed = true;
+      if (window.Toast && typeof window.Toast.confirm === 'function') {
+        confirmed = await window.Toast.confirm({
+          title: 'مسح المخزون بالكامل',
+          message: 'هل أنت متأكد من رغبتك في حذف كافة بيانات المخزون وتفريغ الجدول تماماً؟',
+          type: 'danger',
+          confirmText: 'نعم، مسح كل المخزون',
+          cancelText: 'إلغاء'
+        });
+      } else {
+        confirmed = window.confirm('هل أنت متأكد من رغبتك في مسح كافة بيانات المخزون وتفريغ الجدول تماماً؟');
+      }
+
+      if (confirmed) {
+        try {
+          const savedItems = currentInventory.filter(item => item._id && item._id.length === 24);
+          if (savedItems.length > 0) {
+            if (!window.API || !window.API.inventory) throw new Error('تعذر الاتصال بالخادم.');
+            await Promise.all(savedItems.map(item => window.API.inventory.delete(item._id)));
+          }
+          currentInventory = [];
+          localStorage.removeItem('pharmacist_inventory');
+          applyFilters();
+          if (window.Toast) window.Toast.success('تم مسح وتفريغ كافة بيانات المخزون بنجاح.', 'تم تفريغ المخزون');
+        } catch (err) {
+          console.error('Inventory wipe failed:', err);
+          await loadInventory();
+          if (window.Toast) window.Toast.error(err.message || 'تعذر مسح المخزون بالكامل.', 'فشل المسح');
+        }
+      }
+    });
+  }
+
+  // ====================================================================
+  // Load 25 Sample Medicines with Photos Handler
+  // ====================================================================
+  if (loadSample25Btn) {
+    loadSample25Btn.addEventListener('click', () => {
+      currentInventory = JSON.parse(JSON.stringify(sample25Medicines));
+      saveLocalInventory();
+      applyFilters();
+      if (window.Toast) {
+        window.Toast.success('تمت تعبئة 25 دواء مصري مختلف مع الصور والأسعار والصلاحيات بنجاح!', 'تم تجهيز 25 صنفاً');
+      }
+    });
+  }
 
   // ====================================================================
   // Clean Corrupted Data Button Handler
@@ -837,10 +1240,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (confirmed) {
         const initialCount = currentInventory.length;
-        const cleaned = sanitizeInventoryList(currentInventory);
+        const cleaned = currentInventory.filter(item =>
+          item && item._id && item._id.length === 24 ? true : !isCorruptedItem(item)
+        );
         const removed = initialCount - cleaned.length;
 
-        currentInventory = cleaned.length > 0 ? cleaned : [...defaultInventory];
+        currentInventory = cleaned;
         saveLocalInventory();
         applyFilters();
 
@@ -872,8 +1277,8 @@ document.addEventListener('DOMContentLoaded', async () => {
               <div class="d-flex align-items-center gap-2">
                 <div class="modal-header-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
                 <div>
-                  <h5 class="modal-title font-bold m-0" id="invModalTitle">إضافة دواء جديد للمخزون</h5>
-                  <span class="modal-subtitle">إدارة المخزون الذكي، التسعير، الصلاحية، والصورة</span>
+                  <h5 class="modal-title font-bold m-0" id="invModalTitle">إضافة منتج جديد للمخزون</h5>
+                  <span class="modal-subtitle">أدخل الاسم والسعر والكمية، ويمكنك إضافة تفاصيل اختيارية</span>
                 </div>
               </div>
               <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -889,11 +1294,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                   <!-- Image Upload / Preview Column -->
                   <div class="col-md-4 col-12 text-center">
                     <label class="form-label font-bold text-dark d-block text-start mb-2">
-                      <i class="fa-solid fa-image text-success me-1"></i> صورة الدواء
+                      <i class="fa-solid fa-image text-success me-1"></i> صورة المنتج (اختياري)
                     </label>
                     <div class="medicine-image-upload-card">
                       <div class="image-preview-wrapper" id="imagePreviewContainer">
-                        <img id="modalMedImagePreview" src="../../assets/images/1.jpg" alt="معاينة صورة الدواء" onerror="this.src='../../assets/images/1.jpg'">
+                        <span id="imagePreviewPlaceholder" class="image-preview-placeholder"><i class="fa-solid fa-box-open"></i> لا توجد صورة</span>
+                        <img id="modalMedImagePreview" class="d-none" alt="معاينة صورة المنتج" loading="lazy">
                         <div class="image-overlay-actions">
                           <label for="modalMedImageFile" class="btn-upload-overlay" title="رفع صورة من جهازك">
                             <i class="fa-solid fa-camera"></i>
@@ -904,18 +1310,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </div>
                       </div>
                       <input type="file" id="modalMedImageFile" class="d-none" accept="image/*">
-                      <small class="text-muted d-block mt-2" style="font-size: 11px;">اختر قالباً سريعاً للشكل الدوائي:</small>
-
-                      <!-- Quick Presets -->
-                      <div class="image-presets-row mt-2" id="imagePresetsRow">
-                        <button type="button" class="preset-btn active" data-dosage="أقراص" data-img="../../assets/images/1.jpg" title="أقراص">💊 أقراص</button>
-                        <button type="button" class="preset-btn" data-dosage="شراب" data-img="../../assets/images/2.jpg" title="شراب">🧴 شراب</button>
-                        <button type="button" class="preset-btn" data-dosage="كبسولات" data-img="../../assets/images/3.jpg" title="كبسول">💊 كبسول</button>
-                        <button type="button" class="preset-btn" data-dosage="حقن" data-img="../../assets/images/4.jpg" title="حقن">💉 حقن</button>
-                        <button type="button" class="preset-btn" data-dosage="مرهم / كريم" data-img="../../assets/images/5.jpg" title="مرهم">🧴 مرهم</button>
-                        <button type="button" class="preset-btn" data-dosage="نقط / قطرة" data-img="../../assets/images/6.jpg" title="قطرة">💧 قطرة</button>
-                        <button type="button" class="preset-btn" data-dosage="بخاخ" data-img="../../assets/images/7.jpg" title="بخاخ">💨 بخاخ</button>
+                      <label for="modalMedImageFile" class="btn btn-outline-success btn-sm w-100 mt-2">
+                        <i class="fa-solid fa-upload me-1"></i> اختر صورة من جهازك
+                      </label>
+                      <div class="text-start mt-3">
+                        <label for="modalMedImageUrl" class="form-label small fw-bold">أو رابط مباشر لصورة المنتج</label>
+                        <input type="url" id="modalMedImageUrl" class="form-control form-control-sm" placeholder="https://example.com/product-image.jpg" inputmode="url">
+                        <small class="text-muted d-block mt-1">أدخل رابط الصورة نفسها، وسيتم عرضها وحفظ الرابط بدل رفع ملف.</small>
                       </div>
+                      <div id="modalImageUploadStatus" class="d-none text-success small mt-2" role="status" aria-live="polite">
+                        <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
+                        جاري رفع الصورة...
+                      </div>
+
                     </div>
                   </div>
 
@@ -923,24 +1330,28 @@ document.addEventListener('DOMContentLoaded', async () => {
                   <div class="col-md-8 col-12">
                     <div class="mb-3 position-relative">
                       <label class="form-label font-bold text-dark">
-                        اسم الدواء أو المادة الفعالة <span class="text-danger">*</span>
+                        نوع المنتج
+                      </label>
+                      <select id="modalProductType" class="form-select mb-3">
+                        <option value="medicine">دواء</option>
+                        <option value="product">منتج صحي (شامبو، عناية شخصية...)</option>
+                      </select>
+                      <label class="form-label font-bold text-dark">
+                        اسم المنتج <span class="text-danger">*</span>
                       </label>
                       <div class="input-group">
                         <span class="input-group-text bg-light"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
-                        <input type="text" id="modalMedName" class="form-control" placeholder="ابحث في دليل الأدوية (مثال: بانادول، بروفين، أوجمنتين...)" autocomplete="off" required>
+                        <input type="text" id="modalMedName" class="form-control" placeholder="مثال: شامبو، كريم، بانادول..." autocomplete="off" required>
                       </div>
                       <div id="catalogAutocompleteList" class="list-group position-absolute w-100 shadow-lg d-none" style="z-index: 1060; max-height: 240px; overflow-y: auto; top: 100%;"></div>
-                      <small class="text-muted d-block mt-1" style="font-size: 12px;">
-                        💡 <span class="text-success font-bold">ميزة ذكية:</span> البحث متصل بالدليل المصري وقاعدة الأدوية ويملأ السعر والتصنيف تلقائياً.
-                      </small>
                     </div>
 
                     <div class="row g-2">
-                      <div class="col-6">
+                      <div class="col-6 d-none">
                         <label class="form-label font-bold text-dark" style="font-size: 13px;">المادة الفعالة</label>
                         <input type="text" id="modalActiveIngredient" class="form-control form-control-sm" placeholder="مثال: Paracetamol">
                       </div>
-                      <div class="col-6">
+                      <div class="col-6 d-none">
                         <label class="form-label font-bold text-dark" style="font-size: 13px;">الشكل الدوائي</label>
                         <select id="modalDosageForm" class="form-select form-select-sm">
                           <option value="أقراص">أقراص (Tablets)</option>
@@ -954,19 +1365,31 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </select>
                       </div>
                       <div class="col-12 mt-2">
-                        <label class="form-label font-bold text-dark" style="font-size: 13px;">التصنيف الدوائي</label>
-                        <select id="modalCategory" class="form-select form-select-sm">
-                          <option value="مسكنات وخافض حرارة">مسكنات وخافض حرارة</option>
-                          <option value="مضادات حيوية">مضادات حيوية</option>
-                          <option value="أدوية البرد والإنفلونزا">أدوية البرد والإنفلونزا</option>
-                          <option value="فيتامينات ومكملات">فيتامينات ومكملات غذائية</option>
-                          <option value="أدوية الضغط والقلب">أدوية الضغط والقلب</option>
-                          <option value="أدوية السكري">أدوية السكري</option>
-                          <option value="جهاز هضمي ومعدة">جهاز هضمي ومعدة</option>
-                          <option value="حساسية وجهاز تنفسي">حساسية وجهاز تنفسي</option>
-                          <option value="جلدية وتجميل">جلدية وعناية</option>
-                          <option value="أدوية عامة">أدوية عامة أخرى</option>
-                        </select>
+                        <label class="form-label font-bold text-dark" style="font-size: 13px;">نوع المنتج أو تصنيفه</label>
+                        <input id="modalCategory" class="form-control form-control-sm" list="productCategoryOptions" value="أدوية عامة" placeholder="اختر نوعًا أو اكتب نوعًا جديدًا">
+                        <datalist id="productCategoryOptions">
+                          <option value="أدوية عامة"></option>
+                          <option value="مسكنات وخافض حرارة"></option>
+                          <option value="مضادات حيوية"></option>
+                          <option value="فيتامينات ومكملات"></option>
+                          <option value="مستلزمات طبية"></option>
+                          <option value="عناية شخصية"></option>
+                          <option value="شامبو ومنتجات شعر"></option>
+                          <option value="العناية بالبشرة"></option>
+                          <option value="العناية بالفم والأسنان"></option>
+                          <option value="مستحضرات تجميل"></option>
+                          <option value="نظافة شخصية"></option>
+                          <option value="منتجات الأطفال"></option>
+                          <option value="حفاضات ومناديل"></option>
+                          <option value="العناية بالمرأة"></option>
+                          <option value="العناية بالرجال"></option>
+                          <option value="أجهزة قياس ومتابعة"></option>
+                          <option value="إسعافات أولية"></option>
+                          <option value="أدوات طبية"></option>
+                          <option value="منتجات تغذية"></option>
+                          <option value="مستلزمات طبية"></option>
+                          <option value="فيتامينات ومكملات"></option>
+                        </datalist>
                       </div>
                     </div>
                   </div>
@@ -976,22 +1399,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 <!-- Section 2: Pricing & Stock Inventory -->
                 <h6 class="font-bold text-dark mb-3 d-flex align-items-center gap-2">
-                  <i class="fa-solid fa-coins text-warning"></i> التسعير، الأرباح، والكميات المتوفرة
+                  <i class="fa-solid fa-coins text-warning"></i> السعر والكمية
                 </h6>
                 <div class="row g-3 mb-3">
                   <div class="col-md-3 col-6">
-                    <label class="form-label font-bold text-dark">الكمية المتوفرة (علبة) <span class="text-danger">*</span></label>
+                    <label class="form-label font-bold text-dark">الكمية المتوفرة <span class="text-danger">*</span></label>
                     <input type="number" id="modalMedQty" class="form-control" min="0" value="10" required>
                   </div>
                   <div class="col-md-3 col-6">
                     <label class="form-label font-bold text-dark">سعر البيع (ج.م) <span class="text-danger">*</span></label>
                     <input type="number" id="modalMedPrice" class="form-control" min="0.5" step="0.5" value="35.00" required>
                   </div>
-                  <div class="col-md-3 col-6">
+                  <div class="col-md-3 col-6 d-none">
                     <label class="form-label font-bold text-dark">سعر التكلفة (ج.م)</label>
                     <input type="number" id="modalMedCost" class="form-control" min="0" step="0.5" placeholder="مثال: 25.00">
                   </div>
-                  <div class="col-md-3 col-6">
+                  <div class="col-md-3 col-6 d-none">
                     <label class="form-label font-bold text-dark">حد النواقص (علبة)</label>
                     <input type="number" id="modalMedThreshold" class="form-control" min="1" value="5">
                   </div>
@@ -1008,15 +1431,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <hr class="my-3 opacity-25">
 
                 <!-- Section 3: Storage, Expiry & Batch Details -->
-                <h6 class="font-bold text-dark mb-3 d-flex align-items-center gap-2">
+                <h6 class="font-bold text-dark mb-3 d-flex align-items-center gap-2 d-none">
                   <i class="fa-solid fa-calendar-check text-primary"></i> الصلاحية وموقع التخزين ورقم التشغيلة
                 </h6>
                 <div class="row g-3 mb-3">
-                  <div class="col-md-4 col-12">
+                  <div class="col-md-4 col-12 d-none">
                     <label class="form-label font-bold text-dark">تاريخ انتهاء الصلاحية <span class="text-danger">*</span></label>
-                    <input type="date" id="modalMedExpiry" class="form-control" value="2027-06-01" required>
+                    <input type="date" id="modalMedExpiry" class="form-control" value="2027-06-01">
                   </div>
-                  <div class="col-md-4 col-6">
+                  <div class="col-md-4 col-6 d-none">
                     <label class="form-label font-bold text-dark">رقم التشغيلة (Batch No.)</label>
                     <div class="input-group">
                       <input type="text" id="modalMedBatch" class="form-control" placeholder="BATCH-1234">
@@ -1025,7 +1448,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                       </button>
                     </div>
                   </div>
-                  <div class="col-md-4 col-6">
+                  <div class="col-md-4 col-6 d-none">
                     <label class="form-label font-bold text-dark">موقع الرف / المخزن</label>
                     <input type="text" id="modalMedShelf" class="form-control" placeholder="مثال: رف A3، ثلاجة 1">
                   </div>
@@ -1033,7 +1456,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 <!-- Modal Footer Actions -->
                 <div class="d-flex justify-content-between align-items-center pt-3 border-top mt-4 flex-wrap gap-2">
-                  <div class="form-check form-switch m-0">
+                  <div class="form-check form-switch m-0 d-none">
                     <input class="form-check-input" type="checkbox" id="modalMedAvailable" checked>
                     <label class="form-check-label font-bold text-muted" for="modalMedAvailable" style="font-size: 13px;">متاح للطلب المباشر</label>
                   </div>
@@ -1055,35 +1478,50 @@ document.addEventListener('DOMContentLoaded', async () => {
       const nameInput = modalEl.querySelector('#modalMedName');
       const autoList = modalEl.querySelector('#catalogAutocompleteList');
       const medIdInput = modalEl.querySelector('#modalMedicineId');
+      const productTypeSelect = modalEl.querySelector('#modalProductType');
       const priceInput = modalEl.querySelector('#modalMedPrice');
       const costInput = modalEl.querySelector('#modalMedCost');
       const dosageSelect = modalEl.querySelector('#modalDosageForm');
       const categorySelect = modalEl.querySelector('#modalCategory');
       const imgHidden = modalEl.querySelector('#modalMedImage');
       const imgPreview = modalEl.querySelector('#modalMedImagePreview');
+      const imagePlaceholder = modalEl.querySelector('#imagePreviewPlaceholder');
       const fileInput = modalEl.querySelector('#modalMedImageFile');
+      const imageUrlInput = modalEl.querySelector('#modalMedImageUrl');
+      const imageUploadStatus = modalEl.querySelector('#modalImageUploadStatus');
       const clearImgBtn = modalEl.querySelector('#btnClearImage');
-      const presetsRow = modalEl.querySelector('#imagePresetsRow');
       const genBatchBtn = modalEl.querySelector('#btnGenBatch');
       const batchInput = modalEl.querySelector('#modalMedBatch');
-
-      function resolveDosageImage(dosage) {
-        const d = (dosage || '').toLowerCase();
-        if (d.includes('شراب') || d.includes('syrup')) return '../../assets/images/2.jpg';
-        if (d.includes('كبسول') || d.includes('capsule')) return '../../assets/images/3.jpg';
-        if (d.includes('حقن') || d.includes('injection')) return '../../assets/images/4.jpg';
-        if (d.includes('مرهم') || d.includes('كريم') || d.includes('ointment')) return '../../assets/images/5.jpg';
-        if (d.includes('نقط') || d.includes('قطرة') || d.includes('drops')) return '../../assets/images/6.jpg';
-        if (d.includes('بخاخ') || d.includes('spray')) return '../../assets/images/7.jpg';
-        return '../../assets/images/1.jpg';
-      }
-
-      function updateSelectedPreset(imageSrc) {
-        presetsRow?.querySelectorAll('.preset-btn').forEach(b => {
-          if (b.dataset.img === imageSrc) b.classList.add('active');
-          else b.classList.remove('active');
-        });
-      }
+      let previewObjectUrl = '';
+      const setImagePreview = (src) => {
+        if (src) {
+          imgPreview.src = src;
+          imgPreview.classList.remove('d-none');
+          imagePlaceholder.classList.add('d-none');
+        } else {
+          imgPreview.removeAttribute('src');
+          imgPreview.classList.add('d-none');
+          imagePlaceholder.classList.remove('d-none');
+        }
+      };
+      const releasePreviewObjectUrl = () => {
+        if (previewObjectUrl) URL.revokeObjectURL(previewObjectUrl);
+        previewObjectUrl = '';
+      };
+      modalEl.addEventListener('hidden.bs.modal', () => {
+        releasePreviewObjectUrl();
+        fileInput.value = '';
+        imageUploadStatus?.classList.add('d-none');
+      });
+      productTypeSelect?.addEventListener('change', () => {
+        medIdInput.value = '';
+        categorySelect.value = productTypeSelect.value === 'product' ? 'عناية شخصية' : 'أدوية عامة';
+        if (!imgHidden.value && !imageUrlInput.value && !fileInput.files.length) {
+          imgHidden.value = '';
+          setImagePreview('');
+        }
+        autoList.classList.add('d-none');
+      });
 
       function updateProfitWidget() {
         const selling = Number(priceInput?.value) || 0;
@@ -1118,41 +1556,61 @@ document.addEventListener('DOMContentLoaded', async () => {
       costInput?.addEventListener('input', updateProfitWidget);
 
       dosageSelect?.addEventListener('change', (e) => {
-        const matchingImg = resolveDosageImage(e.target.value);
-        imgPreview.src = matchingImg;
-        imgHidden.value = matchingImg;
-        updateSelectedPreset(matchingImg);
+        if (!imgHidden.value && !imageUrlInput.value && !fileInput.files.length) setImagePreview('');
       });
 
       fileInput?.addEventListener('change', (e) => {
         const file = e.target.files && e.target.files[0];
+        if (file && !file.type.startsWith('image/')) {
+          fileInput.value = '';
+          if (window.Toast) window.Toast.error('اختر ملف صورة صالحًا.', 'نوع ملف غير صالح');
+          return;
+        }
+        if (file && file.size > 5 * 1024 * 1024) {
+          fileInput.value = '';
+          if (window.Toast) window.Toast.error('حجم الصورة يجب ألا يتجاوز 5 ميجابايت.', 'الصورة كبيرة');
+          return;
+        }
         if (file) {
-          const reader = new FileReader();
-          reader.onload = (evt) => {
-            imgPreview.src = evt.target.result;
-            imgHidden.value = evt.target.result;
-            presetsRow?.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-          };
-          reader.readAsDataURL(file);
+          imageUrlInput.value = '';
+          imgHidden.value = '';
+          releasePreviewObjectUrl();
+          previewObjectUrl = URL.createObjectURL(file);
+          setImagePreview(previewObjectUrl);
+          imageUploadStatus?.classList.remove('d-none');
+          imageUploadStatus.lastChild.textContent = ' سيتم رفعها عند حفظ المنتج';
+        }
+      });
+
+      imageUrlInput?.addEventListener('input', () => {
+        const value = imageUrlInput.value.trim();
+        fileInput.value = '';
+        releasePreviewObjectUrl();
+        if (!value) {
+          imgHidden.value = '';
+          setImagePreview('');
+          return;
+        }
+        try {
+          const url = new URL(value);
+          if (!['http:', 'https:'].includes(url.protocol)) throw new Error('رابط الصورة يجب أن يبدأ بـ http أو https');
+          imgHidden.value = url.href;
+          setImagePreview(url.href);
+          imageUploadStatus?.classList.add('d-none');
+        } catch {
+          imgHidden.value = '';
+          setImagePreview('');
         }
       });
 
       clearImgBtn?.addEventListener('click', () => {
-        const currentDosage = dosageSelect?.value || 'أقراص';
-        const defaultImg = resolveDosageImage(currentDosage);
-        imgPreview.src = defaultImg;
-        imgHidden.value = defaultImg;
-        updateSelectedPreset(defaultImg);
-      });
-
-      presetsRow?.querySelectorAll('.preset-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const imgPath = btn.dataset.img;
-          imgPreview.src = imgPath;
-          imgHidden.value = imgPath;
-          presetsRow.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-        });
+        fileInput.value = '';
+        imageUrlInput.value = '';
+        releasePreviewObjectUrl();
+        imageUploadStatus?.classList.add('d-none');
+        modalEl.querySelector('#modalSubmitBtn').disabled = false;
+        imgHidden.value = '';
+        setImagePreview('');
       });
 
       genBatchBtn?.addEventListener('click', () => {
@@ -1165,6 +1623,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       let searchDebounceTimer = null;
       if (nameInput && autoList) {
         nameInput.addEventListener('input', (e) => {
+          if (productTypeSelect.value === 'product') {
+            medIdInput.value = '';
+            autoList.classList.add('d-none');
+            return;
+          }
           const q = e.target.value.toLowerCase().trim();
           if (!q || q.length < 2) {
             autoList.classList.add('d-none');
@@ -1185,7 +1648,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             autoList.innerHTML = matches.map(m => {
-              const formImg = m.image || resolveDosageImage(m.dosageForm);
+              const formImg = m.image || '';
               return `
                 <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-2 px-3" 
                   data-id="${m._id}" 
@@ -1194,9 +1657,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                   data-active="${escapeHtml(m.activeIngredient || '')}"
                   data-dosage="${escapeHtml(m.dosageForm || 'أقراص')}"
                   data-category="${escapeHtml(m.category || 'أدوية عامة')}"
-                  data-img="${formImg}">
+                  data-img="${escapeHtml(formImg)}">
                   <div class="d-flex align-items-center gap-2">
-                    <img src="${formImg}" style="width: 36px; height: 36px; object-fit: cover; border-radius: 8px;" onerror="this.src='../../assets/images/1.jpg'">
+                    ${formImg ? `<img src="${escapeHtml(formImg)}" style="width: 36px; height: 36px; object-fit: contain; border-radius: 8px;" loading="lazy" onerror="this.remove()">` : '<span class="med-thumb-placeholder" style="width: 36px; height: 36px;"><i class="fa-solid fa-box-open"></i></span>'}
                     <div>
                       <strong class="d-block text-dark" style="font-size: 13.5px;">${escapeHtml(m.nameAr)}</strong>
                       <small class="text-muted" style="font-size: 11.5px;">${escapeHtml(m.nameEn || '')} • ${escapeHtml(m.activeIngredient || '')}</small>
@@ -1211,6 +1674,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             autoList.querySelectorAll('button').forEach(itemBtn => {
               itemBtn.addEventListener('click', () => {
+                productTypeSelect.value = 'medicine';
                 nameInput.value = itemBtn.dataset.name;
                 medIdInput.value = itemBtn.dataset.id;
                 if (priceInput) priceInput.value = itemBtn.dataset.price;
@@ -1221,10 +1685,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (dosageSelect) dosageSelect.value = dosage;
                 if (categorySelect && itemBtn.dataset.category) categorySelect.value = itemBtn.dataset.category;
 
-                const formImg = itemBtn.dataset.img || resolveDosageImage(dosage);
+                const formImg = itemBtn.dataset.img || '';
+                imageUrlInput.value = /^https?:\/\//i.test(formImg) ? formImg : '';
+                fileInput.value = '';
+                releasePreviewObjectUrl();
                 imgHidden.value = formImg;
-                imgPreview.src = formImg;
-                updateSelectedPreset(formImg);
+                setImagePreview(formImg);
 
                 updateProfitWidget();
                 autoList.classList.add('d-none');
@@ -1244,6 +1710,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       const form = modalEl.querySelector('#invModalForm');
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        const submitButton = document.getElementById('modalSubmitBtn');
+        if (submitButton.disabled) return;
+        const submitLabel = submitButton.innerHTML;
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span> جاري حفظ المنتج...';
         const itemId = document.getElementById('modalItemId').value;
         const medicineId = document.getElementById('modalMedicineId').value;
         const name = document.getElementById('modalMedName').value.trim();
@@ -1254,55 +1725,42 @@ document.addEventListener('DOMContentLoaded', async () => {
         const threshold = Number(document.getElementById('modalMedThreshold')?.value) || 5;
         const batch = document.getElementById('modalMedBatch')?.value || '';
         const shelf = document.getElementById('modalMedShelf')?.value || '';
-        const image = document.getElementById('modalMedImage')?.value || '../../assets/images/1.jpg';
+        const productType = productTypeSelect.value;
+        let image = document.getElementById('modalMedImage')?.value || '';
         const active = document.getElementById('modalActiveIngredient')?.value || '';
         const dosage = document.getElementById('modalDosageForm')?.value || 'أقراص';
         const category = document.getElementById('modalCategory')?.value || 'أدوية عامة';
 
         const modalInstance = bootstrap.Modal.getInstance(modalEl);
 
-        if (itemId) {
-          // Update
-          try {
-            if (window.API && window.API.inventory && itemId.length === 24) {
-              await window.API.inventory.update(itemId, {
-                quantity: qty,
-                customPrice: price,
-                costPrice: cost,
-                shelfLocation: shelf,
-                batchNumber: batch,
-                expiryDate: expiry,
-                lowStockThreshold: threshold,
-                image: image
-              });
-            }
-          } catch (err) {
-            console.warn('API update fallback:', err.message);
+        try {
+          if (!window.API || !window.API.inventory) {
+            throw new Error('تعذر الاتصال بالخادم. لم يتم حفظ المنتج.');
           }
 
-          const target = currentInventory.find(i => String(i._id) === String(itemId));
-          if (target) {
-            target.nameAr = name;
-            target.quantity = qty;
-            target.customPrice = price;
-            target.costPrice = cost;
-            target.shelfLocation = shelf;
-            target.batchNumber = batch;
-            target.expiryDate = expiry;
-            target.image = image;
-            target.dosageForm = dosage;
-            target.category = category;
-            target.activeIngredient = active;
+          const imageUrl = imageUrlInput.value.trim();
+          if (imageUrl) {
+            const parsedImageUrl = new URL(imageUrl);
+            if (!['http:', 'https:'].includes(parsedImageUrl.protocol)) {
+              throw new Error('رابط الصورة يجب أن يبدأ بـ http أو https.');
+            }
+            image = parsedImageUrl.href;
+          } else if (fileInput.files[0]) {
+            if (typeof window.API.upload !== 'function') {
+              throw new Error('رفع الصور غير متاح حاليًا. استخدم رابط الصورة أو حاول لاحقًا.');
+            }
+            imageUploadStatus?.classList.remove('d-none');
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            const uploadResponse = await window.API.upload('/upload', formData);
+            if (!uploadResponse?.data?.url) throw new Error('لم يؤكد الخادم رفع الصورة.');
+            image = uploadResponse.data.url;
+            imgHidden.value = image;
+            imageUploadStatus?.classList.add('d-none');
           }
-          if (window.Toast) window.Toast.success(`تم تحديث بيانات ومخزون (${name}) بنجاح`, 'تحديث المخزون');
-        } else {
-          // Add new
-          let createdId = `inv_${Date.now()}`;
-          try {
-            if (window.API && window.API.inventory) {
-              const res = await window.API.inventory.add({
-                medicineId: medicineId || undefined,
-                medicineName: name,
+
+          if (itemId) {
+            const res = await window.API.inventory.update(itemId, {
                 quantity: qty,
                 customPrice: price,
                 costPrice: cost,
@@ -1311,39 +1769,88 @@ document.addEventListener('DOMContentLoaded', async () => {
                 expiryDate: expiry,
                 lowStockThreshold: threshold,
                 image: image,
+                nameAr: name,
+                productType,
+                category,
+                activeIngredient: active,
+                dosageForm: dosage,
+                isAvailable: document.getElementById('modalMedAvailable').checked,
+              });
+            if (!res || !res.data) throw new Error('لم يؤكد الخادم حفظ التعديلات.');
+
+            const target = currentInventory.find(i => String(i._id) === String(itemId));
+            if (target) {
+              target.nameAr = name;
+              target.quantity = qty;
+              target.customPrice = price;
+              target.costPrice = cost;
+              target.shelfLocation = shelf;
+              target.batchNumber = batch;
+              target.expiryDate = expiry;
+              target.image = image;
+              target.dosageForm = dosage;
+              target.category = category;
+              target.activeIngredient = active;
+              target.productType = productType;
+            }
+            if (window.Toast) window.Toast.success(`تم تحديث بيانات ومخزون (${name}) بنجاح`, 'تحديث المخزون');
+          } else {
+            const res = await window.API.inventory.add({
+                medicineId: medicineId || undefined,
+                medicineName: name,
+                productType,
+                quantity: qty,
+                customPrice: price,
+                costPrice: cost,
+                shelfLocation: shelf,
+                batchNumber: batch,
+                expiryDate: expiry,
+                lowStockThreshold: threshold,
+                image: image,
+                isAvailable: document.getElementById('modalMedAvailable').checked,
                 activeIngredient: active,
                 dosageForm: dosage,
                 category: category,
               });
-              if (res && res.data && res.data._id) {
-                createdId = res.data._id;
-              }
-            }
-          } catch (err) {
-            console.warn('API add fallback:', err.message);
+            if (!res || !res.data || !res.data._id) throw new Error('لم يؤكد الخادم حفظ المنتج.');
+
+            const saved = res.data;
+            const savedMedicine = saved.medicineId && typeof saved.medicineId === 'object' ? saved.medicineId : {};
+            const savedMedicineId = savedMedicine._id || saved.medicineId || medicineId || undefined;
+            const savedItem = {
+              _id: saved._id,
+              medicineId: savedMedicineId,
+              nameAr: savedMedicine.nameAr || name,
+              nameEn: savedMedicine.nameEn || '',
+              productType: savedMedicine.productType || productType,
+              quantity: Number(saved.quantity),
+              customPrice: Number(saved.customPrice || price),
+              costPrice: saved.costPrice,
+              shelfLocation: saved.shelfLocation || '',
+              batchNumber: saved.batchNumber || '',
+              expiryDate: saved.expiryDate || expiry,
+              image: savedMedicine.image || image,
+              dosageForm: savedMedicine.dosageForm || dosage,
+              category: savedMedicine.category || category,
+              activeIngredient: savedMedicine.activeIngredient || active,
+            };
+            const existing = currentInventory.find(item => String(item.medicineId) === String(savedMedicineId));
+            if (existing) Object.assign(existing, savedItem);
+            else currentInventory.unshift(savedItem);
+            if (window.Toast) window.Toast.success(`تمت إضافة (${name}) بنجاح للمخزون`, 'إضافة منتج');
           }
 
-          currentInventory.unshift({
-            _id: createdId,
-            medicineId: medicineId || undefined,
-            nameAr: name,
-            quantity: qty,
-            customPrice: price,
-            costPrice: cost,
-            shelfLocation: shelf,
-            batchNumber: batch,
-            expiryDate: expiry,
-            image: image,
-            dosageForm: dosage,
-            category: category,
-            activeIngredient: active
-          });
-          if (window.Toast) window.Toast.success(`تمت إضافة (${name}) بنجاح للمخزون`, 'إضافة دواء');
+          saveLocalInventory();
+          applyFilters();
+          if (modalInstance) modalInstance.hide();
+        } catch (err) {
+          console.error('Inventory save failed:', err);
+          imageUploadStatus?.classList.add('d-none');
+          if (window.Toast) window.Toast.error(err.message || 'تعذر حفظ المنتج. لم يتم إجراء أي تغيير.', 'فشل الحفظ');
+        } finally {
+          submitButton.disabled = false;
+          submitButton.innerHTML = submitLabel;
         }
-
-        saveLocalInventory();
-        applyFilters();
-        if (modalInstance) modalInstance.hide();
       });
     }
     return modalEl;
@@ -1351,22 +1858,28 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function openAddModal() {
     const modalEl = ensureInventoryModal();
-    document.getElementById('invModalTitle').textContent = 'إضافة دواء جديد للمخزون';
+    document.getElementById('invModalTitle').textContent = 'إضافة منتج جديد للمخزون';
     document.getElementById('modalItemId').value = '';
     document.getElementById('modalMedicineId').value = '';
     document.getElementById('modalMedName').value = '';
+    document.getElementById('modalProductType').value = 'medicine';
     document.getElementById('modalActiveIngredient').value = '';
     document.getElementById('modalDosageForm').value = 'أقراص';
-    document.getElementById('modalCategory').value = 'مسكنات وخافض حرارة';
+    document.getElementById('modalCategory').value = 'أدوية عامة';
     document.getElementById('modalMedQty').value = '10';
     document.getElementById('modalMedPrice').value = '35.00';
-    document.getElementById('modalMedCost').value = '25.00';
+    document.getElementById('modalMedCost').value = '';
     document.getElementById('modalMedThreshold').value = '5';
     document.getElementById('modalMedExpiry').value = '2027-06-01';
     document.getElementById('modalMedBatch').value = `BCH-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
     document.getElementById('modalMedShelf').value = 'رف A1';
-    document.getElementById('modalMedImage').value = '../../assets/images/1.jpg';
-    document.getElementById('modalMedImagePreview').src = '../../assets/images/1.jpg';
+    document.getElementById('modalMedAvailable').checked = true;
+    document.getElementById('modalMedImage').value = '';
+    document.getElementById('modalMedImageUrl').value = '';
+    document.getElementById('modalMedImageFile').value = '';
+    document.getElementById('modalMedImagePreview').removeAttribute('src');
+    document.getElementById('modalMedImagePreview').classList.add('d-none');
+    document.getElementById('imagePreviewPlaceholder').classList.remove('d-none');
     document.getElementById('modalSubmitBtn').innerHTML = '<i class="fa-solid fa-plus me-1"></i> إضافة للمخزون';
 
     const priceInput = modalEl.querySelector('#modalMedPrice');
@@ -1382,6 +1895,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('modalItemId').value = item._id;
     document.getElementById('modalMedicineId').value = item.medicineId || '';
     document.getElementById('modalMedName').value = item.nameAr;
+    document.getElementById('modalProductType').value = item.productType || 'medicine';
     document.getElementById('modalActiveIngredient').value = item.activeIngredient || '';
     document.getElementById('modalDosageForm').value = item.dosageForm || 'أقراص';
     document.getElementById('modalCategory').value = item.category || 'أدوية عامة';
@@ -1393,9 +1907,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('modalMedBatch').value = item.batchNumber || `BCH-${new Date().getFullYear()}-1024`;
     document.getElementById('modalMedShelf').value = item.shelfLocation || '';
     
-    const imgSrc = item.image || '../../assets/images/1.jpg';
+    const imgSrc = item.image || '';
     document.getElementById('modalMedImage').value = imgSrc;
-    document.getElementById('modalMedImagePreview').src = imgSrc;
+    document.getElementById('modalMedImageUrl').value = /^https?:\/\//i.test(imgSrc) ? imgSrc : '';
+    document.getElementById('modalMedImageFile').value = '';
+    const preview = document.getElementById('modalMedImagePreview');
+    const placeholder = document.getElementById('imagePreviewPlaceholder');
+    if (imgSrc) {
+      preview.src = imgSrc;
+      preview.classList.remove('d-none');
+      placeholder.classList.add('d-none');
+    } else {
+      preview.removeAttribute('src');
+      preview.classList.add('d-none');
+      placeholder.classList.remove('d-none');
+    }
 
     document.getElementById('modalSubmitBtn').innerHTML = '<i class="fa-solid fa-save me-1"></i> حفظ التعديلات';
 
@@ -1436,15 +1962,18 @@ document.addEventListener('DOMContentLoaded', async () => {
               <!-- Templates Bar -->
               <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 p-3 mb-3 bg-light rounded-3 border">
                 <div>
-                  <strong class="d-block text-dark" style="font-size: 13.5px;"><i class="fa-solid fa-download text-primary me-1"></i> قوالب جاهزة لتسهيل التعبئة:</strong>
-                  <small class="text-muted" style="font-size: 12px;">يمكنك تحميل نموذج إكسل أو CSV وتعبئة أدويتك عليه مباشرة.</small>
+                  <strong class="d-block text-dark" style="font-size: 13.5px;"><i class="fa-solid fa-download text-primary me-1"></i> ملفات اختبار جاهزة بروابط الصور:</strong>
+                  <small class="text-muted" style="font-size: 12px;">الصور مرتبطة بالمنتج نفسه من صفحة المصدر؛ يلزم الاتصال بالإنترنت لعرضها.</small>
                 </div>
-                <div class="d-flex gap-2">
-                  <button type="button" class="btn btn-outline-success btn-sm font-bold" id="downloadExcelTemplateBtn">
-                    <i class="fa-solid fa-file-excel me-1"></i> قالب Excel (.xlsx)
-                  </button>
+                <div class="d-flex gap-2 flex-wrap">
+                  <a href="../../assets/teryak_20_exact_products_test.xlsx" download="teryak_20_exact_products_test.xlsx" class="btn btn-success btn-sm font-bold" title="تحميل ملف اختبار يضم 20 منتجًا وروابط صور المنتجات نفسها">
+                    <i class="fa-solid fa-file-excel me-1"></i> تحميل ملف اختبار 20 منتجًا (.xlsx)
+                  </a>
+                  <a href="../../assets/teryak_20_exact_products_test.csv" download="teryak_20_exact_products_test.csv" class="btn btn-outline-success btn-sm font-bold">
+                    <i class="fa-solid fa-file-csv me-1"></i> نسخة CSV
+                  </a>
                   <button type="button" class="btn btn-outline-primary btn-sm font-bold" id="downloadCsvTemplateBtn">
-                    <i class="fa-solid fa-file-csv me-1"></i> قالب CSV
+                    <i class="fa-solid fa-file-csv me-1"></i> قالب CSV فارغ
                   </button>
                 </div>
               </div>
@@ -1516,29 +2045,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <th>سعر البيع</th>
                         <th>الصلاحية</th>
                         <th>الموقع</th>
+                        <th>الصورة</th>
                       </tr>
                     </thead>
                     <tbody id="bulkPreviewTableBody"></tbody>
                   </table>
                 </div>
 
-                <!-- Import Mode Selection -->
-                <div class="mt-3 p-3 bg-light rounded border">
-                  <label class="form-label font-bold text-dark mb-2">طريقة الاستيراد:</label>
-                  <div class="d-flex gap-4">
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="importMode" id="importModeMerge" value="merge" checked>
-                      <label class="form-check-label font-bold text-dark" for="importModeMerge">
-                        دمج مع المخزون الحالي (إضافة وتحديث الكميات)
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="importMode" id="importModeReplace" value="replace">
-                      <label class="form-check-label text-danger font-bold" for="importModeReplace">
-                        استبدال المخزون الحالي بالكامل
-                      </label>
-                    </div>
-                  </div>
+                <div class="mt-3 p-3 bg-light rounded border text-muted small">
+                  سيتم دمج الصفوف المستوردة مع المخزون الحالي دون حذف أي منتج موجود. يمكن أن يحتوي عمود الصورة على رابط مباشر.
                 </div>
               </div>
 
@@ -1572,7 +2087,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       // Download CSV Template
       dlCsvBtn?.addEventListener('click', () => {
-        const template = 'اسم الدواء,الكمية,سعر البيع,سعر التكلفة,تاريخ الصلاحية,الموقع\nبانادول إكسترا أقراص,50,45.00,35.00,2027-12-31,رف A1\nأوجمنتين 1 جم أقراص,30,110.00,85.00,2026-10-15,رف B2\nكونجستال أقراص,40,35.00,26.00,2027-06-30,رف C1\nأوميجا 3 بلس كبسولات,25,120.00,90.00,2027-08-01,رف A3';
+        const template = 'اسم المنتج,نوع المنتج,الكمية,سعر البيع,سعر التكلفة,تاريخ الصلاحية,الموقع,القسم,المادة الفعالة,الشكل الدوائي,رابط الصورة\nشامبو,product,10,50,35,2027-12-31,رف A1,عناية شخصية,,,https://example.com/exact-product-image.jpg';
         const blob = new Blob(['\uFEFF' + template], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
@@ -1623,7 +2138,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       // Column Header Matching Logic
       function detectColumnIndices(headers) {
-        const mapping = { name: 0, qty: -1, price: -1, cost: -1, expiry: -1, shelf: -1 };
+        const mapping = {
+          name: 0, qty: -1, price: -1, cost: -1, expiry: -1, shelf: -1,
+          image: -1, productType: -1, category: -1, activeIngredient: -1, dosageForm: -1,
+        };
 
         headers.forEach((h, idx) => {
           const col = String(h || '').toLowerCase().trim();
@@ -1631,14 +2149,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             mapping.name = idx;
           } else if (col.includes('كمي') || col.includes('عدد') || col.includes('رصيد') || col.includes('qty') || col.includes('quantity') || col.includes('stock')) {
             mapping.qty = idx;
-          } else if (col.includes('سعر البيع') || col.includes('سعر') || col.includes('جمهور') || col.includes('price') || col.includes('selling')) {
-            if (mapping.price === -1) mapping.price = idx;
           } else if (col.includes('تكلف') || col.includes('شراء') || col.includes('cost')) {
             mapping.cost = idx;
+          } else if (col.includes('سعر البيع') || col.includes('جمهور') || col.includes('price') || col.includes('selling') || col === 'سعر') {
+            if (mapping.price === -1) mapping.price = idx;
           } else if (col.includes('صلاحي') || col.includes('انتهاء') || col.includes('تاريخ') || col.includes('expiry') || col.includes('exp')) {
             mapping.expiry = idx;
           } else if (col.includes('رف') || col.includes('مكان') || col.includes('مخزن') || col.includes('shelf') || col.includes('loc')) {
             mapping.shelf = idx;
+          } else if (col.includes('image') || col.includes('صورة') || col.includes('رابط')) {
+            mapping.image = idx;
+          } else if (col.includes('نوع المنتج') || col.includes('product type') || col.includes('producttype')) {
+            mapping.productType = idx;
+          } else if (col.includes('قسم') || col.includes('تصنيف') || col.includes('category')) {
+            mapping.category = idx;
+          } else if (col.includes('مادة فعالة') || col.includes('active ingredient') || col.includes('activeingredient')) {
+            mapping.activeIngredient = idx;
+          } else if (col.includes('الشكل الدوائي') || col.includes('dosage form') || col.includes('dosageform')) {
+            mapping.dosageForm = idx;
           }
         });
 
@@ -1648,6 +2176,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (mapping.expiry === -1) mapping.expiry = 3;
 
         return mapping;
+      }
+
+      function parseNumericCell(value, fallback) {
+        const normalized = String(value ?? '').replace(/[^\d.-]/g, '').trim();
+        if (!normalized) return fallback;
+        const parsed = Number(normalized);
+        return Number.isFinite(parsed) ? parsed : fallback;
       }
 
       // Process Excel Workbook via SheetJS
@@ -1667,7 +2202,9 @@ document.addEventListener('DOMContentLoaded', async () => {
           return s.includes('اسم') || s.includes('دواء') || s.includes('name') || s.includes('كمي') || s.includes('qty');
         });
 
-        const mapping = isHeader ? detectColumnIndices(firstRow) : { name: 0, qty: 1, price: 2, cost: 3, expiry: 4, shelf: 5 };
+        const mapping = isHeader
+          ? detectColumnIndices(firstRow)
+          : { name: 0, qty: 1, price: 2, cost: 3, expiry: 4, shelf: 5, image: -1, productType: -1, category: -1, activeIngredient: -1, dosageForm: -1 };
         const startIndex = isHeader ? 1 : 0;
         const items = [];
 
@@ -1683,11 +2220,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             continue;
           }
 
-          const rawQty = Number(String(row[mapping.qty] || '').replace(/[^\d.]/g, '')) || 10;
-          const rawPrice = Number(String(row[mapping.price] || '').replace(/[^\d.]/g, '')) || 35.00;
+          const rawQty = parseNumericCell(row[mapping.qty], 10);
+          const rawPrice = parseNumericCell(row[mapping.price], 35.00);
           const rawCost = mapping.cost !== -1 && row[mapping.cost] ? Number(String(row[mapping.cost]).replace(/[^\d.]/g, '')) : undefined;
           const rawExpiry = mapping.expiry !== -1 && row[mapping.expiry] ? parseExcelDate(row[mapping.expiry]) : '2027-12-31';
           const rawShelf = mapping.shelf !== -1 && row[mapping.shelf] ? String(row[mapping.shelf]).trim() : '';
+          const rawProductType = mapping.productType !== -1 ? String(row[mapping.productType] || '').trim().toLowerCase() : '';
 
           items.push({
             medicineName: rawName,
@@ -1695,7 +2233,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             customPrice: rawPrice,
             costPrice: rawCost,
             expiryDate: rawExpiry,
-            shelfLocation: rawShelf
+            shelfLocation: rawShelf,
+            imageUrl: mapping.image !== -1 ? String(row[mapping.image] || '').trim() : '',
+            productType: rawProductType.includes('product') || rawProductType.includes('منتج') ? 'product' : 'medicine',
+            category: mapping.category !== -1 ? String(row[mapping.category] || '').trim() : '',
+            activeIngredient: mapping.activeIngredient !== -1 ? String(row[mapping.activeIngredient] || '').trim() : '',
+            dosageForm: mapping.dosageForm !== -1 ? String(row[mapping.dosageForm] || '').trim() : '',
           });
         }
 
@@ -1755,7 +2298,9 @@ document.addEventListener('DOMContentLoaded', async () => {
           return s.includes('اسم') || s.includes('دواء') || s.includes('name') || s.includes('كمي') || s.includes('qty');
         });
 
-        const mapping = isHeader ? detectColumnIndices(headers) : { name: 0, qty: 1, price: 2, cost: 3, expiry: 4, shelf: 5 };
+        const mapping = isHeader
+          ? detectColumnIndices(headers)
+          : { name: 0, qty: 1, price: 2, cost: 3, expiry: 4, shelf: 5, image: -1, productType: -1, category: -1, activeIngredient: -1, dosageForm: -1 };
         const startIndex = isHeader ? 1 : 0;
         const items = [];
 
@@ -1767,11 +2312,12 @@ document.addEventListener('DOMContentLoaded', async () => {
           // Reject binary remnants
           if (name.includes('xl/') || name.includes('docProps') || name.includes('[Content_Types]')) continue;
 
-          const qty = Number(String(parts[mapping.qty] || '').replace(/[^\d.]/g, '')) || 10;
-          const price = Number(String(parts[mapping.price] || '').replace(/[^\d.]/g, '')) || 35.00;
+          const qty = parseNumericCell(parts[mapping.qty], 10);
+          const price = parseNumericCell(parts[mapping.price], 35.00);
           const cost = mapping.cost !== -1 && parts[mapping.cost] ? Number(String(parts[mapping.cost]).replace(/[^\d.]/g, '')) : undefined;
           const expiry = mapping.expiry !== -1 && parts[mapping.expiry] ? parts[mapping.expiry].trim() : '2027-12-31';
           const shelf = mapping.shelf !== -1 && parts[mapping.shelf] ? parts[mapping.shelf].trim() : '';
+          const rawProductType = mapping.productType !== -1 ? String(parts[mapping.productType] || '').trim().toLowerCase() : '';
 
           items.push({
             medicineName: name,
@@ -1779,7 +2325,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             customPrice: price,
             costPrice: cost,
             expiryDate: expiry,
-            shelfLocation: shelf
+            shelfLocation: shelf,
+            imageUrl: mapping.image !== -1 ? String(parts[mapping.image] || '').trim() : '',
+            productType: rawProductType.includes('product') || rawProductType.includes('منتج') ? 'product' : 'medicine',
+            category: mapping.category !== -1 ? String(parts[mapping.category] || '').trim() : '',
+            activeIngredient: mapping.activeIngredient !== -1 ? String(parts[mapping.activeIngredient] || '').trim() : '',
+            dosageForm: mapping.dosageForm !== -1 ? String(parts[mapping.dosageForm] || '').trim() : '',
           });
         }
 
@@ -1802,11 +2353,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             <td><strong class="text-success">${item.customPrice.toFixed(2)} ج.م</strong></td>
             <td><small class="text-muted">${escapeHtml(item.expiryDate)}</small></td>
             <td><small class="shelf-tag">${escapeHtml(item.shelfLocation || '—')}</small></td>
+            <td>${item.imageUrl && /^https?:\/\//i.test(item.imageUrl) ? `<a href="${escapeHtml(item.imageUrl)}" target="_blank" rel="noopener noreferrer">عرض الصورة</a>` : '—'}</td>
           </tr>
         `).join('');
 
         if (items.length > 8) {
-          previewBody.innerHTML += `<tr><td colspan="5" class="text-center text-muted font-bold py-2 bg-light">+ ${items.length - 8} أدوية أخرى في الملف...</td></tr>`;
+          previewBody.innerHTML += `<tr><td colspan="6" class="text-center text-muted font-bold py-2 bg-light">+ ${items.length - 8} أدوية أخرى في الملف...</td></tr>`;
         }
 
         previewArea.classList.remove('d-none');
@@ -1911,68 +2463,37 @@ document.addEventListener('DOMContentLoaded', async () => {
         execBtn.disabled = true;
         execBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> جاري استيراد وحفظ الأدوية...';
 
-        const importMode = modalEl.querySelector('input[name="importMode"]:checked')?.value || 'merge';
-
-        // 1. Sync with Backend API
         try {
-          if (window.API && window.API.inventory) {
-            await window.API.inventory.bulkImport(itemsToImport);
+          if (!window.API || !window.API.inventory) {
+            throw new Error('تعذر الاتصال بالخادم. لم يتم استيراد المنتجات.');
           }
+          const response = await window.API.inventory.bulkImport(itemsToImport);
+          if (!response?.success || !response.data) throw new Error('لم يؤكد الخادم استيراد المنتجات.');
+          const refreshed = await loadInventory();
+          if (!refreshed) {
+            throw new Error('أُرسل الاستيراد، لكن تعذر تحديث المخزون من الخادم. أعد تحميل الصفحة للتحقق.');
+          }
+
+          const importErrors = Array.isArray(response.data.errors) ? response.data.errors : [];
+          if (importErrors.length) {
+            window.Toast?.warning(
+              `تم استيراد ${response.data.addedCount + response.data.updatedCount} منتج، وتعذر استيراد ${importErrors.length} صف.`,
+              'اكتمل الاستيراد جزئيًا'
+            );
+            console.warn('Inventory import row errors:', importErrors);
+          } else {
+            window.Toast?.success(`تم استيراد ${response.data.totalProcessed} منتج إلى المخزون`, 'اكتمل الاستيراد');
+          }
+
+          const modalInstance = bootstrap.Modal.getInstance(modalEl);
+          if (modalInstance) modalInstance.hide();
         } catch (err) {
-          console.warn('Bulk import API fallback:', err.message);
+          console.error('Bulk inventory import failed:', err);
+          window.Toast?.error(err.message || 'تعذر استيراد المنتجات. لم يتم تعديل المخزون.', 'فشل الاستيراد');
+        } finally {
+          execBtn.disabled = false;
+          execBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up me-1"></i> استيراد وحفظ في المخزون';
         }
-
-        // 2. Local State Processing
-        if (importMode === 'replace') {
-          currentInventory = itemsToImport.map((item, idx) => ({
-            _id: `inv_imp_${Date.now()}_${idx}`,
-            nameAr: item.medicineName,
-            quantity: item.quantity,
-            customPrice: item.customPrice,
-            costPrice: item.costPrice,
-            expiryDate: item.expiryDate,
-            shelfLocation: item.shelfLocation || 'رف A1',
-            image: '../../assets/images/1.jpg'
-          }));
-        } else {
-          // Merge
-          itemsToImport.forEach(item => {
-            const existing = currentInventory.find(i => i.nameAr === item.medicineName);
-            if (existing) {
-              existing.quantity += item.quantity;
-              existing.customPrice = item.customPrice;
-              if (item.costPrice) existing.costPrice = item.costPrice;
-              if (item.expiryDate) existing.expiryDate = item.expiryDate;
-              if (item.shelfLocation) existing.shelfLocation = item.shelfLocation;
-            } else {
-              currentInventory.unshift({
-                _id: `inv_imp_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
-                nameAr: item.medicineName,
-                quantity: item.quantity,
-                customPrice: item.customPrice,
-                costPrice: item.costPrice,
-                expiryDate: item.expiryDate,
-                shelfLocation: item.shelfLocation || 'رف A1',
-                image: '../../assets/images/1.jpg'
-              });
-            }
-          });
-        }
-
-        // Sanitize final list to guarantee zero corruption
-        currentInventory = sanitizeInventoryList(currentInventory);
-        saveLocalInventory();
-        applyFilters();
-
-        const modalInstance = bootstrap.Modal.getInstance(modalEl);
-        if (modalInstance) modalInstance.hide();
-
-        if (window.Toast) {
-          window.Toast.success(`تم استيراد ${itemsToImport.length} دواء إلى مخزون الصيدلية بنجاح!`, 'تم الاستيراد بنجاح');
-        }
-
-        execBtn.disabled = false;
-        execBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up me-1"></i> استيراد وحفظ في المخزون';
       });
     }
     return modalEl;
@@ -1998,18 +2519,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (typeof XLSX !== 'undefined') {
         const rows = [
-          ['اسم الدواء', 'الكمية', 'سعر البيع (ج.م)', 'سعر التكلفة', 'تاريخ الصلاحية', 'الموقع / الرف', 'الحالة']
+          ['اسم المنتج', 'نوع المنتج', 'الكمية', 'سعر البيع (ج.م)', 'سعر التكلفة', 'تاريخ الصلاحية', 'الموقع / الرف', 'القسم', 'رابط الصورة', 'الحالة']
         ];
         currentInventory.forEach(item => {
           const qty = Number(item.quantity) || 0;
           const status = qty === 0 ? 'نفد المخزون' : (qty <= 5 ? 'نواقص' : 'متوفر');
           rows.push([
             item.nameAr || 'دواء',
+            item.productType || 'medicine',
             qty,
             Number(item.customPrice || 25),
             item.costPrice ? Number(item.costPrice) : '',
             item.expiryDate || '2027-01-01',
             item.shelfLocation || '',
+            item.category || '',
+            item.image || '',
             status
           ]);
         });
@@ -2022,9 +2546,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (window.Toast) window.Toast.success('تم تصدير ملف المخزون كـ Excel بنجاح', 'تصدير المخزون');
       } else {
         // Fallback to CSV
-        let csv = 'اسم الدواء,الكمية,سعر البيع,تاريخ الصلاحية,الموقع\n';
+        let csv = 'اسم المنتج,نوع المنتج,الكمية,سعر البيع,تاريخ الصلاحية,الموقع,القسم,رابط الصورة\n';
         currentInventory.forEach(item => {
-          csv += `"${escapeHtml(item.nameAr)}",${item.quantity},${item.customPrice || 25},"${item.expiryDate || '2027-01-01'}","${escapeHtml(item.shelfLocation || '')}"\n`;
+          csv += `"${escapeHtml(item.nameAr)}","${escapeHtml(item.productType || 'medicine')}",${item.quantity},${item.customPrice || 25},"${item.expiryDate || '2027-01-01'}","${escapeHtml(item.shelfLocation || '')}","${escapeHtml(item.category || '')}","${escapeHtml(item.image || '')}"\n`;
         });
         const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');

@@ -43,18 +43,62 @@ const getMedicines = async (req, res, next) => {
     }
 
     const skip = (Number(page) - 1) * Number(limit);
-    const total = await Medicine.countDocuments(query);
-    const medicines = await Medicine.find(query)
-      .populate('alternatives', 'nameAr nameEn price image activeIngredient')
-      .sort(sortOptions)
-      .skip(skip)
-      .limit(Number(limit));
+    const [total, medicines] = await Promise.all([
+      Medicine.countDocuments(query),
+      Medicine.find(query)
+        .select('nameAr nameEn activeIngredient productType category dosageForm price image concentration status')
+        .sort(sortOptions)
+        .skip(skip)
+        .limit(Number(limit)),
+    ]);
+    const medicineIds = medicines.map((medicine) => medicine._id);
+    const pharmacyCountByMedicine = new Map();
+    if (medicineIds.length) {
+      const availabilityCounts = await PharmacyInventory.aggregate([
+        {
+          $match: {
+            medicineId: { $in: medicineIds },
+            quantity: { $gt: 0 },
+            isAvailable: true,
+          },
+        },
+        {
+          $lookup: {
+            from: Pharmacy.collection.name,
+            let: { pharmacyId: '$pharmacyId' },
+            pipeline: [
+              { $match: { $expr: { $eq: ['$_id', '$$pharmacyId'] }, isApproved: true } },
+              { $project: { _id: 1 } },
+            ],
+            as: 'approvedPharmacy',
+          },
+        },
+        { $unwind: '$approvedPharmacy' },
+        {
+          $group: {
+            _id: { medicineId: '$medicineId', pharmacyId: '$approvedPharmacy._id' },
+          },
+        },
+        { $group: { _id: '$_id.medicineId', count: { $sum: 1 } } },
+      ]);
+      availabilityCounts.forEach(({ _id, count }) => {
+        pharmacyCountByMedicine.set(String(_id), count);
+      });
+    }
+    const medicinesWithAvailability = medicines.map((medicine) => {
+      const medicineData = medicine.toObject();
+      if (medicineData.image?.startsWith('data:')) medicineData.image = '';
+      return {
+        ...medicineData,
+        pharmaciesCount: pharmacyCountByMedicine.get(String(medicine._id)) || 0,
+      };
+    });
 
     return successResponse(
       res,
       200,
       'تم جلب قائمة الأدوية بنجاح',
-      medicines,
+      medicinesWithAvailability,
       {
         total,
         page: Number(page),
@@ -67,7 +111,7 @@ const getMedicines = async (req, res, next) => {
   }
 };
 
-// @desc    Get single medicine details with alternatives and available pharmacies
+// @desc    Get single medicine details with available pharmacies
 // @route   GET /api/medicines/:id
 // @access  Public
 const getMedicineById = async (req, res, next) => {
@@ -77,10 +121,7 @@ const getMedicineById = async (req, res, next) => {
     // Find medicine by ID or by English/Arabic name lookup
     let medicine;
     if (id && id.match(/^[0-9a-fA-F]{24}$/)) {
-      medicine = await Medicine.findById(id).populate(
-        'alternatives',
-        'nameAr nameEn price image activeIngredient category dosageForm'
-      );
+      medicine = await Medicine.findById(id).select('-alternatives');
     } else {
       const cleanQuery = (id || '').trim();
       const sanitized = cleanQuery.replace(/[-_]/g, ' ');
@@ -115,27 +156,11 @@ const getMedicineById = async (req, res, next) => {
           { category: regex },
           ...aliasQueries,
         ],
-      }).populate(
-        'alternatives',
-        'nameAr nameEn price image activeIngredient category dosageForm'
-      );
+      }).select('-alternatives');
     }
 
     if (!medicine) {
       return errorResponse(res, 404, 'الدواء المطلوب غير موجود');
-    }
-
-    // If alternatives list is empty, automatically find medicines with same active ingredient or category
-    let alternatives = medicine.alternatives;
-    if (!alternatives || alternatives.length === 0) {
-      alternatives = await Medicine.find({
-        _id: { $ne: medicine._id },
-        $or: [
-          { activeIngredient: medicine.activeIngredient },
-          { category: medicine.category },
-        ],
-        status: 'active',
-      }).limit(4);
     }
 
     // Find pharmacies that have this medicine in stock
@@ -143,9 +168,13 @@ const getMedicineById = async (req, res, next) => {
       medicineId: medicine._id,
       quantity: { $gt: 0 },
       isAvailable: true,
-    }).populate('pharmacyId', 'name phone address rating deliveryAvailable deliveryFee openingHours');
+    }).populate({
+      path: 'pharmacyId',
+      select: 'name phone address rating deliveryAvailable deliveryFee deliveryTimeMinutes openingHours isApproved',
+      match: { isApproved: true },
+    });
 
-    const availablePharmacies = inventories.map((inv) => ({
+    const availablePharmacies = inventories.filter((inv) => inv.pharmacyId).map((inv) => ({
       pharmacy: inv.pharmacyId,
       quantity: inv.quantity,
       price: inv.customPrice || medicine.price,
@@ -153,8 +182,10 @@ const getMedicineById = async (req, res, next) => {
     }));
 
     return successResponse(res, 200, 'تم جلب تفاصيل الدواء', {
-      medicine,
-      alternatives,
+      medicine: {
+        ...medicine.toObject(),
+        ...(medicine.image?.startsWith('data:') ? { image: '' } : {}),
+      },
       availablePharmacies,
     });
   } catch (error) {
@@ -408,4 +439,3 @@ module.exports = {
   getEgyptianDrugRegistry,
   syncEgyptianDrugCatalog,
 };
-

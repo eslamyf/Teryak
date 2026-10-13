@@ -557,12 +557,43 @@ header {
     background: #f8fafc;
 }
 
+.inventory-table tbody tr.selected-row {
+    background: #fff1f2 !important;
+}
+
 .inventory-table td {
     padding: 12px 16px;
     vertical-align: middle;
     font-size: 14px;
     color: #1e293b;
     border-bottom: 1px solid #f1f5f9;
+}
+
+/* Bulk Selection Checkbox & Floating Bar */
+.item-checkbox {
+    width: 19px;
+    height: 19px;
+    border-radius: 6px;
+    border: 1.5px solid #cbd5e1;
+    cursor: pointer;
+    accent-color: #ef4444;
+}
+
+.item-checkbox:checked {
+    background-color: #ef4444;
+    border-color: #ef4444;
+}
+
+#bulkActionBar {
+    background: #fff1f2 !important;
+    border: 1.5px solid #fecaca !important;
+    border-radius: 16px !important;
+    animation: fadeIn 0.25s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* Medicine Cell inside Table */
@@ -577,7 +608,8 @@ header {
     width: 48px;
     height: 48px;
     border-radius: 12px;
-    object-fit: cover;
+    object-fit: contain;
+    padding: 2px;
     border: 1px solid #e2e8f0;
     flex-shrink: 0;
     background: #f8fafc;
@@ -760,10 +792,19 @@ header {
     width: 64px;
     height: 64px;
     border-radius: 14px;
-    object-fit: cover;
+    object-fit: contain;
+    padding: 2px;
     border: 1px solid #e2e8f0;
     background: #f8fafc;
     flex-shrink: 0;
+}
+
+.med-thumb-placeholder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    font-size: 18px;
 }
 
 .med-grid-body {
@@ -1074,12 +1115,24 @@ header {
 .image-preview-wrapper img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
+  object-fit: contain !important;
+  object-position: center;
+  transform: none !important;
+  padding: 4px;
 }
 
-.image-preview-wrapper:hover img {
-  transform: scale(1.06);
+.image-preview-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.image-preview-placeholder i {
+  font-size: 30px;
 }
 
 .image-overlay-actions {
@@ -1480,9 +1533,6 @@ body.dark-theme .med-grid-thumb,
   border-color: #334155 !important;
   background: #1e293b !important;
 }
-
-
-
 
 
 

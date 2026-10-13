@@ -3,6 +3,7 @@
  */
 const http = require('http');
 const path = require('path');
+const fs = require('fs/promises');
 const dns = require('dns');
 
 try {
@@ -13,6 +14,10 @@ const connectDB = require('../config/db');
 const app = require('../app');
 const User = require('../models/User');
 const Order = require('../models/Order');
+const Medicine = require('../models/Medicine');
+const Pharmacy = require('../models/Pharmacy');
+const PharmacyInventory = require('../models/PharmacyInventory');
+const Notification = require('../models/Notification');
 
 const TEST_PORT = 5095;
 let server;
@@ -61,6 +66,9 @@ async function runTestSuite() {
   const testEmailPrefix = `test_${Date.now()}`;
   let passed = 0;
   let failed = 0;
+  let testPharmacyId;
+  let testMedicineId;
+  let patientAId;
 
   function assert(condition, message) {
     if (condition) {
@@ -114,8 +122,51 @@ async function runTestSuite() {
     assert(patientA.status === 201 && !!tokenA, 'Patient A registered and received JWT token');
 
     // 6. Price Tampering Prevention in Order Creation
+    const patientAUser = await User.findOne({ email: `${testEmailPrefix}_ptA@test.com` });
+    patientAId = patientAUser?._id;
+    const pharmacist = await User.create({
+      email: `${testEmailPrefix}_pharmacist@test.com`,
+      password: 'Password123!',
+      name: 'Test Pharmacist',
+      phone: '01022223333',
+      role: 'pharmacist',
+    });
+    const medicine = await Medicine.create({
+      nameAr: `منتج اختبار ${testEmailPrefix}`,
+      nameEn: `Test product ${testEmailPrefix}`,
+      activeIngredient: '',
+      productType: 'product',
+      category: 'عناية شخصية',
+      price: 45,
+      status: 'active',
+    });
+    testMedicineId = medicine._id;
+    const pharmacy = await Pharmacy.create({
+      ownerId: pharmacist._id,
+      name: 'Test Pharmacy',
+      licenseNumber: `TEST-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+      phone: '01022223333',
+      isApproved: true,
+      deliveryFee: 0,
+    });
+    testPharmacyId = pharmacy._id;
+    await PharmacyInventory.create({
+      pharmacyId: pharmacy._id,
+      medicineId: medicine._id,
+      quantity: 5,
+      customPrice: 50,
+      isAvailable: true,
+    });
+
     const tamperedOrder = await apiRequest('POST', '/api/orders', {
-      items: [{ name: 'بانادول إكسترا أقراص', price: 0.05, quantity: 2 }],
+      pharmacyId: String(pharmacy._id),
+      items: [{
+        medicineId: String(medicine._id),
+        pharmacyId: String(pharmacy._id),
+        name: medicine.nameAr,
+        price: 0.05,
+        quantity: 2,
+      }],
       subtotal: 0.1,
       totalAmount: 0.1,
       deliveryFee: 0,
@@ -124,6 +175,11 @@ async function runTestSuite() {
     assert(tamperedOrder.status === 201, 'Order created successfully');
     const orderTotal = tamperedOrder.data?.data?.totalAmount;
     assert(orderTotal > 1, `Server securely recalculated order price against database (Calculated: ${orderTotal} EGP vs Tampered: 0.1 EGP)`);
+    const reservedInventory = await PharmacyInventory.findOne({
+      pharmacyId: pharmacy._id,
+      medicineId: medicine._id,
+    });
+    assert(reservedInventory?.quantity === 3, 'Order reserves requested quantity from the selected pharmacy stock');
 
     const orderIdA = tamperedOrder.data?.data?._id;
 
@@ -159,8 +215,16 @@ async function runTestSuite() {
     assert(uploadRes.status === 200 && uploadJson?.data?.filename === 'upload-test.png', 'File upload endpoint accepts valid multipart upload and returns file metadata');
 
     // Clean up test data
+    await Order.deleteMany({ patientId: patientAId });
+    await Notification.deleteMany({ recipientId: patientAId, type: 'order' });
+    if (testPharmacyId) {
+      await PharmacyInventory.deleteMany({ pharmacyId: testPharmacyId });
+      await Pharmacy.deleteOne({ _id: testPharmacyId });
+    }
+    if (testMedicineId) await Medicine.deleteOne({ _id: testMedicineId });
     await User.deleteMany({ email: new RegExp(testEmailPrefix) });
-    await Order.deleteMany({ _id: orderIdA });
+    const uploadedPath = uploadJson?.data?.url?.match(/^\/uploads\/([a-f0-9]{32}\.png)$/);
+    if (uploadedPath) await fs.unlink(path.join(__dirname, '..', 'uploads', uploadedPath[1]));
     console.log('\n[INFO] Cleaned up temporary test artifacts from database.');
 
     console.log(`\n=====================================================`);

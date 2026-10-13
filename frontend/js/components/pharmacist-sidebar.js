@@ -56,6 +56,15 @@ class PharmacistSidebar extends HTMLElement {
   async loadPharmacyInfo() {
     let name = 'صيدلية ترياق';
     let address = 'الفرع المعتمد';
+    const formatAddress = (value) => {
+      if (typeof value === 'string') return value.trim();
+      if (value && typeof value === 'object') {
+        return [value.street, value.city, value.governorate]
+          .filter(part => typeof part === 'string' && part.trim())
+          .join('، ');
+      }
+      return '';
+    };
 
     try {
       const user = window.Auth ? window.Auth.getCurrentUser() : JSON.parse(localStorage.getItem('currentUser') || 'null');
@@ -66,8 +75,9 @@ class PharmacistSidebar extends HTMLElement {
           name = `صيدلية د. ${user.name.trim()}`;
         }
 
-        if (user.address && user.address.trim().length > 0) {
-          address = user.address.trim();
+        const userAddress = formatAddress(user.address);
+        if (userAddress) {
+          address = userAddress;
         } else if (user.city && user.city.trim().length > 0) {
           address = user.city.trim();
         }
@@ -80,7 +90,8 @@ class PharmacistSidebar extends HTMLElement {
           if (res && res.data && res.data.pharmacy) {
             const p = res.data.pharmacy;
             if (p.name) name = p.name;
-            if (p.address) address = p.address;
+            const pharmacyAddress = formatAddress(p.address);
+            if (pharmacyAddress) address = pharmacyAddress;
           }
         } catch (e) {
           // silent fallback

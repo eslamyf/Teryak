@@ -23,15 +23,17 @@ const createOrder = async (req, res, next) => {
       return errorResponse(res, 400, 'السلة فارغة، يرجى إضافة أدوية للطلب');
     }
 
-    // Resolve target pharmacy
-    let targetPharmacyId = pharmacyId;
-    let pharmacyDoc = null;
-    if (targetPharmacyId) {
-      pharmacyDoc = await Pharmacy.findById(targetPharmacyId);
+    const itemPharmacyIds = [...new Set(items.map((item) => item.pharmacyId).filter(Boolean).map(String))];
+    if (itemPharmacyIds.length > 1 || (pharmacyId && itemPharmacyIds.some((id) => id !== String(pharmacyId)))) {
+      return errorResponse(res, 400, 'يجب أن تكون جميع منتجات الطلب من صيدلية واحدة');
     }
+    const targetPharmacyId = pharmacyId || itemPharmacyIds[0];
+    if (!targetPharmacyId || items.some((item) => !item.pharmacyId && !pharmacyId)) {
+      return errorResponse(res, 400, 'يرجى اختيار صيدلية مسجل لديها كل منتج قبل تأكيد الطلب');
+    }
+    const pharmacyDoc = await Pharmacy.findOne({ _id: targetPharmacyId, isApproved: true });
     if (!pharmacyDoc) {
-      pharmacyDoc = await Pharmacy.findOne({ isApproved: true });
-      if (pharmacyDoc) targetPharmacyId = pharmacyDoc._id;
+      return errorResponse(res, 404, 'الصيدلية المختارة غير موجودة أو غير معتمدة');
     }
 
     const resolvedDeliveryFee =
@@ -41,83 +43,126 @@ const createOrder = async (req, res, next) => {
 
     // SECURITY: Server-side price & item verification against DB (Prevent client price tampering)
     const verifiedItems = [];
+    const reservedStock = [];
+    const restoreReservedStock = async () => {
+      for (const reservation of reservedStock) {
+        const restored = await PharmacyInventory.updateOne(
+          { _id: reservation.inventoryId },
+          { $inc: { quantity: reservation.quantity } }
+        );
+        if (restored.modifiedCount !== 1) {
+          console.error(`Failed to restore stock for inventory ${reservation.inventoryId}`);
+        }
+      }
+      reservedStock.length = 0;
+    };
+    const stockToReserve = [];
     let calculatedSubtotal = 0;
 
     for (const item of items) {
       const qty = Math.max(1, Number(item.quantity) || 1);
-      let realPrice = 25; // Safe fallback price
+      let realPrice;
       let resolvedMedicineId = item.medicineId;
       let medicineName = item.name;
 
       if (resolvedMedicineId) {
         const medDoc = await Medicine.findById(resolvedMedicineId);
-        if (medDoc) {
-          realPrice = medDoc.price;
-          medicineName = medDoc.nameAr || medDoc.nameEn || medicineName;
+        if (!medDoc) {
+          await restoreReservedStock();
+          return errorResponse(res, 404, `المنتج ${medicineName || ''} غير موجود`);
         }
+        realPrice = medDoc.price;
+        medicineName = medDoc.nameAr || medDoc.nameEn || medicineName;
       } else if (medicineName) {
         const medDoc = await Medicine.findOne({
           $or: [{ nameAr: medicineName }, { nameEn: medicineName }],
         });
-        if (medDoc) {
-          realPrice = medDoc.price;
-          resolvedMedicineId = medDoc._id;
+        if (!medDoc) {
+          await restoreReservedStock();
+          return errorResponse(res, 404, `المنتج ${medicineName} غير موجود`);
         }
+        realPrice = medDoc.price;
+        resolvedMedicineId = medDoc._id;
       }
 
-      // Check if target pharmacy has a custom inventory price
-      if (targetPharmacyId && resolvedMedicineId) {
-        const inv = await PharmacyInventory.findOne({
+      if (!resolvedMedicineId) {
+        await restoreReservedStock();
+        return errorResponse(res, 400, 'تعذر تحديد المنتج المطلوب');
+      }
+
+      const inventory = await PharmacyInventory.findOne(
+        {
           pharmacyId: targetPharmacyId,
           medicineId: resolvedMedicineId,
-        });
-        if (inv && inv.customPrice !== undefined && inv.customPrice > 0) {
-          realPrice = inv.customPrice;
+          quantity: { $gte: qty },
+          isAvailable: true,
         }
+      );
+      if (!inventory) {
+        return errorResponse(res, 409, `الكمية المطلوبة من ${medicineName || 'المنتج'} غير متوفرة في الصيدلية المختارة`);
+      }
+      if (inventory.customPrice !== undefined && inventory.customPrice > 0) {
+        realPrice = inventory.customPrice;
+      }
+      if (realPrice === undefined) {
+        return errorResponse(res, 400, `تعذر تحديد سعر ${medicineName || 'المنتج'}`);
       }
 
+      stockToReserve.push({ inventoryId: inventory._id, quantity: qty, name: medicineName });
       calculatedSubtotal += realPrice * qty;
-
       verifiedItems.push({
-        medicineId: resolvedMedicineId || undefined,
-        name: medicineName || 'دواء علاجي',
+        medicineId: resolvedMedicineId,
+        name: medicineName || 'منتج',
         price: realPrice,
         quantity: qty,
         image: item.image || '',
       });
-
-      // Atomic stock reservation if item belongs to pharmacy inventory
-      if (targetPharmacyId && resolvedMedicineId) {
-        await PharmacyInventory.findOneAndUpdate(
-          {
-            pharmacyId: targetPharmacyId,
-            medicineId: resolvedMedicineId,
-            quantity: { $gte: qty },
-          },
-          { $inc: { quantity: -qty } }
-        );
-      }
     }
 
-    const calculatedTotal = calculatedSubtotal + Number(resolvedDeliveryFee);
+    try {
+      for (const reservation of stockToReserve) {
+        const result = await PharmacyInventory.updateOne(
+          {
+            _id: reservation.inventoryId,
+            quantity: { $gte: reservation.quantity },
+            isAvailable: true,
+          },
+          { $inc: { quantity: -reservation.quantity } }
+        );
+        if (result.modifiedCount !== 1) {
+          await restoreReservedStock();
+          return errorResponse(res, 409, `الكمية المطلوبة من ${reservation.name || 'المنتج'} لم تعد متوفرة`);
+        }
+        reservedStock.push(reservation);
+      }
+    } catch (error) {
+      await restoreReservedStock();
+      throw error;
+    }
 
-    const order = await Order.create({
-      patientId: req.user._id,
-      pharmacyId: targetPharmacyId || undefined,
-      items: verifiedItems,
-      subtotal: Number(calculatedSubtotal.toFixed(2)),
-      deliveryFee: Number(resolvedDeliveryFee),
-      totalAmount: Number(calculatedTotal.toFixed(2)),
-      paymentMethod,
-      shippingAddress: shippingAddress || {
-        fullName: req.user.name,
-        phone: req.user.phone,
-        governorate: req.user.address?.governorate || 'القاهرة',
-        city: req.user.address?.city || 'مدينة نصر',
-      },
-      prescriptionImage: prescriptionImage || '',
-      status: 'pending',
-    });
+    let order;
+    try {
+      order = await Order.create({
+        patientId: req.user._id,
+        pharmacyId: targetPharmacyId,
+        items: verifiedItems,
+        subtotal: Number(calculatedSubtotal.toFixed(2)),
+        deliveryFee: Number(resolvedDeliveryFee),
+        totalAmount: Number((calculatedSubtotal + Number(resolvedDeliveryFee)).toFixed(2)),
+        paymentMethod,
+        shippingAddress: shippingAddress || {
+          fullName: req.user.name,
+          phone: req.user.phone,
+          governorate: req.user.address?.governorate || 'القاهرة',
+          city: req.user.address?.city || 'مدينة نصر',
+        },
+        prescriptionImage: prescriptionImage || '',
+        status: 'pending',
+      });
+    } catch (error) {
+      await restoreReservedStock();
+      throw error;
+    }
 
     // Notify patient
     await Notification.create({

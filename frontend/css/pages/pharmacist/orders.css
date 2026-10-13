@@ -301,7 +301,8 @@
   width: 70px;
   height: 70px;
   border-radius: 12px;
-  object-fit: cover;
+  object-fit: contain;
+  padding: 2px;
   border: 1px solid #e2e8f0;
   background: #f8fafc;
   flex-shrink: 0;

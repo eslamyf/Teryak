@@ -44,8 +44,15 @@
 
       let cart = this.getCart();
       const cleanName = String(product.name).trim();
+      const productId = product.medicineId || product.id;
+      const pharmacyId = product.pharmacyId || '';
       let existingItem = cart.find(
-        (item) => String(item.name).trim() === cleanName || (product.id && item.id === product.id)
+        (item) => {
+          const sameProduct = productId
+            ? String(item.medicineId || item.id) === String(productId)
+            : String(item.name).trim() === cleanName;
+          return sameProduct && String(item.pharmacyId || '') === String(pharmacyId);
+        }
       );
 
       // Parse price to clean numeric float
@@ -54,13 +61,7 @@
         : parseFloat(String(product.price).replace(/[^0-9.]/g, '')) || 25.0;
 
       const qtyToAdd = Number(product.quantity) || 1;
-      const getBase = () => {
-        const p = window.location.pathname.replace(/\\/g, '/');
-        if (p.includes('/pages/public/') || p.includes('/pages/pharmacist/') || p.includes('/pages/admin/')) return '../../';
-        if (p.includes('/pages/')) return '../';
-        return './';
-      };
-      const productImg = product.image || product.img || (getBase() + 'assets/images/parst.jpg');
+      const productImg = product.image || product.img || '';
 
       if (existingItem) {
         existingItem.quantity = (Number(existingItem.quantity) || 1) + qtyToAdd;
@@ -78,8 +79,9 @@
           image: productImg,
           img: productImg,
           quantity: qtyToAdd,
-          pharmacy: product.pharmacy || 'صيدلية ترياق المعتمدة',
-          pharmacyId: product.pharmacyId || undefined
+          pharmacy: product.pharmacy || '',
+          pharmacyId: pharmacyId || undefined,
+          deliveryFee: Number(product.deliveryFee) || undefined,
         });
       }
 

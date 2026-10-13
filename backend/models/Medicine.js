@@ -10,14 +10,20 @@ const medicineSchema = new mongoose.Schema(
     },
     nameEn: {
       type: String,
-      required: [true, 'اسم الدواء بالإنجليزية مطلوب'],
+      default: '',
       trim: true,
       index: true,
     },
     activeIngredient: {
       type: String,
-      required: [true, 'المادة الفعالة مطلوبة'],
+      default: '',
       trim: true,
+      index: true,
+    },
+    productType: {
+      type: String,
+      enum: ['medicine', 'product'],
+      default: 'medicine',
       index: true,
     },
     category: {

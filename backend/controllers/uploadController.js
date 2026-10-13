@@ -1,4 +1,7 @@
 const { successResponse, errorResponse } = require('../utils/apiResponse');
+const fs = require('fs/promises');
+const path = require('path');
+const crypto = require('crypto');
 
 // @desc    Upload an image or document (Prescription, License, Medicine Image)
 // @route   POST /api/upload
@@ -9,21 +12,25 @@ const uploadFile = async (req, res, next) => {
       return errorResponse(res, 400, 'يرجى اختيار ملف لرفعه');
     }
 
-    // If Cloudinary is configured in environment, upload to Cloudinary
-    if (
-      process.env.CLOUDINARY_CLOUD_NAME &&
-      process.env.CLOUDINARY_API_KEY &&
-      process.env.CLOUDINARY_API_SECRET
-    ) {
-      // Cloudinary stream upload can be attached here
+    const extensionByMimeType = {
+      'image/jpeg': '.jpg',
+      'image/png': '.png',
+      'image/webp': '.webp',
+      'image/gif': '.gif',
+      'application/pdf': '.pdf',
+    };
+    const extension = extensionByMimeType[req.file.mimetype];
+    if (!extension) {
+      return errorResponse(res, 400, 'نوع الملف غير مدعوم');
     }
 
-    // Default safe fallback for serverless / local: Base64 Data URI
-    const base64 = req.file.buffer.toString('base64');
-    const dataUrl = `data:${req.file.mimetype};base64,${base64}`;
+    const filename = `${crypto.randomBytes(16).toString('hex')}${extension}`;
+    const uploadsDirectory = path.join(__dirname, '../uploads');
+    await fs.mkdir(uploadsDirectory, { recursive: true });
+    await fs.writeFile(path.join(uploadsDirectory, filename), req.file.buffer, { flag: 'wx' });
 
     return successResponse(res, 200, 'تم رفع الملف بنجاح', {
-      url: dataUrl,
+      url: `/uploads/${filename}`,
       filename: req.file.originalname,
       size: req.file.size,
       mimetype: req.file.mimetype,

@@ -22,8 +22,13 @@ const getMyInventory = async (req, res, next) => {
     const { search } = req.query;
 
     let inventory = await PharmacyInventory.find({ pharmacyId: pharmacy._id })
-      .populate('medicineId', 'nameAr nameEn price activeIngredient category dosageForm image concentration')
-      .sort({ updatedAt: -1 });
+      .populate('medicineId', 'nameAr nameEn price activeIngredient productType category dosageForm image concentration')
+      .sort({ updatedAt: -1 })
+      .lean();
+
+    inventory.forEach((item) => {
+      if (item.medicineId?.image?.startsWith('data:')) item.medicineId.image = '';
+    });
 
     if (search && search.trim() !== '') {
       const q = search.trim().toLowerCase();
@@ -31,9 +36,9 @@ const getMyInventory = async (req, res, next) => {
         const med = item.medicineId;
         if (!med) return false;
         return (
-          med.nameAr.toLowerCase().includes(q) ||
-          med.nameEn.toLowerCase().includes(q) ||
-          med.activeIngredient.toLowerCase().includes(q)
+          (med.nameAr || '').toLowerCase().includes(q) ||
+          (med.nameEn || '').toLowerCase().includes(q) ||
+          (med.activeIngredient || '').toLowerCase().includes(q)
         );
       });
     }
@@ -66,27 +71,37 @@ const addToInventory = async (req, res, next) => {
       lowStockThreshold = 5,
       image,
       activeIngredient,
+      productType = 'medicine',
       category,
       dosageForm,
+      isAvailable = true,
     } = req.body;
 
     let targetMedicineId = medicineId;
 
     // If no medicineId provided, find by name or create a new medicine entry
     if (!targetMedicineId && medicineName) {
+      const matchingType = productType === 'product'
+        ? { productType: 'product' }
+        : { $or: [{ productType: 'medicine' }, { productType: { $exists: false } }] };
       let med = await Medicine.findOne({
-        $or: [{ nameAr: medicineName }, { nameEn: medicineName }],
+        $and: [
+          { $or: [{ nameAr: medicineName }, { nameEn: medicineName }] },
+          matchingType,
+        ],
       });
 
       if (!med) {
         med = await Medicine.create({
           nameAr: medicineName,
           nameEn: medicineName,
-          activeIngredient: activeIngredient || 'عام',
-          category: category || 'أدوية عامة',
-          dosageForm: dosageForm || 'أقراص',
+          activeIngredient: activeIngredient || '',
+          productType,
+          category: category || (productType === 'product' ? 'منتجات صحية' : 'أدوية عامة'),
+          dosageForm: dosageForm || '',
           image: image || '',
-          price: customPrice || 25,
+          price: customPrice !== undefined ? Number(customPrice) : 25,
+          status: 'active',
         });
       } else if (image && !med.image) {
         med.image = image;
@@ -118,6 +133,7 @@ const addToInventory = async (req, res, next) => {
       if (shelfLocation !== undefined) inventoryItem.shelfLocation = shelfLocation;
       if (expiryDate) inventoryItem.expiryDate = expiryDate;
       if (batchNumber) inventoryItem.batchNumber = batchNumber;
+      if (typeof isAvailable === 'boolean') inventoryItem.isAvailable = isAvailable;
       await inventoryItem.save();
     } else {
       inventoryItem = await PharmacyInventory.create({
@@ -130,12 +146,13 @@ const addToInventory = async (req, res, next) => {
         expiryDate: expiryDate || new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
         batchNumber: batchNumber || 'BATCH-' + Math.floor(1000 + Math.random() * 9000),
         lowStockThreshold: Number(lowStockThreshold),
+        isAvailable: Boolean(isAvailable),
       });
     }
 
     const populated = await PharmacyInventory.findById(inventoryItem._id).populate(
       'medicineId',
-      'nameAr nameEn price activeIngredient category dosageForm image'
+      'nameAr nameEn price activeIngredient productType category dosageForm image'
     );
 
     return successResponse(res, 201, 'تمت إضافة الدواء إلى المخزون بنجاح', populated);
@@ -155,7 +172,22 @@ const updateInventoryItem = async (req, res, next) => {
     }
 
     const { id } = req.params;
-    const { quantity, customPrice, costPrice, shelfLocation, batchNumber, expiryDate, isAvailable, lowStockThreshold, image } = req.body;
+    const {
+      quantity,
+      customPrice,
+      costPrice,
+      shelfLocation,
+      batchNumber,
+      expiryDate,
+      isAvailable,
+      lowStockThreshold,
+      image,
+      nameAr,
+      productType,
+      category,
+      activeIngredient,
+      dosageForm,
+    } = req.body;
 
     const item = await PharmacyInventory.findOne({
       _id: id,
@@ -177,17 +209,24 @@ const updateInventoryItem = async (req, res, next) => {
 
     await item.save();
 
-    if (image && item.medicineId) {
+    if (item.medicineId && [nameAr, productType, category, activeIngredient, dosageForm, image].some(value => value !== undefined)) {
       const med = await Medicine.findById(item.medicineId);
-      if (med && med.image !== image) {
-        med.image = image;
+      if (med) {
+        if (nameAr !== undefined) {
+          med.nameAr = nameAr;
+        }
+        if (productType !== undefined) med.productType = productType;
+        if (category !== undefined) med.category = category;
+        if (activeIngredient !== undefined) med.activeIngredient = activeIngredient;
+        if (dosageForm !== undefined) med.dosageForm = dosageForm;
+        if (image !== undefined) med.image = image;
         await med.save();
       }
     }
 
     const populated = await PharmacyInventory.findById(item._id).populate(
       'medicineId',
-      'nameAr nameEn price activeIngredient category dosageForm image'
+      'nameAr nameEn price activeIngredient productType category dosageForm image'
     );
 
     return successResponse(res, 200, 'تم تحديث المخزون بنجاح', populated);
@@ -235,7 +274,7 @@ const getLowStockItems = async (req, res, next) => {
     const lowStockItems = await PharmacyInventory.find({
       pharmacyId: pharmacy._id,
       $expr: { $lte: ['$quantity', '$lowStockThreshold'] },
-    }).populate('medicineId', 'nameAr nameEn price category');
+    }).populate('medicineId', 'nameAr nameEn price productType category');
 
     return successResponse(res, 200, 'تم جلب تنبيهات النواقص', lowStockItems);
   } catch (error) {
@@ -265,9 +304,19 @@ const bulkImportInventory = async (req, res, next) => {
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
       let name = (item.medicineName || item.nameAr || item.name || '').trim();
+      const image = String(item.imageUrl || item.image || '').trim();
       if (!name && !item.medicineId) {
         errors.push(`الصف #${i + 1}: اسم الدواء أو معرّفه مطلوب`);
         continue;
+      }
+      if (image) {
+        try {
+          const imageUrl = new URL(image, 'http://localhost');
+          if (!['http:', 'https:'].includes(imageUrl.protocol)) throw new Error('invalid protocol');
+        } catch {
+          errors.push(`الصف #${i + 1}: رابط الصورة غير صالح؛ استخدم رابط HTTP أو HTTPS`);
+          continue;
+        }
       }
 
       // Guard against binary/ZIP strings from corrupted imports
@@ -277,22 +326,40 @@ const bulkImportInventory = async (req, res, next) => {
       }
 
       let targetMedId = item.medicineId;
+      const productType = item.productType === 'product' ? 'product' : 'medicine';
       if (!targetMedId && name) {
+        const matchingType = productType === 'product'
+          ? { productType: 'product' }
+          : { $or: [{ productType: 'medicine' }, { productType: { $exists: false } }] };
         let med = await Medicine.findOne({
-          $or: [
-            { nameAr: name },
-            { nameEn: new RegExp('^' + escapeRegex(name) + '$', 'i') }
-          ]
+          $and: [
+            {
+              $or: [
+                { nameAr: name },
+                { nameEn: new RegExp('^' + escapeRegex(name) + '$', 'i') }
+              ],
+            },
+            matchingType,
+          ],
         });
         if (!med) {
           med = await Medicine.create({
             nameAr: name,
             nameEn: item.nameEn || name,
-            activeIngredient: item.activeIngredient || 'عام',
-            category: item.category || 'أدوية عامة',
+            activeIngredient: item.activeIngredient || '',
+            productType,
+            category: item.category || (productType === 'product' ? 'عناية شخصية' : 'أدوية عامة'),
+            dosageForm: item.dosageForm || '',
+            image: image || '',
             price: Number(item.customPrice || item.price) || 25,
             status: 'active'
           });
+        } else {
+          if (item.category) med.category = item.category;
+          if (item.activeIngredient !== undefined) med.activeIngredient = item.activeIngredient;
+          if (item.dosageForm !== undefined) med.dosageForm = item.dosageForm;
+          if (image) med.image = image;
+          await med.save();
         }
         targetMedId = med._id;
       }
@@ -347,4 +414,3 @@ module.exports = {
   getLowStockItems,
   bulkImportInventory,
 };
-
