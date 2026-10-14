@@ -1,6 +1,13 @@
 /**
  * Teryak Platform - Unified <app-navbar> Web Component
- * Based on site.js, site.css, and PAGES-MIGRATION.md specifications
+ * Matches the exact design and structure of the Home Page Navbar
+ * Features:
+ * - Brand Logo & Name
+ * - Clean Navigation Links
+ * - Cart Icon with Badge
+ * - Theme Switcher (Light / Dark)
+ * - "دخول" Button that routes to register form if not registered, or login form if registered
+ * - User Menu dropdown when logged in
  */
 
 class AppNavbar extends HTMLElement {
@@ -59,222 +66,162 @@ class AppNavbar extends HTMLElement {
     const base = this.getBasePath();
     const current = this.getCurrentPage();
 
-    const isHome = current === 'index.html' || current === 'home.html' || current === '';
     const isMedicines = current === 'medicines.html' || current === 'medicine.html' || current === 'medicine-detail.html';
     const isPharmacies = current === 'pharmacies.html';
-    const isDonation = current === 'donation.html';
     const isAbout = current === 'about.html';
 
     const homeUrl = base + 'index.html';
     const medicinesUrl = base + 'pages/public/medicines.html';
     const pharmaciesUrl = base + 'pages/public/pharmacies.html';
-    const donationUrl = base + 'pages/public/donation.html';
     const aboutUrl = base + 'pages/public/about.html';
-    const loginUrl = base + 'pages/public/login.html';
-    const registerUrl = base + 'pages/public/register.html';
+    const pharmacistUrl = base + 'pages/public/register.html';
+    const rxUrl = homeUrl + '#rx';
+    const faqUrl = homeUrl + '#faq';
     const logoImg = base + 'assets/images/logo.png';
 
     this.innerHTML = `
-      <header class="hd">
-        <div class="wrap hd-in">
-          <!-- Logo & Tagline -->
-          <a href="${homeUrl}" class="logo" title="تِرياق - صيدليتك الذكية">
-            <img src="${logoImg}" alt="شعار تِرياق" style="height:36px;width:auto;object-fit:contain;">
-            <div>
+      <header class="site-header">
+        <div class="wrap" style="width:100%;">
+          <nav aria-label="التنقل الرئيسي">
+            <!-- Brand Logo & Name (Right side in RTL) -->
+            <a href="${homeUrl}" class="logo" title="تِرياق - الصفحة الرئيسية">
+              <img src="${logoImg}" alt="شعار ترياق">
               <span>تِرياق</span>
-              <small>صيدليتك الذكية</small>
+            </a>
+
+            <!-- Navigation Links (Center in RTL) -->
+            <div class="nav-links" id="navLinks">
+              <a href="${medicinesUrl}" class="${isMedicines ? 'active on' : ''}">الأدوية</a>
+              <a href="${pharmaciesUrl}" class="${isPharmacies ? 'active on' : ''}">الصيدليات</a>
+              <a href="${rxUrl}" id="navRxLink">الروشتة</a>
+              <a href="${faqUrl}">أسئلة</a>
+              <a href="${aboutUrl}" class="${isAbout ? 'active on' : ''}">من نحن</a>
+              <a href="${pharmacistUrl}">للصيادلة</a>
             </div>
-          </a>
 
-          <!-- Navigation Links (5 links as specified in site.js) -->
-          <nav class="links" id="links" aria-label="التنقل الرئيسي">
-            <a href="${homeUrl}" class="${isHome ? 'on active' : ''}" ${isHome ? 'aria-current="page"' : ''}>الرئيسية</a>
-            <a href="${medicinesUrl}" class="${isMedicines ? 'on active' : ''}" ${isMedicines ? 'aria-current="page"' : ''}>الأدوية</a>
-            <a href="${pharmaciesUrl}" class="${isPharmacies ? 'on active' : ''}" ${isPharmacies ? 'aria-current="page"' : ''}>الصيدليات</a>
-            <a href="${donationUrl}" class="${isDonation ? 'on active' : ''}" ${isDonation ? 'aria-current="page"' : ''}>التبرع والبدائل</a>
-            <a href="${aboutUrl}" class="${isAbout ? 'on active' : ''}" ${isAbout ? 'aria-current="page"' : ''}>من نحن</a>
-          </nav>
+            <!-- Nav End Controls (Left side in RTL) -->
+            <div class="nav-end">
+              <!-- Shopping Cart Trigger Button -->
+              <div class="cart-btn-wrap">
+                <button class="icon-btn" id="navCartBtn" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalToggle" aria-label="عرض سلة المشتريات" title="سلة المشتريات">
+                  <i class="fa-solid fa-cart-shopping"></i>
+                  <span class="cart-counter-badge" id="count">0</span>
+                </button>
+              </div>
 
-          <!-- Header Controls -->
-          <div class="hd-end">
-            <!-- Shopping Cart Trigger Button -->
-            <button class="icon-btn" id="cartBtn" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalToggle" aria-label="السلة" title="سلة الطلبات">
-              <svg class="i" viewBox="0 0 24 24" aria-hidden="true">
-                <circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/>
-                <path d="M2 3h3l2.7 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6"/>
-              </svg>
-              <i class="badge" id="count">0</i>
-            </button>
-
-            <!-- Theme Switcher (Dark / Light) -->
-            <button class="icon-btn" id="themeToggleBtn" type="button" aria-label="تبديل الوضع الفاتح والغامق" title="تبديل الوضع">
-              <svg class="i moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-              <svg class="i sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-            </button>
-
-            <!-- Language Switcher -->
-            <button class="icon-btn hide-sm" id="langToggleBtn" type="button" aria-label="اللغة" title="اللغة">AR</button>
-
-            <!-- Upload Prescription Button -->
-            <button class="btn btn-line hide-sm" id="navPrescriptionBtn" type="button">ارفع روشتة</button>
-
-            <!-- Logged-in User Section with Dropdown -->
-            <div class="user-auth-wrap" id="userAuthDisplay" style="display:none;position:relative;">
-              <button class="user" id="userProfileBtn" type="button" title="خيارات الحساب">
-                <div>
-                  <span id="navUserName">المستخدم</span>
-                  <small id="navUserRole">مريض</small>
-                </div>
-                <i>
-                  <svg class="i" viewBox="0 0 24 24" aria-hidden="true">
-                    <circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>
-                  </svg>
-                </i>
+              <!-- Dark/Light Theme Toggle Button -->
+              <button class="icon-btn" id="themeToggleBtn" type="button" aria-label="تبديل الوضع الفاتح والغامق" title="تبديل الوضع">
+                <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+                </svg>
+                <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="4"/>
+                  <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+                </svg>
               </button>
 
-              <!-- Dropdown Card -->
-              <div class="user-dropdown-card hide" id="userDropdownCard" style="position:absolute;top:calc(100% + 8px);inset-inline-end:0;min-width:210px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--border-radius-md);box-shadow:var(--shadow-md);padding:10px;z-index:1050;display:none;flex-direction:column;gap:6px;">
-                <div style="padding:6px 10px;border-bottom:1px solid var(--border-color);margin-bottom:4px;">
-                  <strong id="dropdownMenuUserName" style="display:block;font-size:14px;color:var(--text-main);">حسابي</strong>
-                  <small id="dropdownMenuUserEmail" style="color:var(--text-muted);font-size:12px;">مستخدم ترياق</small>
-                </div>
-                <a href="#" id="navDashboardLink" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--border-radius-sm);color:var(--text-main);font-size:14px;text-decoration:none;"><i class="fa-solid fa-gauge-high" style="color:var(--primary-color);"></i> لوحة التحكم</a>
-                <a href="${medicinesUrl}" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--border-radius-sm);color:var(--text-main);font-size:14px;text-decoration:none;"><i class="fa-solid fa-bag-shopping" style="color:var(--primary-color);"></i> حجز أدوية جديدة</a>
-                <button type="button" id="Logout" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--border-radius-sm);color:#ef4444;font-size:14px;border:none;background:none;width:100%;text-align:start;cursor:pointer;"><i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج</button>
+              <!-- Login / User Auth Button -->
+              <div id="navAuthContainer">
+                <a href="#" class="login" id="navLoginBtn">دخول</a>
               </div>
-            </div>
 
-            <!-- Guest Section (Sign in / Sign up) -->
-            <div class="guest-auth-wrap" id="guestAuthDisplay" style="display:flex;gap:8px;align-items:center;">
-              <a href="${loginUrl}" class="btn btn-line" style="padding:8px 16px;font-size:14px;" id="SignIn">دخول</a>
-              <a href="${registerUrl}" class="btn btn-brand hide-sm" style="padding:8px 16px;font-size:14px;" id="SignUp">حساب جديد</a>
+              <!-- Mobile Hamburger Menu Button -->
+              <button class="icon-btn mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="فتح القائمة" aria-expanded="false">
+                <svg class="i" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+              </button>
             </div>
-
-            <!-- Mobile Hamburger Menu Button -->
-            <button class="icon-btn menu" id="menu" type="button" aria-label="القائمة" aria-expanded="false">
-              <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-            </button>
-          </div>
+          </nav>
         </div>
       </header>
     `;
   }
 
   bindEvents() {
-    const base = this.getBasePath();
-    const logoutBtn = this.querySelector('#Logout');
-    const userProfileBtn = this.querySelector('#userProfileBtn');
-    const userDropdownCard = this.querySelector('#userDropdownCard');
-    const navDashboardLink = this.querySelector('#navDashboardLink');
     const themeToggleBtn = this.querySelector('#themeToggleBtn');
-    const langToggleBtn = this.querySelector('#langToggleBtn');
-    const navPrescriptionBtn = this.querySelector('#navPrescriptionBtn');
-    const menuBtn = this.querySelector('#menu');
-    const linksNav = this.querySelector('#links');
+    const mobileMenuBtn = this.querySelector('#mobileMenuBtn');
+    const navLinks = this.querySelector('#navLinks');
+    const navRxLink = this.querySelector('#navRxLink');
 
-    // Mobile Hamburger Menu Toggle
-    if (menuBtn && linksNav) {
-      menuBtn.addEventListener('click', (e) => {
+    // Theme Toggle Listener
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isCurrentlyDark = document.body.classList.contains('dark-theme') || document.documentElement.getAttribute('data-theme') === 'dark';
+        const newTheme = isCurrentlyDark ? 'light' : 'dark';
+        this.applyTheme(newTheme, true);
+        window.dispatchEvent(new CustomEvent('teryak:theme-change', { detail: { theme: newTheme } }));
+      });
+    }
+
+    // Mobile Hamburger Menu Listener
+    if (mobileMenuBtn && navLinks) {
+      mobileMenuBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        const isOpen = linksNav.classList.toggle('open');
-        menuBtn.setAttribute('aria-expanded', isOpen);
+        const isOpen = navLinks.classList.toggle('open');
+        mobileMenuBtn.setAttribute('aria-expanded', isOpen);
       });
 
       document.addEventListener('click', (e) => {
-        if (!linksNav.contains(e.target) && !menuBtn.contains(e.target)) {
-          linksNav.classList.remove('open');
-          menuBtn.setAttribute('aria-expanded', 'false');
+        if (!navLinks.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+          navLinks.classList.remove('open');
+          mobileMenuBtn.setAttribute('aria-expanded', 'false');
         }
       });
     }
 
-    const handleDashboardNav = (e) => {
-      if (e) e.preventDefault();
-      const currentUser = window.Auth ? window.Auth.getCurrentUser() : JSON.parse(localStorage.getItem('currentUser') || 'null');
-      const userType = currentUser ? (currentUser.role || currentUser.userType) : localStorage.getItem('userType');
-
-      if (userType === 'صيدلي' || userType === 'pharmacist') {
-        window.location.href = base + 'pages/pharmacist/index.html';
-      } else if (userType === 'إدارة' || userType === 'admin') {
-        window.location.href = base + 'pages/admin/index.html';
-      } else {
-        window.location.href = base + 'pages/public/patient-dashboard.html';
-      }
-    };
-
-    const handleLogout = (e) => {
-      if (e) e.preventDefault();
-      if (window.Auth) {
-        window.Auth.logout(base + 'index.html');
-      } else {
-        localStorage.clear();
-        window.location.href = base + 'index.html';
-      }
-    };
-
-    const handleThemeToggle = (e) => {
-      if (e) e.preventDefault();
-      const isCurrentlyDark = document.body.classList.contains('dark-theme') || document.documentElement.getAttribute('data-theme') === 'dark';
-      const newTheme = isCurrentlyDark ? 'light' : 'dark';
-      this.applyTheme(newTheme, true);
-      window.dispatchEvent(new CustomEvent('teryak:theme-change', { detail: { theme: newTheme } }));
-    };
-
-    const handleLangToggle = (e) => {
-      if (e) e.preventDefault();
-      if (window.Toast) {
-        window.Toast.info('اللغة الحالية هي العربية (الافتراضية). دعم اللغات الإضافية قريباً!', 'لغة الواجهة', 3000);
-      }
-    };
-
-    // Toggle user dropdown card
-    if (userProfileBtn && userDropdownCard) {
-      userProfileBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const isHidden = userDropdownCard.style.display === 'none' || userDropdownCard.classList.contains('hide');
-        userDropdownCard.style.display = isHidden ? 'flex' : 'none';
-        userDropdownCard.classList.toggle('hide', !isHidden);
-      });
-
-      document.addEventListener('click', (e) => {
-        if (!userDropdownCard.contains(e.target) && !userProfileBtn.contains(e.target)) {
-          userDropdownCard.style.display = 'none';
-          userDropdownCard.classList.add('hide');
+    // Prescription fast trigger modal if available
+    if (navRxLink) {
+      navRxLink.addEventListener('click', (e) => {
+        const rxModalEl = document.getElementById('prescriptionModal');
+        if (rxModalEl && window.bootstrap) {
+          e.preventDefault();
+          const modal = new window.bootstrap.Modal(rxModalEl);
+          modal.show();
         }
       });
     }
+  }
 
-    // Prescription fast trigger modal
-    const openPrescriptionModal = (e) => {
-      if (e) e.preventDefault();
-      const rxModalEl = document.getElementById('prescriptionModal');
-      if (rxModalEl && window.bootstrap) {
-        const modal = new window.bootstrap.Modal(rxModalEl);
-        modal.show();
-      } else {
-        window.location.href = base + 'index.html#prescriptionSection';
-      }
-    };
+  handleDashboardNav() {
+    const base = this.getBasePath();
+    const currentUser = window.Auth ? window.Auth.getCurrentUser() : JSON.parse(localStorage.getItem('currentUser') || 'null');
+    const userType = currentUser ? (currentUser.role || currentUser.userType) : localStorage.getItem('userType');
 
-    if (navPrescriptionBtn) navPrescriptionBtn.addEventListener('click', openPrescriptionModal);
-    if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
-    if (navDashboardLink) navDashboardLink.addEventListener('click', handleDashboardNav);
-    if (themeToggleBtn) themeToggleBtn.addEventListener('click', handleThemeToggle);
-    if (langToggleBtn) langToggleBtn.addEventListener('click', handleLangToggle);
+    if (userType === 'صيدلي' || userType === 'pharmacist') {
+      window.location.href = base + 'pages/pharmacist/index.html';
+    } else if (userType === 'إدارة' || userType === 'admin') {
+      window.location.href = base + 'pages/admin/index.html';
+    } else {
+      window.location.href = base + 'pages/public/patient-dashboard.html';
+    }
+  }
+
+  handleAuthAction() {
+    const base = this.getBasePath();
+    // Check if user is registered (has account in localStorage)
+    const isRegistered = localStorage.getItem('haveAcount') === 'true' || 
+                         Boolean(localStorage.getItem('currentUser')) || 
+                         Boolean(localStorage.getItem('token'));
+
+    if (!isRegistered) {
+      // Not registered -> go to registration form
+      window.location.href = base + 'pages/public/register.html';
+    } else {
+      // Already registered -> go to login form
+      window.location.href = base + 'pages/public/login.html';
+    }
   }
 
   updateAuthState() {
-    const isLoggedIn = window.Auth ? window.Auth.isLoggedIn() : (localStorage.getItem('isLoggedIn') === 'true' || localStorage.getItem('haveAcount') === 'true');
-    const userAuthDisplay = this.querySelector('#userAuthDisplay');
-    const guestAuthDisplay = this.querySelector('#guestAuthDisplay');
+    const isLoggedIn = window.Auth ? window.Auth.isLoggedIn() : (localStorage.getItem('isLoggedIn') === 'true');
+    const container = this.querySelector('#navAuthContainer');
+    if (!container) return;
 
     if (isLoggedIn) {
-      if (userAuthDisplay) userAuthDisplay.style.display = 'block';
-      if (guestAuthDisplay) guestAuthDisplay.style.display = 'none';
-
       const user = window.Auth ? window.Auth.getCurrentUser() : JSON.parse(localStorage.getItem('currentUser') || '{}');
-      const userName = (user && (user.name || user.fullName || user.username)) || 'مستخدم ترياق';
-      const userEmail = (user && user.email) || 'user@teryak.com';
+      const userName = (user && (user.name || user.fullName || user.username)) || 'حسابي';
       const role = (user && (user.role || user.userType)) || localStorage.getItem('userType') || 'مريض';
 
       const roleLabels = {
@@ -287,25 +234,88 @@ class AppNavbar extends HTMLElement {
       };
       const displayRole = roleLabels[role] || role;
 
-      const navUserNameEl = this.querySelector('#navUserName');
-      const navUserRoleEl = this.querySelector('#navUserRole');
-      const menuUserNameEl = this.querySelector('#dropdownMenuUserName');
-      const menuUserEmailEl = this.querySelector('#dropdownMenuUserEmail');
+      container.innerHTML = `
+        <div class="user-menu-wrap" style="position:relative;">
+          <button type="button" class="login" id="userProfileBtn" title="خيارات الحساب">
+            <i class="fa-solid fa-user-circle" style="color:var(--primary-color);"></i>
+            <span id="navUserName">${userName}</span>
+            <i class="fa-solid fa-chevron-down" style="font-size:11px;margin-inline-start:4px;color:var(--text-muted);"></i>
+          </button>
+          <div class="user-dropdown-card hide" id="userDropdownCard" style="display:none;position:absolute;top:calc(100% + 8px);inset-inline-end:0;min-width:210px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--border-radius-md);box-shadow:var(--shadow-md);padding:10px;z-index:1050;flex-direction:column;gap:6px;">
+            <div style="padding:6px 10px;border-bottom:1px solid var(--border-color);margin-bottom:4px;">
+              <strong id="dropdownMenuUserName" style="display:block;font-size:14px;color:var(--text-main);">${userName}</strong>
+              <small id="dropdownMenuUserRole" style="color:var(--primary-color);font-size:12px;">${displayRole}</small>
+            </div>
+            <a href="#" id="navDashboardLink" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--border-radius-sm);color:var(--text-main);font-size:14px;text-decoration:none;"><i class="fa-solid fa-gauge-high" style="color:var(--primary-color);"></i> لوحة التحكم</a>
+            <a href="${this.getBasePath()}pages/public/medicines.html" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--border-radius-sm);color:var(--text-main);font-size:14px;text-decoration:none;"><i class="fa-solid fa-bag-shopping" style="color:var(--primary-color);"></i> الأدوية</a>
+            <button type="button" id="Logout" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--border-radius-sm);color:#ef4444;font-size:14px;border:none;background:none;width:100%;text-align:start;cursor:pointer;"><i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج</button>
+          </div>
+        </div>
+      `;
 
-      if (navUserNameEl) navUserNameEl.textContent = userName;
-      if (navUserRoleEl) navUserRoleEl.textContent = displayRole;
-      if (menuUserNameEl) menuUserNameEl.textContent = userName;
-      if (menuUserEmailEl) menuUserEmailEl.textContent = userEmail;
+      // Bind dropdown toggle
+      const profileBtn = container.querySelector('#userProfileBtn');
+      const dropdownCard = container.querySelector('#userDropdownCard');
+      const logoutBtn = container.querySelector('#Logout');
+      const dashLink = container.querySelector('#navDashboardLink');
+
+      if (profileBtn && dropdownCard) {
+        profileBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isHidden = dropdownCard.style.display === 'none' || dropdownCard.classList.contains('hide');
+          dropdownCard.style.display = isHidden ? 'flex' : 'none';
+          dropdownCard.classList.toggle('hide', !isHidden);
+        });
+
+        document.addEventListener('click', (e) => {
+          if (!dropdownCard.contains(e.target) && !profileBtn.contains(e.target)) {
+            dropdownCard.style.display = 'none';
+            dropdownCard.classList.add('hide');
+          }
+        });
+      }
+
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (window.Auth) {
+            window.Auth.logout(this.getBasePath() + 'index.html');
+          } else {
+            localStorage.clear();
+            window.location.href = this.getBasePath() + 'index.html';
+          }
+        });
+      }
+
+      if (dashLink) {
+        dashLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.handleDashboardNav();
+        });
+      }
     } else {
-      if (userAuthDisplay) userAuthDisplay.style.display = 'none';
-      if (guestAuthDisplay) guestAuthDisplay.style.display = 'flex';
+      // User is not logged in: display "دخول" button
+      container.innerHTML = `
+        <a href="#" class="login" id="navLoginBtn">دخول</a>
+      `;
+
+      const loginBtn = container.querySelector('#navLoginBtn');
+      if (loginBtn) {
+        loginBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.handleAuthAction();
+        });
+      }
     }
   }
 
   updateCartCount() {
     const count = window.Cart ? window.Cart.getCount() : 0;
-    const countEl = this.querySelector('#count');
-    if (countEl) countEl.textContent = count;
+    const badge = this.querySelector('#count');
+    if (badge) {
+      badge.textContent = count;
+      badge.style.display = count > 0 ? 'flex' : 'none';
+    }
   }
 }
 

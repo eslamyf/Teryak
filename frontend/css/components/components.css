@@ -174,8 +174,9 @@ svg.i {
 }
 
 /* ==========================================================================
-   2. Unified Header (.hd & .hd-in)
+   2. Unified Header (Site-wide Navbar matching Home Page)
    ========================================================================== */
+.site-header,
 .hd {
   position: sticky;
   top: 0;
@@ -183,65 +184,110 @@ svg.i {
   background: var(--bg-card);
   border-bottom: 1px solid var(--border-color);
   width: 100%;
+  transition: background var(--transition-normal), border-color var(--transition-normal);
 }
 
+.site-header nav,
 .hd-in {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  height: 68px;
+  padding-block: 18px;
 }
 
-.hd .logo {
+.logo {
   font-family: var(--font-heading);
   font-weight: 800;
-  font-size: 26px;
+  font-size: 28px;
   color: var(--primary-color);
-  line-height: 1.1;
   text-decoration: none;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
 }
 
-.hd .logo small {
-  display: block;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text-muted);
+.logo img {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
 }
 
+.nav-links,
 .links {
   display: flex;
-  gap: 6px;
-  align-items: center;
-}
-
-.links a {
-  padding: 7px 16px;
-  border-radius: var(--border-radius-md);
+  gap: 28px;
   font-weight: 600;
   font-size: 16px;
   color: var(--text-muted);
+  align-items: center;
+}
+
+.nav-links a,
+.links a {
+  transition: color var(--transition-fast);
+  color: var(--text-muted);
   text-decoration: none;
-  transition: all var(--transition-fast);
 }
 
-.links a:hover {
-  color: var(--primary-color);
-}
-
-.links a.on,
-.links a.active {
-  background: var(--bg-muted);
+.nav-links a:hover,
+.nav-links a.active,
+.nav-links a.on,
+.links a:hover,
+.links a.active,
+.links a.on {
   color: var(--primary-color) !important;
+  background: none !important;
 }
 
+.nav-end,
 .hd-end {
   display: flex;
-  align-items: center;
   gap: 10px;
+  align-items: center;
+}
+
+.cart-btn-wrap {
+  position: relative;
+}
+
+.cart-counter-badge {
+  position: absolute;
+  top: -6px;
+  inset-inline-end: -6px;
+  background-color: var(--primary-color);
+  color: var(--text-light);
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 99px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid var(--bg-card);
+}
+
+.login {
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  border-radius: var(--border-radius-md);
+  padding: 8px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-main);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.login:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
 }
 
 .user {
@@ -997,22 +1043,26 @@ a.card:hover,
    10. Responsive Breakpoints & Accessibility
    ========================================================================== */
 @media (max-width: 900px) {
+  .nav-links,
   .links {
     display: none;
     position: absolute;
-    top: 68px;
+    top: 100%;
     inset-inline: 0;
     flex-direction: column;
     background: var(--bg-card);
-    padding: 10px 24px 16px;
+    padding: 16px 24px;
     border-bottom: 1px solid var(--border-color);
     box-shadow: var(--shadow-md);
+    gap: 16px;
   }
+  .nav-links.open,
   .links.open {
     display: flex;
   }
+  .mobile-menu-btn,
   .menu {
-    display: grid;
+    display: grid !important;
   }
   .hide-sm,
   .user div {

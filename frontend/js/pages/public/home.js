@@ -107,11 +107,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       user = userRaw ? JSON.parse(userRaw) : null;
     } catch (e) {}
 
-    if (token && user) {
+    if ((token || localStorage.getItem('isLoggedIn') === 'true') && user) {
       const displayName = user.name ? user.name.split(' ')[0] : 'حسابي';
       let dashboardUrl = 'pages/public/patient-dashboard.html';
-      if (user.role === 'pharmacist') dashboardUrl = 'pages/pharmacist/index.html';
-      else if (user.role === 'admin') dashboardUrl = 'pages/admin/index.html';
+      if (user.role === 'pharmacist' || user.userType === 'صيدلي') dashboardUrl = 'pages/pharmacist/index.html';
+      else if (user.role === 'admin' || user.userType === 'إدارة') dashboardUrl = 'pages/admin/index.html';
 
       authNavContainer.innerHTML = `
         <a href="${dashboardUrl}" class="login" title="لوحة التحكم">
@@ -121,8 +121,23 @@ document.addEventListener('DOMContentLoaded', async () => {
       `;
     } else {
       authNavContainer.innerHTML = `
-        <a href="pages/public/login.html" class="login">دخول</a>
+        <a href="#" class="login" id="homeLoginBtn">دخول</a>
       `;
+      const loginBtn = authNavContainer.querySelector('#homeLoginBtn');
+      if (loginBtn) {
+        loginBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const isRegistered = localStorage.getItem('haveAcount') === 'true' || 
+                               Boolean(localStorage.getItem('currentUser')) || 
+                               Boolean(localStorage.getItem('user')) || 
+                               Boolean(localStorage.getItem('token'));
+          if (!isRegistered) {
+            window.location.href = 'pages/public/register.html';
+          } else {
+            window.location.href = 'pages/public/login.html';
+          }
+        });
+      }
     }
   };
   updateAuthUI();
