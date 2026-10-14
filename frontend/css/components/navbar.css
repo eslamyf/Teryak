@@ -1,6 +1,6 @@
 /* ==========================================================================
    Teryak Platform - Unified Navbar Component Styles
-   Matches the Home Page Navbar styling exactly
+   Matches the Home Page Navbar styling exactly with zero extra elements
    ========================================================================== */
 
 .site-header {
@@ -17,7 +17,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-block: 18px;
+  padding-block: 22px;
   gap: 16px;
 }
 
@@ -40,7 +40,7 @@
 
 .nav-links {
   display: flex;
-  gap: 28px;
+  gap: 30px;
   font-weight: 600;
   font-size: 16px;
   color: var(--text-muted);
@@ -57,12 +57,17 @@
 .nav-links a.active,
 .nav-links a.on {
   color: var(--primary-color) !important;
+  background: none !important;
 }
 
 .nav-end {
   display: flex;
   gap: 10px;
   align-items: center;
+}
+
+.cart-btn-wrap {
+  position: relative;
 }
 
 .icon-btn {
@@ -89,8 +94,23 @@
   height: 20px;
 }
 
-.cart-btn-wrap {
-  position: relative;
+/* Light / Dark Mode Icon Toggling: Strictly Mutually Exclusive */
+.sun {
+  display: none !important;
+}
+
+.moon {
+  display: block !important;
+}
+
+[data-theme="dark"] .sun,
+body.dark-theme .sun {
+  display: block !important;
+}
+
+[data-theme="dark"] .moon,
+body.dark-theme .moon {
+  display: none !important;
 }
 
 .cart-counter-badge {
@@ -132,27 +152,28 @@
   color: var(--primary-color);
 }
 
-.mobile-menu-btn {
-  display: none;
+@media (max-width: 768px) {
+  .site-header nav {
+    padding-block: 16px;
+  }
+  .nav-links {
+    gap: 16px;
+    font-size: 14px;
+  }
+  .logo {
+    font-size: 22px;
+  }
+  .logo img {
+    height: 32px;
+  }
+  .login {
+    padding: 6px 14px;
+    font-size: 14px;
+  }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 480px) {
   .nav-links {
     display: none;
-    position: absolute;
-    top: 100%;
-    inset-inline: 0;
-    flex-direction: column;
-    background: var(--bg-card);
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--border-color);
-    box-shadow: var(--shadow-md);
-    gap: 16px;
-  }
-  .nav-links.open {
-    display: flex;
-  }
-  .mobile-menu-btn {
-    display: grid !important;
   }
 }

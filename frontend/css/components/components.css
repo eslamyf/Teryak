@@ -156,6 +156,24 @@ svg.i {
   line-height: 1;
 }
 
+.sun {
+  display: none !important;
+}
+
+.moon {
+  display: block !important;
+}
+
+[data-theme="dark"] .sun,
+body.dark-theme .sun {
+  display: block !important;
+}
+
+[data-theme="dark"] .moon,
+body.dark-theme .moon {
+  display: none !important;
+}
+
 .badge {
   position: absolute;
   top: -6px;
