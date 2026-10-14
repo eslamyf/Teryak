@@ -780,7 +780,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           </td>
           <td>
             <div class="med-cell">
-              ${img ? `<img src="${img}" alt="${name}" class="med-thumb" loading="lazy" onerror="this.remove()">` : '<span class="med-thumb med-thumb-placeholder" aria-label="لا توجد صورة"><i class="fa-solid fa-box-open"></i></span>'}
+              ${img ? `<img src="${img}" alt="${name}" class="med-thumb" loading="lazy" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\\'med-thumb med-thumb-placeholder\\' aria-label=\\'لا توجد صورة\\'><i class=\\'fa-solid fa-box-open\\'></i></span>';">` : '<span class="med-thumb med-thumb-placeholder" aria-label="لا توجد صورة"><i class="fa-solid fa-box-open"></i></span>'}
               <div class="med-info-box">
                 <span class="med-title">${name}</span>
                 <span class="med-meta">${active} • <span class="badge bg-light text-secondary border py-0 px-1" style="font-size: 11px;">${category}</span></span>
@@ -889,7 +889,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           <div class="med-grid-header">
             <div class="d-flex align-items-center gap-2">
               <input type="checkbox" class="item-checkbox card-checkbox" data-id="${item._id}" ${isSelected ? 'checked' : ''} title="تحديد الصنف">
-              ${img ? `<img src="${img}" alt="${name}" class="med-grid-thumb" loading="lazy" onerror="this.remove()">` : '<span class="med-grid-thumb med-thumb-placeholder" aria-label="لا توجد صورة"><i class="fa-solid fa-box-open"></i></span>'}
+              ${img ? `<img src="${img}" alt="${name}" class="med-grid-thumb" loading="lazy" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\\'med-grid-thumb med-thumb-placeholder\\' aria-label=\\'لا توجد صورة\\'><i class=\\'fa-solid fa-box-open\\'></i></span>';">` : '<span class="med-grid-thumb med-thumb-placeholder" aria-label="لا توجد صورة"><i class="fa-solid fa-box-open"></i></span>'}
             </div>
             <span class="status-pill ${statusClass}">
               <span class="status-dot"></span>
@@ -2137,6 +2137,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       // Column Header Matching Logic
+      // Column Header Matching Logic
       function detectColumnIndices(headers) {
         const mapping = {
           name: 0, qty: -1, price: -1, cost: -1, expiry: -1, shelf: -1,
@@ -2145,27 +2146,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         headers.forEach((h, idx) => {
           const col = String(h || '').toLowerCase().trim();
-          if (col.includes('اسم') || col.includes('صنف') || col.includes('دواء') || col.includes('name') || col.includes('medicine')) {
+          if (col.includes('اسم') || col.includes('صنف') || col.includes('دواء') || (col.includes('منتج') && !col.includes('نوع')) || col.includes('name') || col.includes('medicine')) {
             mapping.name = idx;
           } else if (col.includes('كمي') || col.includes('عدد') || col.includes('رصيد') || col.includes('qty') || col.includes('quantity') || col.includes('stock')) {
             mapping.qty = idx;
           } else if (col.includes('تكلف') || col.includes('شراء') || col.includes('cost')) {
             mapping.cost = idx;
-          } else if (col.includes('سعر البيع') || col.includes('جمهور') || col.includes('price') || col.includes('selling') || col === 'سعر') {
+          } else if (col.includes('سعر البيع') || col.includes('جمهور') || col.includes('selling') || (col.includes('سعر') && !col.includes('تكلف')) || col === 'price') {
             if (mapping.price === -1) mapping.price = idx;
           } else if (col.includes('صلاحي') || col.includes('انتهاء') || col.includes('تاريخ') || col.includes('expiry') || col.includes('exp')) {
             mapping.expiry = idx;
-          } else if (col.includes('رف') || col.includes('مكان') || col.includes('مخزن') || col.includes('shelf') || col.includes('loc')) {
+          } else if (col.includes('رف') || col.includes('موقع') || col.includes('مكان') || col.includes('مخزن') || col.includes('shelf') || col.includes('loc')) {
             mapping.shelf = idx;
-          } else if (col.includes('image') || col.includes('صورة') || col.includes('رابط')) {
+          } else if (col.includes('image') || col.includes('img') || col.includes('صورة') || col.includes('صوره') || col.includes('رابط') || col.includes('photo') || col.includes('url') || col.includes('picture')) {
             mapping.image = idx;
-          } else if (col.includes('نوع المنتج') || col.includes('product type') || col.includes('producttype')) {
+          } else if (col.includes('نوع') || col.includes('type')) {
             mapping.productType = idx;
-          } else if (col.includes('قسم') || col.includes('تصنيف') || col.includes('category')) {
+          } else if (col.includes('قسم') || col.includes('تصنيف') || col.includes('فئة') || col.includes('category')) {
             mapping.category = idx;
-          } else if (col.includes('مادة فعالة') || col.includes('active ingredient') || col.includes('activeingredient')) {
+          } else if (col.includes('مادة') || col.includes('فعالة') || col.includes('ingredient') || col.includes('active')) {
             mapping.activeIngredient = idx;
-          } else if (col.includes('الشكل الدوائي') || col.includes('dosage form') || col.includes('dosageform')) {
+          } else if (col.includes('شكل') || col.includes('دوائي') || col.includes('عبوة') || col.includes('dosage') || col.includes('form')) {
             mapping.dosageForm = idx;
           }
         });
@@ -2353,7 +2354,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             <td><strong class="text-success">${item.customPrice.toFixed(2)} ج.م</strong></td>
             <td><small class="text-muted">${escapeHtml(item.expiryDate)}</small></td>
             <td><small class="shelf-tag">${escapeHtml(item.shelfLocation || '—')}</small></td>
-            <td>${item.imageUrl && /^https?:\/\//i.test(item.imageUrl) ? `<a href="${escapeHtml(item.imageUrl)}" target="_blank" rel="noopener noreferrer">عرض الصورة</a>` : '—'}</td>
+            <td>
+              ${item.imageUrl ? `
+                <div class="d-flex align-items-center justify-content-center gap-1">
+                  <img src="${escapeHtml(item.imageUrl)}" alt="معاينة" style="width: 26px; height: 26px; object-fit: contain; border-radius: 4px; border: 1px solid #ced4da; background: #fff;" loading="lazy" onerror="this.style.display='none'">
+                  <a href="${escapeHtml(item.imageUrl)}" target="_blank" rel="noopener noreferrer" class="badge bg-primary text-decoration-none" title="${escapeHtml(item.imageUrl)}" style="font-size: 11px;">
+                    <i class="fa-solid fa-arrow-up-right-from-square me-1"></i>رابط
+                  </a>
+                </div>
+              ` : '<span class="text-muted">—</span>'}
+            </td>
           </tr>
         `).join('');
 

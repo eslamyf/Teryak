@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const chartCanvas = document.getElementById('topMedicinesChart');
     if (!chartCanvas || typeof Chart === 'undefined') return;
 
-    Chart.defaults.font.family = "'Tajawal', sans-serif";
+    Chart.defaults.font.family = "'Cairo', sans-serif";
     Chart.defaults.color = '#6b7280';
 
     new Chart(chartCanvas, {
@@ -75,21 +75,21 @@ document.addEventListener('DOMContentLoaded', async () => {
           legend: { display: false },
           tooltip: {
             rtl: true,
-            titleFont: { family: 'Tajawal' },
-            bodyFont: { family: 'Tajawal' },
+            titleFont: { family: 'Cairo' },
+            bodyFont: { family: 'Cairo' },
           },
         },
         scales: {
           x: {
             beginAtZero: true,
             ticks: {
-              font: { family: 'Tajawal', size: 10 },
+              font: { family: 'Cairo', size: 10 },
             },
             grid: { color: '#e5e7eb' },
           },
           y: {
             ticks: {
-              font: { family: 'Tajawal', size: 11 },
+              font: { family: 'Cairo', size: 11 },
             },
             grid: { display: false },
           },

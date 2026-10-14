@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ترياق | الرئيسية - ابحث عن دوائك بسهولة</title>
+  <title>ترياق | منصة الرعاية الدوائية الذكية - ابحث، قارن، واحجز دوائك بسهولة</title>
+  <meta name="description" content="منصة ترياق الطبية: محرك البحث الدوائي الذكي الأول لمطابقة الأدوية وبدائلها، حجز الدواء من أقرب صيدلية، والتبرع بالأدوية الفائضة لدعم المرضى.">
   
-  <!-- High-Performance Typography: Tajawal (Preferred Medical & Pharmacy Arabic Font) -->
+  <!-- High-Performance Typography: Cairo & Alexandria (Modern Medical Standard) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Alexandria:wght@400;500;600;700;800&family=Cairo:wght@300;400;500;600;700;800;900&family=Alexandria:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css">
@@ -29,94 +30,1065 @@
   <!-- Reusable App Navbar -->
   <app-navbar></app-navbar>
 
-  <a href="#" id="arow" aria-label="العودة لأعلى الصفحة"><i class="fa-solid fa-arrow-up"></i></a>
+  <!-- Emergency / Live Hotline Announcement Ribbon -->
+  <div class="emergency-ribbon">
+    <div class="container d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="ribbon-text d-flex align-items-center gap-2">
+        <span class="ribbon-badge"><i class="fa-solid fa-truck-medical"></i> طوارئ 24/7</span>
+        <span class="ribbon-msg">خدمة حجز الأدوية الحرجة وتوصيلها خلال 45 دقيقة متوفرة الآن في نطاقك!</span>
+      </div>
+      <div class="ribbon-contact d-flex align-items-center gap-3">
+        <a href="tel:19876" class="hotline-link"><i class="fa-solid fa-phone-volume"></i> الخط الساخن: <strong>19876</strong></a>
+        <a href="#prescriptionSection" class="ribbon-btn"><i class="fa-solid fa-camera"></i> رفع روشتة سريعة</a>
+      </div>
+    </div>
+  </div>
 
-  <main class="container">
-    <!-- Hero Section -->
-    <section class="sectionOne">
-      <div class="hero-wrapper">
-        <div class="content">
-          <h1>ابحث عن دوائـك بسهولة</h1>
-          <p>اعثر على أقرب صيدلية متوفر فيها الدواء، احجزه، واحصل على البدائل المتاحة فوراً.</p>
-          <div class="search-bar-box">
-            <input type="text" placeholder="اكتب اسم الدواء أو المادة الفعالة..." id="heroSearchInput">
-            <button class="search-btn" id="heroSearchBtn">بحـث</button>
+  <a href="#" id="arow" aria-label="العودة لأعلى الصفحة" title="العودة للأعلى"><i class="fa-solid fa-arrow-up"></i></a>
+
+  <main>
+    <!-- =========================================================================
+         1. HERO SECTION
+         ========================================================================= -->
+    <section class="hero-section">
+      <div class="container">
+        <div class="hero-wrapper">
+          <div class="hero-content">
+            <div class="hero-tag-badge">
+              <span class="pulse-indicator"></span>
+              <span>المنصة الطبية الذكية الأولى للبحث عن الأدوية وبدائلها</span>
+            </div>
+            
+            <h1 class="hero-title">
+              ابحث عن <span class="highlight-text">دوائك</span>، قارن الصيدليات، واحجز في ثوانٍ
+            </h1>
+            
+            <p class="hero-description">
+              أكبر شبكة صيدليات رقمية تربطك بأقرب صيدلية متوفر فيها الدواء مع خدمة إيجاد البدائل المماثلة فوراً عند نقص الدواء، وحجز الأدوية أو التبرع بها بكل أمان.
+            </p>
+            
+            <!-- Smart Search Box -->
+            <div class="hero-search-container">
+              <div class="search-bar-box">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input 
+                  type="text" 
+                  placeholder="اكتب اسم الدواء، المادة الفعالة، أو المرض (مثال: بنادول، كونجستال)..." 
+                  id="heroSearchInput" 
+                  autocomplete="off"
+                >
+                <button class="search-btn" id="heroSearchBtn">
+                  <i class="fa-solid fa-search me-1"></i> ابـحـث الآن
+                </button>
+              </div>
+
+              <!-- Live Auto-suggest Dropdown -->
+              <div class="search-suggestions-dropdown hide" id="heroSuggestions">
+                <div class="suggestions-header">
+                  <small><i class="fa-solid fa-clock-rotate-left me-1"></i> اقتراحات سريعة مطابقة:</small>
+                </div>
+                <div class="suggestions-list" id="suggestionsList"></div>
+              </div>
+            </div>
+            
+            <!-- Quick Search Tags -->
+            <div class="trending-tags-box">
+              <span class="tags-label"><i class="fa-solid fa-fire text-danger me-1"></i> الأكثر بحثاً:</span>
+              <div class="tags-list">
+                <button type="button" class="trend-tag-btn" data-query="بانادول"><i class="fa-solid fa-tablets"></i> بانادول</button>
+                <button type="button" class="trend-tag-btn" data-query="أوجمنتين"><i class="fa-solid fa-capsules"></i> أوجمنتين</button>
+                <button type="button" class="trend-tag-btn" data-query="كونجستال"><i class="fa-solid fa-shield-virus"></i> كونجستال</button>
+                <button type="button" class="trend-tag-btn" data-query="فيتامين د"><i class="fa-solid fa-sun"></i> فيتامين د</button>
+                <button type="button" class="trend-tag-btn" data-query="أوميجا 3"><i class="fa-solid fa-heart-pulse"></i> أوميجا 3</button>
+                <button type="button" class="trend-tag-btn" data-query="كيتوفان"><i class="fa-solid fa-pills"></i> كيتوفان</button>
+              </div>
+            </div>
+
+            <!-- Trust Metrics Bar -->
+            <div class="hero-trust-bar">
+              <div class="trust-item">
+                <i class="fa-solid fa-bolt text-warning"></i>
+                <span>حجز فوري مؤكد</span>
+              </div>
+              <div class="trust-item">
+                <i class="fa-solid fa-shield-check text-success"></i>
+                <span>أدوية أصلية 100%</span>
+              </div>
+              <div class="trust-item">
+                <i class="fa-solid fa-hospital text-primary"></i>
+                <span>+250 صيدلية معتمدة</span>
+              </div>
+              <div class="trust-item">
+                <i class="fa-solid fa-clock text-info"></i>
+                <span>توصيل 24/7</span>
+              </div>
+            </div>
           </div>
           
-          <div class="secDIV">
-            <small>الأدوية الأكثر بحثاً:</small>
-            <a href="pages/public/medicine-detail.html?med=paracetamol"><button type="button">باراسيتامول</button></a>
-            <a href="pages/public/medicine-detail.html?med=amoxicillin"><button type="button">أموكسيسيلين</button></a>
-            <a href="pages/public/medicine-detail.html?med=vitamind"><button type="button">فيتامين د</button></a>
-            <a href="pages/public/medicine-detail.html?med=omega3"><button type="button">أوميجا 3</button></a>
+          <!-- Visual Graphic with Interactive Floating Cards -->
+          <div class="hero-visual-wrapper">
+            <div class="hero-image-card">
+              <img src="assets/images/BG2.jpeg" alt="Teryak Medical Pharmacy Platform" class="main-hero-img">
+              <div class="image-overlay-glow"></div>
+
+              <!-- Floating Micro-Card 1 -->
+              <div class="floating-badge badge-top-right">
+                <div class="badge-icon green"><i class="fa-solid fa-check"></i></div>
+                <div class="badge-text">
+                  <strong>متوفر في صيدلية الشفاء</strong>
+                  <small>تبعد 400 متر عن موقعك</small>
+                </div>
+              </div>
+
+              <!-- Floating Micro-Card 2 -->
+              <div class="floating-badge badge-bottom-left">
+                <div class="badge-icon blue"><i class="fa-solid fa-arrows-rotate"></i></div>
+                <div class="badge-text">
+                  <strong>بديل مماثل بنفس المادة الفعالة</strong>
+                  <small>خصم 35% بنفس الكفاءة</small>
+                </div>
+              </div>
+
+              <!-- Floating Micro-Card 3 -->
+              <div class="floating-badge badge-rating">
+                <div class="badge-icon yellow"><i class="fa-solid fa-star"></i></div>
+                <div class="badge-text">
+                  <strong>تقييم الصيادلة 4.9/5</strong>
+                  <small>أكثر من 15,000 حجز ناجح</small>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        
-        <div class="hero-image-box">
-          <img src="assets/images/BG2.jpeg" alt="Teryak Medical Banner">
         </div>
       </div>
     </section>
 
-    <!-- Services Section -->
-    <section class="sectionTwo">
-      <div class="services-grid">
-        <a href="pages/public/pharmacies.html" class="service-card">
-          <div class="icon-box green">
-            <i class="fa-solid fa-location-dot"></i>
-          </div>
-          <h2 class="mainParg">أقرب صيدلية</h2>
-          <p class="color">اعثر على أقرب صيدلية متوفر فيها الدواء مع عرض المسافة والسعر</p>
-        </a>
-        
-        <a href="pages/public/medicines.html" class="service-card">
-          <div class="icon-box blue">
-            <i class="fa-solid fa-clock"></i>
-          </div>
-          <h2 class="mainParg">احجز دوائك</h2>
-          <p class="color">احجز الدواء قبل الذهاب لضمان توفره عند وصولك</p>
-        </a>
-        
-        <a href="pages/public/medicines.html" class="service-card">
-          <div class="icon-box purple">
-            <i class="fa-solid fa-pills"></i>
-          </div>
-          <h2 class="mainParg">البدائل المتاحة</h2>
-          <p class="color">اعرض البدائل المتاحة إذا لم يكن الدواء متوفراً</p>
-        </a>
+    <!-- =========================================================================
+         2. CORE PILLARS & VALUE PROPOSITIONS
+         ========================================================================= -->
+    <section class="features-section">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="sub-heading">خدمات ترياق</span>
+          <h2 class="main-heading">كل ما تحتاجه لرعايتك الدوائية في مكان واحد</h2>
+          <p class="section-desc">منظومة رقمية متكاملة لتبسيط الحصول على الدواء وتقديم الحلول الفورية عند نقصه.</p>
+        </div>
+
+        <div class="features-grid">
+          <!-- Card 1 -->
+          <a href="pages/public/medicines.html" class="feature-card">
+            <div class="feature-icon-box green">
+              <i class="fa-solid fa-book-medical"></i>
+            </div>
+            <h3 class="feature-title">دليل الأدوية الشامل</h3>
+            <p class="feature-desc">تصفح آلاف الأدوية بالأسعار الرسمية، الجرعات، الاستخدامات، ودواعي الاستعمال مع تحديث دوري ومباشر.</p>
+            <span class="feature-link">تصفح الأدوية <i class="fa-solid fa-arrow-left"></i></span>
+          </a>
+
+          <!-- Card 2 -->
+          <a href="pages/public/pharmacies.html" class="feature-card">
+            <div class="feature-icon-box blue">
+              <i class="fa-solid fa-map-location-dot"></i>
+            </div>
+            <h3 class="feature-title">أقرب صيدلية متوفرة</h3>
+            <p class="feature-desc">اعثر فوراً على الصيدليات المحيطة التي يتوفر بها الدواء مع حساب المسافة وساعات العمل وحجز الدواء بضغطة واحدة.</p>
+            <span class="feature-link">ابحث عن الصيدليات <i class="fa-solid fa-arrow-left"></i></span>
+          </a>
+
+          <!-- Card 3 -->
+          <a href="#alternativesSection" class="feature-card highlight-card">
+            <div class="feature-icon-box purple">
+              <i class="fa-solid fa-code-compare"></i>
+            </div>
+            <div class="badge-featured">حصرى لترياق</div>
+            <h3 class="feature-title">محرك البدائل الذكي</h3>
+            <p class="feature-desc">إذا كان دواؤك ناقصاً في السوق، محركنا يقترح البدائل المتطابقة تماماً كيميائياً وبنفس المادة الفعالة مع مقارنة الأسعار.</p>
+            <span class="feature-link">جرب محرك البدائل <i class="fa-solid fa-arrow-left"></i></span>
+          </a>
+
+          <!-- Card 4 -->
+          <a href="pages/public/donation.html" class="feature-card">
+            <div class="feature-icon-box emerald">
+              <i class="fa-solid fa-hand-holding-heart"></i>
+            </div>
+            <h3 class="feature-title">التبرع واستبدال الأدوية</h3>
+            <p class="feature-desc">شارك في إنقاذ الأرواح بالتبرع بأدويتك الفائضة الصالحة أو استبدلها بخصومات تصل إلى 40% لدعم المرضى غير القادرين.</p>
+            <span class="feature-link">شارك في المبادرة <i class="fa-solid fa-arrow-left"></i></span>
+          </a>
+        </div>
       </div>
     </section>
 
-    <!-- Donation Callout Section -->
-    <section class="sectionThree">
-      <div class="d-flex">
-        <div class="content">
-          <h1>تبرع بأدويتك غير المستخدمة</h1>
-          <p>ساعد الآخرين بالأدوية التي لا تحتاجها، أو استبدلها بأدوية أخرى.</p>
-          <ul>
-            <li><i class="fa-solid fa-circle-check text-success"></i> تبرع بأدوية جديدة غير مستخدمة</li>
-            <li><i class="fa-solid fa-circle-check text-success"></i> استبدل الأدوية بخصم قد يصل إلى 40%</li>
-            <li><i class="fa-solid fa-circle-check text-success"></i> ساعد من يحتاج إلى دواء غير متوفر</li>
-          </ul>
+    <!-- =========================================================================
+         3. PRESCRIPTION FAST UPLOAD INTERACTIVE BANNER
+         ========================================================================= -->
+    <section class="prescription-banner-section" id="prescriptionSection">
+      <div class="container">
+        <div class="rx-banner-card">
+          <div class="rx-banner-content">
+            <span class="rx-badge"><i class="fa-solid fa-notes-medical"></i> خدمة الروشتة الذكية</span>
+            <h2 class="rx-title">مش قادر تقرأ خط الطبيب؟ ارفع الروشتة واترك الباقي لصيادلتنا</h2>
+            <p class="rx-text">
+              التقط صورة لروشتتك الطبية وسيقوم فريق من الصيادلة المعتمدين بمراجعتها وتحديد الأدوية والبدائل المتاحة وتجهيزها في أقرب صيدلية لك خلال 10 دقائق.
+            </p>
+            
+            <div class="rx-features-list">
+              <div class="rx-item"><i class="fa-solid fa-circle-check"></i> قراءة دقيقة من صيادلة معتمدين</div>
+              <div class="rx-item"><i class="fa-solid fa-circle-check"></i> إيجاد البدائل فوراً لأي دواء ناقص</div>
+              <div class="rx-item"><i class="fa-solid fa-circle-check"></i> سرية تامة وأمان لكافة بياناتك</div>
+            </div>
+
+            <div class="rx-action-wrap">
+              <button class="btn-rx-action" id="openRxModalBtn" data-bs-toggle="modal" data-bs-target="#prescriptionModal">
+                <i class="fa-solid fa-camera"></i> ارفع صورة الروشتة الآن
+              </button>
+              <span class="rx-hint"><i class="fa-solid fa-shield-halved text-success"></i> خدمة مجانية 100%</span>
+            </div>
+          </div>
+
+          <div class="rx-banner-graphic">
+            <div class="rx-illustration-card">
+              <div class="rx-card-header">
+                <i class="fa-solid fa-file-waveform text-success"></i>
+                <span>نموذج روشتة طبية معتمدة</span>
+              </div>
+              <div class="rx-demo-lines">
+                <div class="demo-line line-1"></div>
+                <div class="demo-line line-2"></div>
+                <div class="demo-line line-3"></div>
+              </div>
+              <div class="rx-matched-pill">
+                <i class="fa-solid fa-circle-check text-success"></i>
+                <span>تم تجهيز 3 أصناف بنجاح في صيدلية الأمل</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         4. FEATURED & MOST REQUESTED MEDICINES SECTION
+         ========================================================================= -->
+    <section class="medicines-showcase-section">
+      <div class="container">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+          <div>
+            <span class="sub-heading">الأدوية الشائعة</span>
+            <h2 class="main-heading m-0">الأدوية الأكثر طلباً والأساسية</h2>
+          </div>
+          <a href="pages/public/medicines.html" class="btn-view-all">
+            عرض كافة الأدوية (2,500+) <i class="fa-solid fa-angle-left"></i>
+          </a>
         </div>
 
-        <div class="DIVS">
-          <div class="DIV">
-            <p class="nums">12,450</p>
-            <p class="color">دواء تم التبرع به</p>
+        <!-- Medicine Category Filter Tabs -->
+        <div class="med-filter-tabs" id="medFilterTabs">
+          <button class="tab-btn active" data-category="all">الكل</button>
+          <button class="tab-btn" data-category="painkiller">مسكنات وخافضات حرارة</button>
+          <button class="tab-btn" data-category="antibiotic">مضادات حيوية</button>
+          <button class="tab-btn" data-category="vitamins">فيتامينات ومكملات</button>
+          <button class="tab-btn" data-category="cold">نزلات البرد والجهاز التنفسي</button>
+        </div>
+
+        <!-- Medicines Grid -->
+        <div class="featured-medicines-grid" id="featuredMedicinesGrid">
+          <!-- Card 1: Panadol Extra -->
+          <div class="med-product-card" data-category="painkiller">
+            <div class="med-badge-tag available">متوفر في 12 صيدلية</div>
+            <div class="med-img-box">
+              <img src="assets/images/parst.jpg" alt="بانادول إكسترا" onerror="this.src='assets/images/tablets.jpg'">
+            </div>
+            <div class="med-info">
+              <span class="med-cat">مسكنات وألم</span>
+              <h4 class="med-name">بانادول إكسترا 500 مجم</h4>
+              <p class="med-active-ing"><i class="fa-solid fa-flask"></i> باراسيتامول + كافيين</p>
+              <div class="med-bottom-row">
+                <div class="med-price-wrap">
+                  <span class="currency">ج.م</span>
+                  <span class="price-val">34.00</span>
+                </div>
+                <div class="med-actions">
+                  <a href="pages/public/medicine-detail.html?med=paracetamol" class="btn-med-alt" title="عرض البدائل المماثلة">
+                    <i class="fa-solid fa-arrows-rotate"></i> البدائل
+                  </a>
+                  <button class="btn-med-cart add-to-cart-quick" data-id="101" data-name="بانادول إكسترا 500 مجم" data-price="34.00" data-pharmacy="صيدلية الشفاء" title="أضف للسلة">
+                    <i class="fa-solid fa-cart-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="DIV">
-            <p class="nums">8,320</p>
-            <p class="color">مريض تم مساعدته</p>
+
+          <!-- Card 2: Augmentin -->
+          <div class="med-product-card" data-category="antibiotic">
+            <div class="med-badge-tag available">متوفر في 8 صيدليات</div>
+            <div class="med-img-box">
+              <img src="assets/images/amoc.jpg" alt="أوجمنتين 1 جم" onerror="this.src='assets/images/tablets.jpg'">
+            </div>
+            <div class="med-info">
+              <span class="med-cat">مضادات حيوية</span>
+              <h4 class="med-name">أوجمنتين 1 جم أقراص</h4>
+              <p class="med-active-ing"><i class="fa-solid fa-flask"></i> أموكسيسيلين + كلافولانيك</p>
+              <div class="med-bottom-row">
+                <div class="med-price-wrap">
+                  <span class="currency">ج.م</span>
+                  <span class="price-val">99.00</span>
+                </div>
+                <div class="med-actions">
+                  <a href="pages/public/medicine-detail.html?med=amoxicillin" class="btn-med-alt" title="عرض البدائل المماثلة">
+                    <i class="fa-solid fa-arrows-rotate"></i> البدائل
+                  </a>
+                  <button class="btn-med-cart add-to-cart-quick" data-id="102" data-name="أوجمنتين 1 جم أقراص" data-price="99.00" data-pharmacy="صيدلية الأمل" title="أضف للسلة">
+                    <i class="fa-solid fa-cart-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="DIV">
-            <p class="nums">245</p>
-            <p class="color">صيدلية مشاركة</p>
+
+          <!-- Card 3: Congestal -->
+          <div class="med-product-card" data-category="cold">
+            <div class="med-badge-tag available">متوفر في 15 صيدلية</div>
+            <div class="med-img-box">
+              <img src="assets/images/congestal.jpg" alt="كونجستال" onerror="this.src='assets/images/tablets.jpg'">
+            </div>
+            <div class="med-info">
+              <span class="med-cat">نزلات البرد</span>
+              <h4 class="med-name">كونجستال أقراص لنزلات البرد</h4>
+              <p class="med-active-ing"><i class="fa-solid fa-flask"></i> باراسيتامول + كلورفينيرامين</p>
+              <div class="med-bottom-row">
+                <div class="med-price-wrap">
+                  <span class="currency">ج.م</span>
+                  <span class="price-val">31.00</span>
+                </div>
+                <div class="med-actions">
+                  <a href="pages/public/medicine-detail.html?med=congestal" class="btn-med-alt" title="عرض البدائل المماثلة">
+                    <i class="fa-solid fa-arrows-rotate"></i> البدائل
+                  </a>
+                  <button class="btn-med-cart add-to-cart-quick" data-id="103" data-name="كونجستال أقراص" data-price="31.00" data-pharmacy="صيدلية الرعاية" title="أضف للسلة">
+                    <i class="fa-solid fa-cart-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Vitamin D -->
+          <div class="med-product-card" data-category="vitamins">
+            <div class="med-badge-tag available">متوفر في 9 صيدليات</div>
+            <div class="med-img-box">
+              <img src="assets/images/vitamine.jpg" alt="فيتامين د3" onerror="this.src='assets/images/capsules.jpg'">
+            </div>
+            <div class="med-info">
+              <span class="med-cat">فيتامينات ومكملات</span>
+              <h4 class="med-name">فيتامين د3 10,000 وحدة</h4>
+              <p class="med-active-ing"><i class="fa-solid fa-flask"></i> كوليكالسيفيرول</p>
+              <div class="med-bottom-row">
+                <div class="med-price-wrap">
+                  <span class="currency">ج.م</span>
+                  <span class="price-val">85.00</span>
+                </div>
+                <div class="med-actions">
+                  <a href="pages/public/medicine-detail.html?med=vitamind" class="btn-med-alt" title="عرض البدائل المماثلة">
+                    <i class="fa-solid fa-arrows-rotate"></i> البدائل
+                  </a>
+                  <button class="btn-med-cart add-to-cart-quick" data-id="104" data-name="فيتامين د3 10,000 وحدة" data-price="85.00" data-pharmacy="صيدلية النهضة" title="أضف للسلة">
+                    <i class="fa-solid fa-cart-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 5: Omega 3 -->
+          <div class="med-product-card" data-category="vitamins">
+            <div class="med-badge-tag available">متوفر في 11 صيدلية</div>
+            <div class="med-img-box">
+              <img src="assets/images/omega.jpg" alt="أوميجا 3 بلس" onerror="this.src='assets/images/capsules.jpg'">
+            </div>
+            <div class="med-info">
+              <span class="med-cat">فيتامينات ومكملات</span>
+              <h4 class="med-name">أوميجا 3 بلس كبسولات</h4>
+              <p class="med-active-ing"><i class="fa-solid fa-flask"></i> زيت السمك + زيت جنين القمح</p>
+              <div class="med-bottom-row">
+                <div class="med-price-wrap">
+                  <span class="currency">ج.م</span>
+                  <span class="price-val">72.00</span>
+                </div>
+                <div class="med-actions">
+                  <a href="pages/public/medicine-detail.html?med=omega3" class="btn-med-alt" title="عرض البدائل المماثلة">
+                    <i class="fa-solid fa-arrows-rotate"></i> البدائل
+                  </a>
+                  <button class="btn-med-cart add-to-cart-quick" data-id="105" data-name="أوميجا 3 بلس كبسولات" data-price="72.00" data-pharmacy="صيدلية الشفاء" title="أضف للسلة">
+                    <i class="fa-solid fa-cart-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 6: Aspirin Protect -->
+          <div class="med-product-card" data-category="painkiller">
+            <div class="med-badge-tag available">متوفر في 14 صيدلية</div>
+            <div class="med-img-box">
+              <img src="assets/images/aspirin.jpg" alt="أسبرين بروتكت" onerror="this.src='assets/images/tablets.jpg'">
+            </div>
+            <div class="med-info">
+              <span class="med-cat">صحة القلب والدم</span>
+              <h4 class="med-name">أسبرين بروتكت 100 مجم</h4>
+              <p class="med-active-ing"><i class="fa-solid fa-flask"></i> حمض أسيتيل ساليسيليك</p>
+              <div class="med-bottom-row">
+                <div class="med-price-wrap">
+                  <span class="currency">ج.م</span>
+                  <span class="price-val">28.00</span>
+                </div>
+                <div class="med-actions">
+                  <a href="pages/public/medicine-detail.html?med=aspirin" class="btn-med-alt" title="عرض البدائل المماثلة">
+                    <i class="fa-solid fa-arrows-rotate"></i> البدائل
+                  </a>
+                  <button class="btn-med-cart add-to-cart-quick" data-id="106" data-name="أسبرين بروتكت 100 مجم" data-price="28.00" data-pharmacy="صيدلية الأمل" title="أضف للسلة">
+                    <i class="fa-solid fa-cart-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         5. SMART MEDICINE ALTERNATIVES INTERACTIVE ENGINE
+         ========================================================================= -->
+    <section class="alternatives-showcase-section" id="alternativesSection">
+      <div class="container">
+        <div class="alt-engine-card">
+          <div class="row align-items-center g-4">
+            <div class="col-lg-5">
+              <div class="alt-engine-intro">
+                <span class="alt-tag"><i class="fa-solid fa-dna"></i> ميزة ترياق الحصرية</span>
+                <h2 class="alt-title">دوائك ناقص في السوق؟ لا تقلق، البديل المكافئ متوفر فوراً</h2>
+                <p class="alt-desc">
+                  يقوم محرك ترياق بمطابقة التركيب الكيميائي الدقيق والمادة الفعالة مع مئات البدائل الطبية المعتمدة من وزارة الصحة المصرية، لتضمن استمرار علاجك بدون انقطاع وبأفضل سعر.
+                </p>
+
+                <div class="alt-selector-box">
+                  <label for="altMedicineSelect" class="form-label font-bold text-dark">اختر دواء لتجربة محرك البدائل:</label>
+                  <select id="altMedicineSelect" class="form-select alt-dropdown">
+                    <option value="augmentin">أوجمنتين 1 جم (Augmentin 1g)</option>
+                    <option value="panadol">بانادول إكسترا (Panadol Extra)</option>
+                    <option value="congestal">كونجستال (Congestal Cold)</option>
+                    <option value="ketofan">كيتوفان 50 مجم (Ketofan)</option>
+                  </select>
+                </div>
+
+                <div class="alt-match-guarantee">
+                  <i class="fa-solid fa-shield-halved text-success"></i>
+                  <small>تطابق حيوي 100% معتمد وفقاً للدليل الدوائي المصري</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-7">
+              <div class="alt-results-container" id="altResultsDisplay">
+                <!-- Dynamically populated or rendered via JS -->
+                <div class="alt-comparison-card">
+                  <div class="orig-med-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <span class="badge bg-danger-subtle text-danger mb-1">الدواء المطلوب (غير متوفر أحياناً)</span>
+                        <h4 class="orig-med-title" id="origMedName">أوجمنتين 1 جم أقراص</h4>
+                        <small class="orig-med-active" id="origMedActive"><i class="fa-solid fa-flask"></i> المادة الفعالة: أموكسيسيلين + حمض كلافولانيك</small>
+                      </div>
+                      <div class="orig-price text-end">
+                        <span class="price-strike">99.00 ج.م</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="alt-items-list-header">
+                    <span><i class="fa-solid fa-circle-check text-success"></i> البدائل المتطابقة كيميائياً المتاحة الآن:</span>
+                  </div>
+
+                  <div class="alt-items-list" id="altItemsList">
+                    <!-- Alternative 1 -->
+                    <div class="alt-item-row">
+                      <div class="alt-item-info">
+                        <strong>هايبوتك 1 جم (Hibiotic 1g)</strong>
+                        <span class="alt-match-badge"><i class="fa-solid fa-check-double"></i> 100% تطابق دوائي</span>
+                        <small class="text-muted d-block">متوفر في 9 صيدليات محيطة</small>
+                      </div>
+                      <div class="alt-item-pricing">
+                        <span class="alt-price">75.00 ج.م</span>
+                        <span class="save-badge">توفير 24 ج.م</span>
+                      </div>
+                      <a href="pages/public/medicine-detail.html?med=hibiotic" class="btn btn-sm btn-outline-success font-bold">احجز البديل</a>
+                    </div>
+
+                    <!-- Alternative 2 -->
+                    <div class="alt-item-row">
+                      <div class="alt-item-info">
+                        <strong>كلاموكس 1 جم (Klamox 1g)</strong>
+                        <span class="alt-match-badge"><i class="fa-solid fa-check-double"></i> 100% تطابق دوائي</span>
+                        <small class="text-muted d-block">متوفر في 6 صيدليات محيطة</small>
+                      </div>
+                      <div class="alt-item-pricing">
+                        <span class="alt-price">78.00 ج.م</span>
+                        <span class="save-badge">توفير 21 ج.م</span>
+                      </div>
+                      <a href="pages/public/medicine-detail.html?med=klamox" class="btn btn-sm btn-outline-success font-bold">احجز البديل</a>
+                    </div>
+
+                    <!-- Alternative 3 -->
+                    <div class="alt-item-row">
+                      <div class="alt-item-info">
+                        <strong>ميجاموكس 1 جم (Megamox 1g)</strong>
+                        <span class="alt-match-badge"><i class="fa-solid fa-check-double"></i> 100% تطابق دوائي</span>
+                        <small class="text-muted d-block">متوفر في 8 صيدليات محيطة</small>
+                      </div>
+                      <div class="alt-item-pricing">
+                        <span class="alt-price">80.00 ج.م</span>
+                        <span class="save-badge">توفير 19 ج.م</span>
+                      </div>
+                      <a href="pages/public/medicine-detail.html?med=megamox" class="btn btn-sm btn-outline-success font-bold">احجز البديل</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         6. HOW TERYAK WORKS (3 SIMPLE STEPS)
+         ========================================================================= -->
+    <section class="how-it-works-section">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="sub-heading">بساطة الاستخدام</span>
+          <h2 class="main-heading">كيف يعمل ترياق في 3 خطوات بسيطة؟</h2>
+          <p class="section-desc">صممنا ترياق ليضمن وصولك لدواءك في أسرع وقت وبأسهل طريقة دون الحاجة للتنقل بين الصيدليات.</p>
+        </div>
+
+        <div class="steps-grid">
+          <!-- Step 1 -->
+          <div class="step-card">
+            <div class="step-number">01</div>
+            <div class="step-icon-wrap">
+              <i class="fa-solid fa-magnifying-glass-location"></i>
+            </div>
+            <h3 class="step-title">ابحث أو ارفع الروشتة</h3>
+            <p class="step-desc">اكتب اسم الدواء أو المادة الفعالة في محرك البحث، أو قم برفع صورة واضحة للروشتة مباشرة.</p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step-card">
+            <div class="step-number">02</div>
+            <div class="step-icon-wrap">
+              <i class="fa-solid fa-hospital-user"></i>
+            </div>
+            <h3 class="step-title">اختر الصيدلية أو البديل</h3>
+            <p class="step-desc">شاهد أقرب الصيدليات المتوفر فيها الدواء مع الأسعار، أو اختر أحد البدائل المماثلة المعتمدة بأسعار تنافسية.</p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step-card">
+            <div class="step-number">03</div>
+            <div class="step-icon-wrap">
+              <i class="fa-solid fa-box-check"></i>
+            </div>
+            <h3 class="step-title">احجز واستلم فوراً</h3>
+            <p class="step-desc">احجز طلبك لضمان توفره عند وصولك للصيدلية، أو اطلب خدمة التوصيل المباشر حتى باب منزلك بكل سهولة.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         7. VERIFIED 24/7 PARTNER PHARMACIES
+         ========================================================================= -->
+    <section class="pharmacies-section">
+      <div class="container">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+          <div>
+            <span class="sub-heading">شبكة الصيدليات</span>
+            <h2 class="main-heading m-0">صيدليات معتمدة تعمل على مدار الساعة</h2>
+          </div>
+          <a href="pages/public/pharmacies.html" class="btn-view-all">
+            استكشف كافة الصيدليات (+250) <i class="fa-solid fa-angle-left"></i>
+          </a>
+        </div>
+
+        <div class="pharmacies-grid">
+          <!-- Pharmacy 1 -->
+          <div class="pharmacy-spotlight-card">
+            <div class="pharmacy-img-box">
+              <img src="assets/images/shifa.jpg" alt="صيدلية الشفاء" onerror="this.src='assets/images/BG1.jpeg'">
+              <span class="pharmacy-status-badge open-24"><i class="fa-solid fa-clock"></i> مفتوح 24 ساعة</span>
+            </div>
+            <div class="pharmacy-details">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <h4 class="pharmacy-name">صيدلية الشفاء</h4>
+                <div class="pharmacy-rating"><i class="fa-solid fa-star text-warning"></i> 4.9</div>
+              </div>
+              <p class="pharmacy-address"><i class="fa-solid fa-location-dot text-danger me-1"></i> مدينة نصر، شارع عباس العقاد</p>
+              <div class="pharmacy-stats-chips">
+                <span class="chip"><i class="fa-solid fa-pills"></i> +4,200 دواء</span>
+                <span class="chip"><i class="fa-solid fa-truck"></i> توصيل متاح</span>
+              </div>
+              <div class="pharmacy-actions-row">
+                <a href="tel:+201234567891" class="btn-pharmacy-call"><i class="fa-solid fa-phone"></i> اتصال</a>
+                <a href="pages/public/pharmacies.html" class="btn-pharmacy-view">تصفح الأدوية</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pharmacy 2 -->
+          <div class="pharmacy-spotlight-card">
+            <div class="pharmacy-img-box">
+              <img src="assets/images/amal.jpg" alt="صيدلية الأمل" onerror="this.src='assets/images/BG1.jpeg'">
+              <span class="pharmacy-status-badge open-24"><i class="fa-solid fa-clock"></i> مفتوح 24 ساعة</span>
+            </div>
+            <div class="pharmacy-details">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <h4 class="pharmacy-name">صيدلية الأمل المركزية</h4>
+                <div class="pharmacy-rating"><i class="fa-solid fa-star text-warning"></i> 5.0</div>
+              </div>
+              <p class="pharmacy-address"><i class="fa-solid fa-location-dot text-danger me-1"></i> الدقي، ميدان المساحة</p>
+              <div class="pharmacy-stats-chips">
+                <span class="chip"><i class="fa-solid fa-pills"></i> +5,000 دواء</span>
+                <span class="chip"><i class="fa-solid fa-truck"></i> توصيل سريع</span>
+              </div>
+              <div class="pharmacy-actions-row">
+                <a href="tel:+201234567892" class="btn-pharmacy-call"><i class="fa-solid fa-phone"></i> اتصال</a>
+                <a href="pages/public/pharmacies.html" class="btn-pharmacy-view">تصفح الأدوية</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pharmacy 3 -->
+          <div class="pharmacy-spotlight-card">
+            <div class="pharmacy-img-box">
+              <img src="assets/images/reaya.jpg" alt="صيدلية الرعاية" onerror="this.src='assets/images/BG1.jpeg'">
+              <span class="pharmacy-status-badge open-now"><i class="fa-solid fa-door-open"></i> مفتوح الآن</span>
+            </div>
+            <div class="pharmacy-details">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <h4 class="pharmacy-name">صيدلية الرعاية الحديثة</h4>
+                <div class="pharmacy-rating"><i class="fa-solid fa-star text-warning"></i> 4.8</div>
+              </div>
+              <p class="pharmacy-address"><i class="fa-solid fa-location-dot text-danger me-1"></i> المعادي، شارع النصر</p>
+              <div class="pharmacy-stats-chips">
+                <span class="chip"><i class="fa-solid fa-pills"></i> +3,800 دواء</span>
+                <span class="chip"><i class="fa-solid fa-hand-holding-heart"></i> تقبل التبرعات</span>
+              </div>
+              <div class="pharmacy-actions-row">
+                <a href="tel:+201234567893" class="btn-pharmacy-call"><i class="fa-solid fa-phone"></i> اتصال</a>
+                <a href="pages/public/pharmacies.html" class="btn-pharmacy-view">تصفح الأدوية</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pharmacy 4 -->
+          <div class="pharmacy-spotlight-card">
+            <div class="pharmacy-img-box">
+              <img src="assets/images/nahda.jpg" alt="صيدلية النهضة" onerror="this.src='assets/images/BG1.jpeg'">
+              <span class="pharmacy-status-badge open-24"><i class="fa-solid fa-clock"></i> مفتوح 24 ساعة</span>
+            </div>
+            <div class="pharmacy-details">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <h4 class="pharmacy-name">صيدلية النهضة الكبرى</h4>
+                <div class="pharmacy-rating"><i class="fa-solid fa-star text-warning"></i> 4.7</div>
+              </div>
+              <p class="pharmacy-address"><i class="fa-solid fa-location-dot text-danger me-1"></i> مصر الجديدة، شارع الأهرام</p>
+              <div class="pharmacy-stats-chips">
+                <span class="chip"><i class="fa-solid fa-pills"></i> +4,500 دواء</span>
+                <span class="chip"><i class="fa-solid fa-truck"></i> شحن محافظات</span>
+              </div>
+              <div class="pharmacy-actions-row">
+                <a href="tel:+201234567894" class="btn-pharmacy-call"><i class="fa-solid fa-phone"></i> اتصال</a>
+                <a href="pages/public/pharmacies.html" class="btn-pharmacy-view">تصفح الأدوية</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         8. MEDICINE DONATION & SOCIAL IMPACT
+         ========================================================================= -->
+    <section class="donation-spotlight-section">
+      <div class="container">
+        <div class="donation-hero-box">
+          <div class="row align-items-center g-4">
+            <div class="col-lg-6">
+              <div class="donation-content">
+                <span class="donation-tag"><i class="fa-solid fa-handshake-angle"></i> مبادرة ترياق الخيرية</span>
+                <h2 class="donation-title">تبرع بأدويتك الفائضة وأنقذ حياة مريض</h2>
+                <p class="donation-desc">
+                  الكثير من المرضى يعجزون عن توفير أدويتهم الحيوية. إذا كان لديك أدوية صالحة وغير مستخدمة، يمكنك التبرع بها أو استبدالها بخصومات حقيقية تصل إلى 40%، وتوصيلها للمستحقين مجاناً.
+                </p>
+
+                <ul class="donation-benefits-list">
+                  <li><i class="fa-solid fa-circle-check text-success"></i> فحص سلامة وتاريخ صلاحية الأدوية عبر صيادلة مختصين</li>
+                  <li><i class="fa-solid fa-circle-check text-success"></i> إمكانية استبدال الأدوية الصالحة بخصومات على أدويتك الحالية</li>
+                  <li><i class="fa-solid fa-circle-check text-success"></i> تقارير ومتابعة دورية لوصول تبرعك للحالات المستحقة</li>
+                </ul>
+
+                <div class="donation-cta-group">
+                  <a href="pages/public/donation.html" class="btn-donate-now">
+                    <i class="fa-solid fa-heart me-1"></i> تبرع بدواء الآن
+                  </a>
+                  <a href="pages/public/donation.html#request" class="btn-request-med">
+                    <i class="fa-solid fa-hand-holding-medical me-1"></i> طلب دواء لغير القادرين
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="donation-stats-grid">
+                <div class="donation-stat-card">
+                  <div class="stat-icon-wrap emerald"><i class="fa-solid fa-boxes-packing"></i></div>
+                  <div class="stat-number">12,450+</div>
+                  <div class="stat-label">عبوة دواء تم التبرع بها</div>
+                </div>
+
+                <div class="donation-stat-card">
+                  <div class="stat-icon-wrap blue"><i class="fa-solid fa-user-doctor"></i></div>
+                  <div class="stat-number">8,320+</div>
+                  <div class="stat-label">مريض استفاد من العلاج</div>
+                </div>
+
+                <div class="donation-stat-card">
+                  <div class="stat-icon-wrap purple"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                  <div class="stat-number">40%</div>
+                  <div class="stat-label">أقصى خصم عند الاستبدال</div>
+                </div>
+
+                <div class="donation-stat-card">
+                  <div class="stat-icon-wrap yellow"><i class="fa-solid fa-hospital-user"></i></div>
+                  <div class="stat-number">245+</div>
+                  <div class="stat-label">صيدلية شريكة بالمبادرة</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         9. HEALTH TIPS & PHARMACY AWARENESS
+         ========================================================================= -->
+    <section class="health-tips-section">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="sub-heading">التوعية الدوائية</span>
+          <h2 class="main-heading">نصائح وإرشادات طبية من صيادلة ترياق</h2>
+          <p class="section-desc">معلومات طبية موثوقة لحمايتك وضمان الاستخدام الآمن والفعال للأدوية.</p>
+        </div>
+
+        <div class="tips-grid">
+          <!-- Tip 1 -->
+          <article class="tip-card">
+            <div class="tip-badge">سلامة الأدوية</div>
+            <h3 class="tip-title">كيف تحفظ الأدوية في درجات الحرارة المناسبة في الصيف؟</h3>
+            <p class="tip-desc">درجات الحرارة المرتفعة قد تفسد المواد الفعالة في الأدوية وخاصة المضادات الحيوية وقطرات العين والشراب. إليك الشروط الصحيحة لتخزينها.</p>
+            <div class="tip-meta">
+              <span><i class="fa-solid fa-user-nurse me-1"></i> د. سارة أحمد</span>
+              <span><i class="fa-solid fa-clock me-1"></i> قراءة 3 دقائق</span>
+            </div>
+          </article>
+
+          <!-- Tip 2 -->
+          <article class="tip-card">
+            <div class="tip-badge">المضادات الحيوية</div>
+            <h3 class="tip-title">مخاطر إيقاف كورس المضاد الحيوي بمجرد الشعور بالتحسن</h3>
+            <p class="tip-desc">إيقاف الجرعات قبل اكتمال الكورس العلاجي يؤدي لتطور بكتيريا مقاومة للمضادات الحيوية، مما يجعل علاج العدوى في المستقبل أكثر صعوبة وتعقيداً.</p>
+            <div class="tip-meta">
+              <span><i class="fa-solid fa-user-nurse me-1"></i> د. محمد محمود</span>
+              <span><i class="fa-solid fa-clock me-1"></i> قراءة 4 دقائق</span>
+            </div>
+          </article>
+
+          <!-- Tip 3 -->
+          <article class="tip-card">
+            <div class="tip-badge">التداخلات الدوائية</div>
+            <h3 class="tip-title">تداخلات شائعة وخطيرة بين المسكنات وأدوية الضغط والسيولة</h3>
+            <p class="tip-desc">تناول بعض المسكنات مثل الإيبوبروفين والنابروكسين قد يرفع ضغط الدم ويقلل فاعلية أدوية الضغط. استشر الصيدلي دائماً للبديل الآمن.</p>
+            <div class="tip-meta">
+              <span><i class="fa-solid fa-user-nurse me-1"></i> د. كريم فؤاد</span>
+              <span><i class="fa-solid fa-clock me-1"></i> قراءة 5 دقائق</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         10. PLATFORM TRUST METRICS
+         ========================================================================= -->
+    <section class="platform-stats-section">
+      <div class="container">
+        <div class="stats-counter-bar">
+          <div class="counter-box">
+            <div class="counter-val">50,000+</div>
+            <div class="counter-title">مستخدم نشط شهرياً</div>
+          </div>
+          <div class="counter-box">
+            <div class="counter-val">2,500+</div>
+            <div class="counter-title">دواء مسجل بالأسعار</div>
+          </div>
+          <div class="counter-box">
+            <div class="counter-val">15 دقيقة</div>
+            <div class="counter-title">متوسط وقت تجهيز الحجز</div>
+          </div>
+          <div class="counter-box">
+            <div class="counter-val">99.8%</div>
+            <div class="counter-title">دقة مطابقة وتوفر الأدوية</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         11. TESTIMONIALS & USER REVIEWS
+         ========================================================================= -->
+    <section class="testimonials-section">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="sub-heading">ثقة عملائنا</span>
+          <h2 class="main-heading">ماذا يقول مستخدمو وصيادلة ترياق؟</h2>
+          <p class="section-desc">تجارب حقيقية لمرضى وصيادلة اعتمدوا على ترياق في توفير الرعاية الدوائية.</p>
+        </div>
+
+        <div class="testimonials-grid">
+          <!-- Review 1 -->
+          <div class="review-card">
+            <div class="review-stars">
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+            </div>
+            <p class="review-quote">"كنت بدور على دواء ناقص لوالدتي في 7 صيدليات في المنطقة وملقيتوش، عن طريق محرك البدائل في ترياق لقيت البديل بنفس المادة الفعالة في صيدلية قريبة وحجزته في دقيقة واستلمته فوراً. وفر عليا تعب كبير!"</p>
+            <div class="review-author">
+              <div class="author-avatar"><i class="fa-solid fa-user"></i></div>
+              <div class="author-info">
+                <strong>أحمد سمير</strong>
+                <small>مستخدم من القاهرة</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Review 2 -->
+          <div class="review-card">
+            <div class="review-stars">
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+            </div>
+            <p class="review-quote">"كصيدلي، منصة ترياق ساعدتنا في تنظيم طلبات المرضى وتقليل الهدر في الأدوية، مبادرة التبرع واستبدال الأدوية وفرت علاج حقيقي لحالات إنسانية كانت محتاجة جداً. منصة ممتازة وتستحق الدعم."</p>
+            <div class="review-author">
+              <div class="author-avatar"><i class="fa-solid fa-user-doctor"></i></div>
+              <div class="author-info">
+                <strong>د. عمر الهواري</strong>
+                <small>صيدلية الشفاء - مدينة نصر</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Review 3 -->
+          <div class="review-card">
+            <div class="review-stars">
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+            </div>
+            <p class="review-quote">"خاصية رفع الروشتة ممتازة جداً ومريحة لأي حد مبيعرفش يقرأ خط الدكاترة، صوّرت الروشتة وفي أقل من 10 دقائق الصيدلية جهزتلي الأصناف والبدائل ووصلت للبيت. شكراً ترياق!"</p>
+            <div class="review-author">
+              <div class="author-avatar"><i class="fa-solid fa-user"></i></div>
+              <div class="author-info">
+                <strong>منى عبد الرحمن</strong>
+                <small>مستخدمة من الجيزة</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         12. FAQ ACCORDION
+         ========================================================================= -->
+    <section class="faq-section">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="sub-heading">إجابات واضحة</span>
+          <h2 class="main-heading">الأسئلة الأكثر شيوعاً</h2>
+          <p class="section-desc">كل ما تود معرفته عن كيفية استخدام منصة ترياق والاستفادة من خدماتها.</p>
+        </div>
+
+        <div class="faq-container accordion" id="teryakFaqAccordion">
+          <!-- Question 1 -->
+          <div class="accordion-item faq-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button class="accordion-button faq-btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <i class="fa-solid fa-circle-question me-2 text-success"></i> كيف أضمن توفر الدواء عند ذهابي للصيدلية؟
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#teryakFaqAccordion">
+              <div class="accordion-body faq-body">
+                عند حجز الدواء عبر ترياق، يتم إرسال إشعار فوري بنظام الصيدلية لحجز العبوة باسمك ورقم هاتفك، وتتلقى رسالة تأكيد الحجز برقم الطلب لضمان عدم بيعها قبل وصولك.
+              </div>
+            </div>
+          </div>
+
+          <!-- Question 2 -->
+          <div class="accordion-item faq-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button collapsed faq-btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                <i class="fa-solid fa-circle-question me-2 text-success"></i> هل البدائل المقترحة مطابقة وآمنة طبياً؟
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#teryakFaqAccordion">
+              <div class="accordion-body faq-body">
+                نعم تماماً. محرك البدائل في ترياق يعتمد على المطابقة الحيوية (Bioequivalence) الدقيقة لنفس المادة الفعالة والتركيز والشكل الصيدلاني وفقاً لهيئة الدواء المصرية، مع مراجعة إضافية من الصيدلي المسؤول.
+              </div>
+            </div>
+          </div>
+
+          <!-- Question 3 -->
+          <div class="accordion-item faq-item">
+            <h2 class="accordion-header" id="headingThree">
+              <button class="accordion-button collapsed faq-btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                <i class="fa-solid fa-circle-question me-2 text-success"></i> كيف تتم عملية التبرع واستبدال الأدوية؟
+              </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#teryakFaqAccordion">
+              <div class="accordion-body faq-body">
+                يمكنك تسجيل بيانات الأدوية وتاريخ صلاحيتها عبر صفحة التبرع، ثم تسليمها لأقرب صيدلية شريكة لفحصها واعتمادها، وتحصل فوراً على رصيد خصم يصل إلى 40% للاستفادة به في مشترياتك القادمة.
+              </div>
+            </div>
+          </div>
+
+          <!-- Question 4 -->
+          <div class="accordion-item faq-item">
+            <h2 class="accordion-header" id="headingFour">
+              <button class="accordion-button collapsed faq-btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                <i class="fa-solid fa-circle-question me-2 text-success"></i> هل تتوفر خدمة توصيل الأدوية للمنازل؟
+              </button>
+            </h2>
+            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#teryakFaqAccordion">
+              <div class="accordion-body faq-body">
+                نعم، توفر معظم الصيدليات الشريكة في ترياق خدمة التوصيل المنزلي السريع، ويمكنك اختيار خيار التوصيل أثناء تأكيد حجز السلة مع إدخال عنوانك بالتفصيل.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         13. PHARMACIST PARTNER CTA BANNER
+         ========================================================================= -->
+    <section class="partner-cta-section">
+      <div class="container">
+        <div class="partner-card">
+          <div class="partner-content">
+            <span class="partner-badge"><i class="fa-solid fa-user-doctor"></i> انضم لشبكتنا</span>
+            <h2 class="partner-title">هل أنت صيدلي؟ ضاعف مبيعاتك وخدماتك مع ترياق</h2>
+            <p class="partner-desc">انضم إلى أكثر من 250 صيدلية شريكة واستقبل طلبات الحجز من آلاف المرضى في محيطك الجغرافي بكل سهولة.</p>
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+              <a href="pages/public/register.html" class="btn-partner-join">سجل صيدليتك الآن مجاناً</a>
+              <a href="pages/public/about.html" class="btn-partner-learn">تعرف على المزايا</a>
+            </div>
+          </div>
+          <div class="partner-icon-visual">
+            <i class="fa-solid fa-hospital-user"></i>
           </div>
         </div>
       </div>
     </section>
   </main>
+
+  <!-- =========================================================================
+       MODALS: PRESCRIPTION UPLOAD MODAL
+       ========================================================================= -->
+  <div class="modal fade" id="prescriptionModal" tabindex="-1" aria-labelledby="prescriptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content teryak-rx-modal">
+        <div class="modal-header border-bottom pb-3">
+          <div class="d-flex align-items-center gap-2">
+            <div class="rx-modal-icon"><i class="fa-solid fa-camera"></i></div>
+            <div>
+              <h5 class="modal-title font-bold m-0" id="prescriptionModalLabel">رفع روشتة طبية سريعة</h5>
+              <small class="text-muted">مراجعة وتجهيز فوري عبر صيدلي معتمد</small>
+            </div>
+          </div>
+          <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+        </div>
+        <div class="modal-body p-4">
+          <form id="rxUploadForm">
+            <!-- Upload Box -->
+            <div class="upload-dropzone mb-3" id="rxDropzone">
+              <input type="file" id="rxFileInput" accept="image/*,.pdf" class="d-none">
+              <div class="dropzone-inner" id="rxDropzoneInner">
+                <i class="fa-solid fa-cloud-arrow-up dropzone-icon"></i>
+                <h6 class="font-bold mb-1">انقر لاختيار صورة الروشتة أو اسحبها هنا</h6>
+                <small class="text-muted">يدعم صيغ JPG، PNG، أو PDF (بحد أقصى 10 ميجابايت)</small>
+              </div>
+              <div class="file-preview-wrap hide" id="rxFilePreview">
+                <img id="rxPreviewImg" src="" alt="معاينة الروشتة">
+                <button type="button" class="btn-remove-file" id="rxRemoveFileBtn" title="إزالة الملف"><i class="fa-solid fa-xmark"></i></button>
+              </div>
+            </div>
+
+            <!-- Form Fields -->
+            <div class="mb-3">
+              <label for="rxPatientName" class="form-label font-bold">اسم المريض / صاحب الطلب *</label>
+              <input type="text" class="form-control" id="rxPatientName" placeholder="اكتب اسمك بالكامل..." required>
+            </div>
+
+            <div class="mb-3">
+              <label for="rxPatientPhone" class="form-label font-bold">رقم الهاتف للتواصل *</label>
+              <input type="tel" class="form-control" id="rxPatientPhone" placeholder="01xxxxxxxxx" required dir="ltr">
+            </div>
+
+            <div class="mb-3">
+              <label for="rxPreferredPharmacy" class="form-label font-bold">الصيدلية المفضلة (اختياري)</label>
+              <select class="form-select" id="rxPreferredPharmacy">
+                <option value="">أقرب صيدلية لموقعي تلقائياً</option>
+                <option value="صيدلية الشفاء">صيدلية الشفاء (مدينة نصر)</option>
+                <option value="صيدلية الأمل">صيدلية الأمل (الدقي)</option>
+                <option value="صيدلية الرعاية">صيدلية الرعاية (المعادي)</option>
+                <option value="صيدلية النهضة">صيدلية النهضة (مصر الجديدة)</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="rxNotes" class="form-label font-bold">ملاحظات إضافية أو بدائل مقبولة</label>
+              <textarea class="form-control" id="rxNotes" rows="2" placeholder="هل لديك حساسية من أدوية معينة؟ هل تفضل البدائل الأقل سعراً؟"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100 font-bold py-2 mt-2" id="submitRxBtn">
+              <i class="fa-solid fa-paper-plane me-1"></i> إرسال الروشتة للمراجعة
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Reusable App Footer -->
   <app-footer></app-footer>

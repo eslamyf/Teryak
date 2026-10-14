@@ -311,7 +311,7 @@ const bulkImportInventory = async (req, res, next) => {
       }
       if (image) {
         try {
-          const imageUrl = new URL(image, 'http://localhost');
+          const imageUrl = new URL(encodeURI(image), 'http://localhost');
           if (!['http:', 'https:'].includes(imageUrl.protocol)) throw new Error('invalid protocol');
         } catch {
           errors.push(`الصف #${i + 1}: رابط الصورة غير صالح؛ استخدم رابط HTTP أو HTTPS`);
@@ -359,6 +359,7 @@ const bulkImportInventory = async (req, res, next) => {
           if (item.activeIngredient !== undefined) med.activeIngredient = item.activeIngredient;
           if (item.dosageForm !== undefined) med.dosageForm = item.dosageForm;
           if (image) med.image = image;
+          if (productType && med.productType !== productType) med.productType = productType;
           await med.save();
         }
         targetMedId = med._id;
@@ -371,14 +372,21 @@ const bulkImportInventory = async (req, res, next) => {
 
       const qty = Number(item.quantity) || 0;
       const price = item.customPrice !== undefined ? Number(item.customPrice) : (item.price ? Number(item.price) : undefined);
+      const costPrice = item.costPrice !== undefined && item.costPrice !== null && !isNaN(Number(item.costPrice))
+        ? Number(item.costPrice)
+        : undefined;
+      const shelfLocation = (item.shelfLocation || item.shelf || '').trim();
       const expiry = item.expiryDate ? new Date(item.expiryDate) : new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
       const batch = item.batchNumber || 'BATCH-' + Math.floor(1000 + Math.random() * 9000);
 
       if (existing) {
         existing.quantity += qty;
         if (price !== undefined) existing.customPrice = price;
+        if (costPrice !== undefined) existing.costPrice = costPrice;
+        if (shelfLocation) existing.shelfLocation = shelfLocation;
         if (item.expiryDate) existing.expiryDate = expiry;
         if (item.batchNumber) existing.batchNumber = batch;
+        existing.isAvailable = existing.quantity > 0;
         await existing.save();
         updatedCount++;
       } else {
@@ -387,9 +395,12 @@ const bulkImportInventory = async (req, res, next) => {
           medicineId: targetMedId,
           quantity: qty,
           customPrice: price,
+          costPrice: costPrice,
+          shelfLocation: shelfLocation,
           expiryDate: expiry,
           batchNumber: batch,
-          lowStockThreshold: Number(item.lowStockThreshold) || 5
+          lowStockThreshold: Number(item.lowStockThreshold) || 5,
+          isAvailable: qty > 0,
         });
         addedCount++;
       }

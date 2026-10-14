@@ -422,7 +422,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div class="card">
           <div class="img-box">
             <a href="${detailUrl}">
-              ${safeImage ? `<img src="${safeImage}" class="card-img-top" alt="${safeName}" loading="lazy" onerror="this.remove()">` : '<span class="medicine-image-placeholder" aria-label="لا توجد صورة للمنتج"><i class="fa-solid fa-box-open"></i></span>'}
+              ${safeImage ? `<img src="${safeImage}" class="card-img-top" alt="${safeName}" loading="lazy" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\\'medicine-image-placeholder\\' aria-label=\\'لا توجد صورة للمنتج\\'><i class=\\'fa-solid fa-box-open\\'></i></span>';">` : '<span class="medicine-image-placeholder" aria-label="لا توجد صورة للمنتج"><i class="fa-solid fa-box-open"></i></span>'}
             </a>
             <span class="rate"><i class="fa-solid fa-star"></i> ${med.rating}</span>
             ${statusBadge}

@@ -318,15 +318,31 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
 
+    let parsedAdminMeds = [];
+
     const dlTemplateBtn = document.getElementById('adminDownloadTemplateBtn');
     if (dlTemplateBtn) {
       dlTemplateBtn.addEventListener('click', () => {
-        const templateContent = 'الاسم العربي,الاسم الإنجليزي,الفئة,السعر\nبانادول إكسترا أقراص,Panadol Extra,مسكنات,45.00\nأوجمنتين 1 جم أقراص,Augmentin 1g,مضادات حيوية,110.00\nأوميجا 3 بلس كبسول,Omega 3 Plus,مكملات غذائية,120.00';
-        const blob = new Blob(['\uFEFF' + templateContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'قالب_كتالوج_أدوية_ترياق.csv';
-        link.click();
+        if (typeof XLSX !== 'undefined') {
+          const data = [
+            ['اسم الدواء / المنتج', 'الاسم الإنجليزي', 'نوع المنتج', 'الفئة', 'المادة الفعالة', 'السعر', 'رابط الصورة'],
+            ['بانادول إكسترا أقراص', 'Panadol Extra', 'medicine', 'مسكنات', 'باراسيتامول + كافيين', 45.00, 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80'],
+            ['أوجمنتين 1 جم أقراص', 'Augmentin 1g', 'medicine', 'مضادات حيوية', 'أموكسيسيلين + كلافولانات', 110.00, 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=600&auto=format&fit=crop&q=80'],
+            ['سيروم سيرافي بحمض الهيالورونيك', 'CeraVe Hyaluronic Acid Serum', 'product', 'عناية بالبشرة', 'حمض الهيالورونيك + سيراميد', 380.00, 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=600&auto=format&fit=crop&q=80'],
+            ['واقي شمس فيشي SPF50+', 'Vichy Capital Soleil SPF50+', 'product', 'واقي شمس وحماية', 'فلاتر حماية واسعة المدى', 420.00, 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=600&auto=format&fit=crop&q=80']
+          ];
+          const ws = XLSX.utils.aoa_to_sheet(data);
+          const wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, 'الكتالوج');
+          XLSX.writeFile(wb, 'قالب_كتالوج_أدوية_ومنتجات_ترياق.xlsx');
+        } else {
+          const templateContent = 'اسم الدواء / المنتج,الاسم الإنجليزي,نوع المنتج,الفئة,المادة الفعالة,السعر,رابط الصورة\nبانادول إكسترا أقراص,Panadol Extra,medicine,مسكنات,باراسيتامول + كافيين,45.00,https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop&q=80\nسيروم سيرافي بحمض الهيالورونيك,CeraVe Hyaluronic Serum,product,عناية بالبشرة,حمض الهيالورونيك,380.00,https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=600&auto=format&fit=crop&q=80';
+          const blob = new Blob(['\uFEFF' + templateContent], { type: 'text/csv;charset=utf-8;' });
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = 'قالب_كتالوج_أدوية_ترياق.csv';
+          link.click();
+        }
       });
     }
 
@@ -337,21 +353,35 @@ document.addEventListener('DOMContentLoaded', async () => {
     const adminTextInput = document.getElementById('adminCsvTextInput');
     const adminExecBtn = document.getElementById('adminExecuteImportBtn');
 
+    function detectAdminColumns(headers) {
+      const map = { nameAr: 0, nameEn: 1, productType: -1, category: 2, active: -1, price: 3, image: -1 };
+      headers.forEach((h, idx) => {
+        const c = String(h || '').toLowerCase().trim();
+        if (c.includes('إنجليز') || c.includes('english') || c === 'nameen') map.nameEn = idx;
+        else if (c.includes('اسم') || c.includes('دواء') || (c.includes('منتج') && !c.includes('نوع')) || c === 'name' || c === 'namear') map.nameAr = idx;
+        else if (c.includes('نوع') || c.includes('type')) map.productType = idx;
+        else if (c.includes('فئة') || c.includes('قسم') || c.includes('تصنيف') || c.includes('category')) map.category = idx;
+        else if (c.includes('مادة') || c.includes('فعالة') || c.includes('active') || c.includes('ingredient')) map.active = idx;
+        else if (c.includes('سعر') || c.includes('price')) map.price = idx;
+        else if (c.includes('صورة') || c.includes('صوره') || c.includes('رابط') || c.includes('image') || c.includes('img') || c.includes('url')) map.image = idx;
+      });
+      return map;
+    }
+
     function processAdminFile(file) {
       if (!file) return;
-      const maxSize = 5 * 1024 * 1024;
+      const maxSize = 8 * 1024 * 1024;
       if (file.size > maxSize) {
-        if (window.Toast) window.Toast.error('حجم الملف يتجاوز 5 ميجابايت', 'ملف كبير جداً');
+        if (window.Toast) window.Toast.error('حجم الملف يتجاوز 8 ميجابايت', 'ملف كبير جداً');
         return;
       }
-      // Show file name
       if (adminDropZoneFileName) {
-        adminDropZoneFileName.textContent = `✓ تم اختيار: ${file.name}`;
+        adminDropZoneFileName.textContent = `✓ تم اختيار: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
         adminDropZoneFileName.style.display = 'block';
       }
       if (adminDropZone) {
-        adminDropZone.style.borderColor = '#0d6efd';
-        adminDropZone.style.background = '#eff6ff';
+        adminDropZone.style.borderColor = '#198754';
+        adminDropZone.style.background = '#f0fff4';
       }
 
       const ext = file.name.split('.').pop().toLowerCase();
@@ -371,74 +401,81 @@ document.addEventListener('DOMContentLoaded', async () => {
             const sheet = workbook.Sheets[sheetName];
             const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
 
+            if (!rows || rows.length === 0) return;
             const firstRow = rows[0] || [];
             const isHeader = firstRow.some(c => String(c).includes('اسم') || String(c).toLowerCase().includes('name'));
+            const colMap = isHeader ? detectAdminColumns(firstRow) : { nameAr: 0, nameEn: 1, productType: -1, category: 2, active: -1, price: 3, image: -1 };
             const startIdx = isHeader ? 1 : 0;
 
-            const csvLines = [];
-            if (isHeader) csvLines.push(firstRow.join(','));
-            else csvLines.push('الاسم العربي,الاسم الإنجليزي,الفئة,السعر');
+            parsedAdminMeds = [];
+            const previewLines = [];
 
             for (let i = startIdx; i < rows.length; i++) {
               const row = rows[i];
-              if (!String(row[0] || '').trim()) continue;
-              csvLines.push(row.map(c => String(c || '')).join(','));
+              const nameAr = String(row[colMap.nameAr] || '').trim();
+              if (!nameAr) continue;
+
+              const nameEn = colMap.nameEn !== -1 ? String(row[colMap.nameEn] || '').trim() : '';
+              const cat = colMap.category !== -1 ? String(row[colMap.category] || '').trim() : 'أدوية عامة';
+              const rawType = colMap.productType !== -1 ? String(row[colMap.productType] || '').trim().toLowerCase() : '';
+              const productType = rawType.includes('product') || rawType.includes('منتج') || cat.includes('تجميل') || cat.includes('عناية') ? 'product' : 'medicine';
+              const active = colMap.active !== -1 ? String(row[colMap.active] || '').trim() : '';
+              const price = Number(String(row[colMap.price] || '').replace(/[^\d.]/g, '')) || 35.0;
+              const image = colMap.image !== -1 ? String(row[colMap.image] || '').trim() : '';
+
+              parsedAdminMeds.push({
+                nameAr,
+                nameEn: nameEn || nameAr,
+                productType,
+                category: cat,
+                activeIngredient: active,
+                price,
+                image
+              });
+
+              previewLines.push(`${nameAr},${nameEn || nameAr},${cat},${price}${image ? ',' + image : ''}`);
             }
 
-            const csvText = csvLines.join('\n');
-            if (adminTextInput) adminTextInput.value = csvText;
-
-            const dataRows = csvLines.length - 1;
-            if (window.Toast) window.Toast.success(`تم تحليل ملف Excel: ${dataRows} دواء`, 'تم قراءة Excel بنجاح');
+            if (adminTextInput) adminTextInput.value = previewLines.join('\n');
+            if (window.Toast) window.Toast.success(`تم استخراج ${parsedAdminMeds.length} صنف من شيت Excel بنجاح`, 'تم تحليل الملف');
           } catch (err) {
             console.error('Admin Excel parse error:', err);
-            if (window.Toast) window.Toast.error('تعذر قراءة ملف Excel. تأكد من أن الملف غير محمي.', 'خطأ في القراءة');
+            if (window.Toast) window.Toast.error('تعذر قراءة ملف Excel: ' + err.message, 'خطأ في القراءة');
           }
-        };
-        reader.onerror = () => {
-          if (window.Toast) window.Toast.error('تعذر قراءة الملف', 'خطأ');
         };
         reader.readAsArrayBuffer(file);
       } else {
-        // CSV / TXT
+        // CSV
         const reader = new FileReader();
         reader.onload = (event) => {
           if (adminTextInput) adminTextInput.value = event.target.result;
+          parsedAdminMeds = [];
           if (window.Toast) {
-            const lines = event.target.result.split(/\r?\n/).filter(l => l.trim() && !l.includes('الاسم') && !l.toLowerCase().includes('name'));
-            window.Toast.success(`تم تحميل الملف: حوالي ${lines.length} صف`, 'تم قراءة الملف');
+            const lines = event.target.result.split(/\r?\n/).filter(l => l.trim() && !l.includes('اسم') && !l.toLowerCase().includes('name'));
+            window.Toast.success(`تم قراءة الملف: حوالي ${lines.length} صنف`, 'تم التحميل');
           }
-        };
-        reader.onerror = () => {
-          if (window.Toast) window.Toast.error('تعذر قراءة الملف، يرجى المحاولة مرة أخرى', 'خطأ في القراءة');
         };
         reader.readAsText(file, 'UTF-8');
       }
     }
 
-
     if (adminFileInput && adminDropZone) {
-      // Click on dropzone → open file picker
       adminDropZone.addEventListener('click', () => adminFileInput.click());
-
       if (adminDropZoneBrowse) {
         adminDropZoneBrowse.addEventListener('click', (e) => {
           e.stopPropagation();
           adminFileInput.click();
         });
       }
-
       adminFileInput.addEventListener('change', (e) => {
         processAdminFile(e.target.files[0]);
       });
-
       adminDropZone.addEventListener('dragover', (e) => {
         e.preventDefault();
         e.stopPropagation();
         adminDropZone.style.background = '#dbeaff';
         adminDropZone.style.borderColor = '#0d6efd';
       });
-
       adminDropZone.addEventListener('dragleave', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -447,7 +484,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           adminDropZone.style.borderColor = '#198754';
         }
       });
-
       adminDropZone.addEventListener('drop', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -458,35 +494,42 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (adminExecBtn && adminTextInput) {
       adminExecBtn.addEventListener('click', async () => {
-        const raw = adminTextInput.value.trim();
-        if (!raw) {
-          if (window.Toast) window.Toast.warning('يرجى لصق بيانات CSV أو اختيار ملف', 'لا توجد بيانات');
-          return;
-        }
+        let medsToImport = [];
 
-        const lines = raw.split(/\r?\n/).filter(l => l.trim() !== '');
-        const startIndex = (lines[0] && (lines[0].includes('الاسم') || lines[0].toLowerCase().includes('name'))) ? 1 : 0;
-        const medsToImport = [];
-
-        for (let i = startIndex; i < lines.length; i++) {
-          const p = lines[i].split(',').map(x => x.trim());
-          if (p[0]) {
-            medsToImport.push({
-              nameAr: p[0],
-              nameEn: p[1] || p[0],
-              category: p[2] || 'أدوية عامة',
-              price: Number(p[3]) || 35.0,
-            });
+        if (parsedAdminMeds.length > 0) {
+          medsToImport = parsedAdminMeds;
+        } else {
+          const raw = adminTextInput.value.trim();
+          if (!raw) {
+            if (window.Toast) window.Toast.warning('يرجى اختيار ملف أو لصق بيانات الكتالوج', 'لا توجد بيانات');
+            return;
+          }
+          const lines = raw.split(/\r?\n/).filter(l => l.trim() !== '');
+          const startIndex = (lines[0] && (lines[0].includes('اسم') || lines[0].toLowerCase().includes('name'))) ? 1 : 0;
+          for (let i = startIndex; i < lines.length; i++) {
+            const p = lines[i].split(',').map(x => x.trim());
+            if (p[0]) {
+              const cat = p[2] || 'أدوية عامة';
+              const isProd = cat.includes('تجميل') || cat.includes('عناية') || cat.includes('بشرة') || cat.includes('شعر');
+              medsToImport.push({
+                nameAr: p[0],
+                nameEn: p[1] || p[0],
+                category: cat,
+                productType: isProd ? 'product' : 'medicine',
+                price: Number(p[3]) || 35.0,
+                image: p[4] || ''
+              });
+            }
           }
         }
 
         if (medsToImport.length === 0) {
-          if (window.Toast) window.Toast.warning('لم يتم العثور على أدوية صالحة بالملف', 'خطأ في التنسيق');
+          if (window.Toast) window.Toast.warning('لم يتم العثور على أدوية أو منتجات صالحة', 'خطأ في التنسيق');
           return;
         }
 
         adminExecBtn.disabled = true;
-        adminExecBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> جاري استيراد الأدوية...';
+        adminExecBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> جاري استيراد المنتجات...';
 
         try {
           if (window.API && window.API.medicines) {
@@ -501,16 +544,19 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (existing) {
             existing.price = item.price;
             existing.category = item.category;
+            if (item.image) existing.image = item.image;
+            if (item.productType) existing.productType = item.productType;
           } else {
             currentMedicines.unshift({
               _id: `med_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
               nameAr: item.nameAr,
               nameEn: item.nameEn,
               category: item.category,
+              productType: item.productType || 'medicine',
               price: item.price,
               status: 'active',
               pharmaciesCount: 5,
-              image: '../../assets/images/parst.jpg',
+              image: item.image || '../../assets/images/tablets.jpg',
             });
           }
         });
@@ -523,7 +569,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (modalInstance) modalInstance.hide();
 
         if (window.Toast) {
-          window.Toast.success(`تم استيراد ${medsToImport.length} دواء إلى الكتالوج بنجاح!`, 'تم الاستيراد');
+          window.Toast.success(`تم استيراد ${medsToImport.length} صنف إلى الكتالوج بنجاح!`, 'تم الاستيراد');
         }
 
         adminExecBtn.disabled = false;

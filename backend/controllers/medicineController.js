@@ -345,22 +345,28 @@ const bulkImportMedicines = async (req, res, next) => {
         if (item.dosageForm) existing.dosageForm = item.dosageForm;
         if (item.concentration) existing.concentration = item.concentration;
         if (item.description) existing.description = item.description;
-        if (item.image) existing.image = item.image;
+        if (item.image || item.imageUrl) existing.image = (item.image || item.imageUrl).trim();
+        if (item.productType) existing.productType = item.productType;
         await existing.save();
         updatedCount++;
       } else {
+        const prodType = item.productType || (
+          (item.category && (item.category.includes('تجميل') || item.category.includes('عناية') || item.category.includes('بشرة') || item.category.includes('شعر')))
+            ? 'product' : 'medicine'
+        );
         await Medicine.create({
           nameAr: nameAr,
           nameEn: (item.nameEn || nameAr).trim(),
-          activeIngredient: item.activeIngredient || 'مادة فعالة عامة',
-          category: item.category || 'أدوية عامة',
-          dosageForm: item.dosageForm || 'أقراص',
+          activeIngredient: item.activeIngredient || (prodType === 'product' ? 'مركبات عناية وترطيب' : 'مادة فعالة عامة'),
+          productType: prodType,
+          category: item.category || (prodType === 'product' ? 'عناية شخصية' : 'أدوية عامة'),
+          dosageForm: item.dosageForm || (prodType === 'product' ? 'عبوة' : 'أقراص'),
           concentration: item.concentration || '',
           description: item.description || '',
           usageInstructions: item.usageInstructions || '',
           price: Number(item.price) || 25,
           requiresPrescription: Boolean(item.requiresPrescription),
-          image: item.image || '',
+          image: (item.image || item.imageUrl || '').trim(),
           status: 'active'
         });
         insertedCount++;
