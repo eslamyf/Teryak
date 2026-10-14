@@ -135,6 +135,10 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke
   color: var(--text-main);
   position: relative;
   cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1;
   transition: border-color var(--transition-fast), color var(--transition-fast);
 }
 .icon-btn:hover {
@@ -142,8 +146,13 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke
   color: var(--primary-color);
 }
 .icon-btn svg {
-  width: 20px;
-  height: 20px;
+  width: 20px !important;
+  height: 20px !important;
+  stroke: currentColor;
+}
+.icon-btn i {
+  font-size: 16px;
+  line-height: 1;
 }
 /* حظر تام لتداخل أيقونات الشمس والقمر */
 .sun {

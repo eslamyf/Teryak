@@ -12,9 +12,19 @@ class AppNavbar extends HTMLElement {
     this.updateCartCount();
 
     // Listen to global platform events
-    window.addEventListener('teryak:auth-change', () => this.updateAuthState());
-    window.addEventListener('teryak:cart-change', () => this.updateCartCount());
-    window.addEventListener('teryak:theme-change', (e) => this.applyTheme(e.detail?.theme));
+    this._authListener = () => this.updateAuthState();
+    this._cartListener = () => this.updateCartCount();
+    this._themeListener = (e) => this.applyTheme(e.detail?.theme, false);
+
+    window.addEventListener('teryak:auth-change', this._authListener);
+    window.addEventListener('teryak:cart-change', this._cartListener);
+    window.addEventListener('teryak:theme-change', this._themeListener);
+  }
+
+  disconnectedCallback() {
+    if (this._authListener) window.removeEventListener('teryak:auth-change', this._authListener);
+    if (this._cartListener) window.removeEventListener('teryak:cart-change', this._cartListener);
+    if (this._themeListener) window.removeEventListener('teryak:theme-change', this._themeListener);
   }
 
   getBasePath() {
@@ -65,13 +75,15 @@ class AppNavbar extends HTMLElement {
     const base = this.getBasePath();
     const current = this.getCurrentPage();
 
+    const isHome = current === 'index.html' || current === '' || current === '/';
     const isMedicines = current === 'medicines.html' || current === 'medicine.html' || current === 'medicine-detail.html';
 
-    const homeUrl = base + 'index.html';
+    const homeUrl = isHome ? 'index.html' : base + 'index.html';
     const medicinesUrl = base + 'pages/public/medicines.html';
     const pharmacistUrl = base + 'pages/public/register.html';
-    const rxUrl = homeUrl + '#rx';
-    const faqUrl = homeUrl + '#faq';
+    const loginUrl = base + 'pages/public/login.html';
+    const rxUrl = isHome ? '#rx' : homeUrl + '#rx';
+    const faqUrl = isHome ? '#faq' : homeUrl + '#faq';
     const logoImg = base + 'assets/images/logo.png';
 
     this.innerHTML = `
@@ -103,7 +115,7 @@ class AppNavbar extends HTMLElement {
               </div>
 
               <!-- Dark/Light Theme Toggle Button -->
-              <button class="icon-btn" id="themeToggleBtn" type="button" aria-label="تبديل الوضع الفاتح والغامق" title="تبديل الوضع">
+              <button class="icon-btn" id="theme" type="button" aria-label="تبديل الوضع الفاتح والغامق" title="تبديل الوضع">
                 <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
                 </svg>
@@ -115,7 +127,7 @@ class AppNavbar extends HTMLElement {
 
               <!-- Login / Auth State Button -->
               <div id="navAuthContainer">
-                <a href="#" class="login" id="navLoginBtn">دخول</a>
+                <a href="${loginUrl}" class="login" id="navLoginBtn">دخول</a>
               </div>
             </div>
           </nav>
@@ -125,11 +137,12 @@ class AppNavbar extends HTMLElement {
   }
 
   bindEvents() {
-    const themeToggleBtn = this.querySelector('#themeToggleBtn');
+    const themeBtn = this.querySelector('#theme');
 
     // Theme Toggle Listener
-    if (themeToggleBtn) {
-      themeToggleBtn.addEventListener('click', (e) => {
+    if (themeBtn && !themeBtn.dataset.bound) {
+      themeBtn.dataset.bound = 'true';
+      themeBtn.addEventListener('click', (e) => {
         e.preventDefault();
         const isCurrentlyDark = document.body.classList.contains('dark-theme') || document.documentElement.getAttribute('data-theme') === 'dark';
         const newTheme = isCurrentlyDark ? 'light' : 'dark';
@@ -166,8 +179,9 @@ class AppNavbar extends HTMLElement {
         </a>
       `;
     } else {
+      const loginUrl = base + 'pages/public/login.html';
       container.innerHTML = `
-        <a href="#" class="login" id="navLoginBtn">دخول</a>
+        <a href="${loginUrl}" class="login" id="navLoginBtn">دخول</a>
       `;
 
       const loginBtn = container.querySelector('#navLoginBtn');
@@ -190,7 +204,7 @@ class AppNavbar extends HTMLElement {
 
   updateCartCount() {
     const count = window.Cart ? window.Cart.getCount() : 0;
-    const badge = this.querySelector('#count');
+    const badge = this.querySelector('.cart-counter-badge');
     if (badge) {
       badge.textContent = count;
       badge.style.display = count > 0 ? 'flex' : 'none';
@@ -198,4 +212,6 @@ class AppNavbar extends HTMLElement {
   }
 }
 
-customElements.define('app-navbar', AppNavbar);
+if (!customElements.get('app-navbar')) {
+  customElements.define('app-navbar', AppNavbar);
+}

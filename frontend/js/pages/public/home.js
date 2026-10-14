@@ -10,31 +10,17 @@
 
 document.addEventListener('DOMContentLoaded', async () => {
   // ---------------------------------------------------------
-  // 1. Theme Switcher (Synchronized with localStorage & System)
+  // 1. Theme Switcher (Delegated to unified <app-navbar> or fallback)
   // ---------------------------------------------------------
   const themeBtn = document.getElementById('theme');
-  const applyTheme = (targetTheme) => {
-    const isDark = targetTheme === 'dark';
-    if (isDark) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      document.body.classList.add('dark-theme');
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-      document.body.classList.remove('dark-theme');
-    }
-    try {
-      localStorage.setItem('teryak_theme', targetTheme);
-      localStorage.setItem('theme', targetTheme);
-    } catch (e) {}
-
-    window.dispatchEvent(new CustomEvent('teryak:theme-change', { detail: { theme: targetTheme } }));
-  };
-
-  if (themeBtn) {
+  if (themeBtn && !themeBtn.dataset.bound) {
+    themeBtn.dataset.bound = 'true';
     themeBtn.addEventListener('click', () => {
       const currentTheme = document.documentElement.getAttribute('data-theme') === 'dark' || document.body.classList.contains('dark-theme') ? 'dark' : 'light';
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      applyTheme(newTheme);
+      if (document.querySelector('app-navbar')) {
+        document.querySelector('app-navbar').applyTheme(newTheme);
+      }
     });
   }
 
@@ -95,54 +81,56 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ---------------------------------------------------------
-  // 3. User Authentication State in Navbar
+  // 3. User Authentication State in Navbar (Delegated to <app-navbar> or fallback)
   // ---------------------------------------------------------
-  const authNavContainer = document.getElementById('navAuthContainer');
-  const updateAuthUI = () => {
-    if (!authNavContainer) return;
-    const token = localStorage.getItem('token');
-    const userRaw = localStorage.getItem('user');
-    let user = null;
-    try {
-      user = userRaw ? JSON.parse(userRaw) : null;
-    } catch (e) {}
+  if (!document.querySelector('app-navbar')) {
+    const authNavContainer = document.getElementById('navAuthContainer');
+    const updateAuthUI = () => {
+      if (!authNavContainer) return;
+      const token = localStorage.getItem('token');
+      const userRaw = localStorage.getItem('user');
+      let user = null;
+      try {
+        user = userRaw ? JSON.parse(userRaw) : null;
+      } catch (e) {}
 
-    if ((token || localStorage.getItem('isLoggedIn') === 'true') && user) {
-      const displayName = user.name ? user.name.split(' ')[0] : 'حسابي';
-      const role = user.role || user.userType || 'مريض';
-      let dashboardUrl = 'pages/public/patient-dashboard.html';
-      if (role === 'pharmacist' || role === 'صيدلي') dashboardUrl = 'pages/pharmacist/index.html';
-      else if (role === 'admin' || role === 'إدارة') dashboardUrl = 'pages/admin/index.html';
+      if ((token || localStorage.getItem('isLoggedIn') === 'true') && user) {
+        const displayName = user.name ? user.name.split(' ')[0] : 'حسابي';
+        const role = user.role || user.userType || 'مريض';
+        let dashboardUrl = 'pages/public/patient-dashboard.html';
+        if (role === 'pharmacist' || role === 'صيدلي') dashboardUrl = 'pages/pharmacist/index.html';
+        else if (role === 'admin' || role === 'إدارة') dashboardUrl = 'pages/admin/index.html';
 
-      authNavContainer.innerHTML = `
-        <a href="${dashboardUrl}" class="login" title="الانتقال إلى لوحة التحكم">
-          <i class="fa-solid fa-user-circle"></i>
-          <span>${displayName}</span>
-        </a>
-      `;
-    } else {
-      authNavContainer.innerHTML = `
-        <a href="#" class="login" id="homeLoginBtn">دخول</a>
-      `;
-      const loginBtn = authNavContainer.querySelector('#homeLoginBtn');
-      if (loginBtn) {
-        loginBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          const isRegistered = localStorage.getItem('haveAcount') === 'true' || 
-                               Boolean(localStorage.getItem('currentUser')) || 
-                               Boolean(localStorage.getItem('user')) || 
-                               Boolean(localStorage.getItem('token'));
-          if (!isRegistered) {
-            window.location.href = 'pages/public/register.html';
-          } else {
-            window.location.href = 'pages/public/login.html';
-          }
-        });
+        authNavContainer.innerHTML = `
+          <a href="${dashboardUrl}" class="login" title="الانتقال إلى لوحة التحكم">
+            <i class="fa-solid fa-user-circle"></i>
+            <span>${displayName}</span>
+          </a>
+        `;
+      } else {
+        authNavContainer.innerHTML = `
+          <a href="#" class="login" id="homeLoginBtn">دخول</a>
+        `;
+        const loginBtn = authNavContainer.querySelector('#homeLoginBtn');
+        if (loginBtn) {
+          loginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const isRegistered = localStorage.getItem('haveAcount') === 'true' || 
+                                 Boolean(localStorage.getItem('currentUser')) || 
+                                 Boolean(localStorage.getItem('user')) || 
+                                 Boolean(localStorage.getItem('token'));
+            if (!isRegistered) {
+              window.location.href = 'pages/public/register.html';
+            } else {
+              window.location.href = 'pages/public/login.html';
+            }
+          });
+        }
       }
-    }
-  };
-  updateAuthUI();
-  window.addEventListener('teryak:auth-change', updateAuthUI);
+    };
+    updateAuthUI();
+    window.addEventListener('teryak:auth-change', updateAuthUI);
+  }
 
   // ---------------------------------------------------------
   // 4. Cart Integration & Badge Sync

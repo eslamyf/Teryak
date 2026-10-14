@@ -1,6 +1,6 @@
 /* ==========================================================================
    Teryak Platform - Unified Navbar Component Styles
-   Matches the Home Page Navbar styling exactly with zero extra elements
+   Single source of truth matching Home Page Navbar exactly
    ========================================================================== */
 
 .site-header {
@@ -13,7 +13,8 @@
   transition: background var(--transition-normal), border-color var(--transition-normal);
 }
 
-.site-header nav {
+.site-header nav,
+.hero nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -30,6 +31,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  line-height: 1;
 }
 
 .logo img {
@@ -81,6 +83,10 @@
   color: var(--text-main);
   position: relative;
   cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1;
   transition: border-color var(--transition-fast), color var(--transition-fast);
 }
 
@@ -90,8 +96,14 @@
 }
 
 .icon-btn svg {
-  width: 20px;
-  height: 20px;
+  width: 20px !important;
+  height: 20px !important;
+  stroke: currentColor;
+}
+
+.icon-btn i {
+  font-size: 16px;
+  line-height: 1;
 }
 
 /* Light / Dark Mode Icon Toggling: Strictly Mutually Exclusive */
@@ -116,7 +128,7 @@ body.dark-theme .moon {
 .cart-counter-badge {
   position: absolute;
   top: -6px;
-  inset-inline-end: -6px;
+  right: -6px;
   background-color: var(--primary-color);
   color: var(--text-light);
   font-size: 11px;
@@ -144,6 +156,8 @@ body.dark-theme .moon {
   gap: 6px;
   text-decoration: none;
   cursor: pointer;
+  font-family: inherit;
+  line-height: normal;
   transition: border-color var(--transition-fast), color var(--transition-fast);
 }
 
@@ -152,10 +166,19 @@ body.dark-theme .moon {
   color: var(--primary-color);
 }
 
-
+/* Hero transparent navbar */
+.hero app-navbar,
+.hero .site-header {
+  background: transparent !important;
+  border-bottom: none !important;
+  position: static !important;
+  box-shadow: none !important;
+  width: 100%;
+}
 
 @media (max-width: 768px) {
-  .site-header nav {
+  .site-header nav,
+  .hero nav {
     padding-block: 16px;
   }
   .nav-links {

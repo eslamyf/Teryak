@@ -8,7 +8,8 @@
    - Borders: var(--border-color), var(--border-radius-sm), md, lg
    - Shadows: var(--shadow-sm), md, lg
    - Fonts: var(--font-arabic), var(--font-heading)
-   ========================================================================== */
+   /* Import Unified Navbar System */
+@import url('navbar.css');
 
 /* Universal Reset & Focus */
 :focus-visible {
@@ -130,19 +131,21 @@ svg.i {
 }
 
 .icon-btn {
-  position: relative;
   width: 42px;
   height: 42px;
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-color);
   background: var(--bg-card);
-  display: inline-grid;
+  display: grid;
   place-items: center;
   color: var(--text-main);
+  position: relative;
   cursor: pointer;
-  font-size: 13px;
-  font-weight: 700;
-  transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
+  padding: 0;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
 }
 
 .icon-btn:hover {
@@ -150,9 +153,14 @@ svg.i {
   color: var(--primary-color);
 }
 
-.icon-btn svg,
+.icon-btn svg {
+  width: 20px !important;
+  height: 20px !important;
+  stroke: currentColor;
+}
+
 .icon-btn i {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1;
 }
 
@@ -206,12 +214,13 @@ body.dark-theme .moon {
 }
 
 .site-header nav,
+.hero nav,
 .hd-in {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding-block: 18px;
+  padding-block: 22px;
 }
 
 .logo {
@@ -223,6 +232,7 @@ body.dark-theme .moon {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  line-height: 1;
 }
 
 .logo img {
@@ -234,7 +244,7 @@ body.dark-theme .moon {
 .nav-links,
 .links {
   display: flex;
-  gap: 28px;
+  gap: 30px;
   font-weight: 600;
   font-size: 16px;
   color: var(--text-muted);
@@ -272,7 +282,7 @@ body.dark-theme .moon {
 .cart-counter-badge {
   position: absolute;
   top: -6px;
-  inset-inline-end: -6px;
+  right: -6px;
   background-color: var(--primary-color);
   color: var(--text-light);
   font-size: 11px;
@@ -300,6 +310,8 @@ body.dark-theme .moon {
   gap: 6px;
   text-decoration: none;
   cursor: pointer;
+  font-family: inherit;
+  line-height: normal;
   transition: border-color var(--transition-fast), color var(--transition-fast);
 }
 
