@@ -39,6 +39,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (userEmailOrPhoneEl) userEmailOrPhoneEl.textContent = 'حساب تجريبي / ضيف';
   }
 
+  // Patient Logout Action
+  const patientLogoutBtn = document.getElementById('patientLogoutBtn');
+  if (patientLogoutBtn) {
+    patientLogoutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (window.Auth && typeof window.Auth.logout === 'function') {
+        window.Auth.logout('../../index.html');
+      } else {
+        localStorage.removeItem('token');
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('user');
+        localStorage.setItem('isLoggedIn', 'false');
+        window.location.href = '../../index.html';
+      }
+    });
+  }
+
   // Load and Render Dynamic Patient Orders
   async function loadPatientOrders() {
     let orders = [];

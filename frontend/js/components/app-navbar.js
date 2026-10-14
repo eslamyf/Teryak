@@ -154,71 +154,17 @@ class AppNavbar extends HTMLElement {
 
     if (isLoggedIn && user) {
       const displayName = user.name ? user.name.split(' ')[0] : 'حسابي';
-      const fullName = user.name || user.fullName || displayName;
       const role = user.role || user.userType || 'مريض';
-      const roleLabel = (role === 'pharmacist' || role === 'صيدلي') ? 'صيدلي' : (role === 'admin' || role === 'إدارة') ? 'مسؤول' : 'مريض';
       let dashboardUrl = base + 'pages/public/patient-dashboard.html';
       if (role === 'pharmacist' || role === 'صيدلي') dashboardUrl = base + 'pages/pharmacist/index.html';
       else if (role === 'admin' || role === 'إدارة') dashboardUrl = base + 'pages/admin/index.html';
 
       container.innerHTML = `
-        <div class="user-menu-wrap" id="userMenuWrap">
-          <button type="button" class="user-menu-btn" id="userMenuBtn" aria-expanded="false" title="خيارات الحساب">
-            <i class="fa-solid fa-user-circle user-icon"></i>
-            <span>${displayName}</span>
-            <i class="fa-solid fa-chevron-down chevron-icon"></i>
-          </button>
-          <div class="user-dropdown-card" id="userDropdownCard">
-            <div class="user-dropdown-header">
-              <strong>${fullName}</strong>
-              <small>${roleLabel}</small>
-            </div>
-            <a href="${dashboardUrl}" class="user-dropdown-item">
-              <i class="fa-solid fa-gauge-high" style="color:var(--primary-color);"></i>
-              <span>لوحة التحكم</span>
-            </a>
-            <button type="button" class="user-dropdown-item logout-item" id="navLogoutBtn">
-              <i class="fa-solid fa-right-from-bracket"></i>
-              <span>تسجيل الخروج</span>
-            </button>
-          </div>
-        </div>
+        <a href="${dashboardUrl}" class="login" title="الانتقال إلى لوحة التحكم">
+          <i class="fa-solid fa-user-circle"></i>
+          <span>${displayName}</span>
+        </a>
       `;
-
-      const userMenuWrap = container.querySelector('#userMenuWrap');
-      const userMenuBtn = container.querySelector('#userMenuBtn');
-      const navLogoutBtn = container.querySelector('#navLogoutBtn');
-
-      if (userMenuBtn && userMenuWrap) {
-        userMenuBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const isOpen = userMenuWrap.classList.toggle('open');
-          userMenuBtn.setAttribute('aria-expanded', isOpen);
-        });
-
-        document.addEventListener('click', (e) => {
-          if (!userMenuWrap.contains(e.target)) {
-            userMenuWrap.classList.remove('open');
-            userMenuBtn.setAttribute('aria-expanded', 'false');
-          }
-        });
-      }
-
-      if (navLogoutBtn) {
-        navLogoutBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          if (window.Auth && typeof window.Auth.logout === 'function') {
-            window.Auth.logout(base + 'index.html');
-          } else {
-            localStorage.removeItem('token');
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('user');
-            localStorage.setItem('isLoggedIn', 'false');
-            window.dispatchEvent(new CustomEvent('teryak:auth-change'));
-            window.location.href = base + 'index.html';
-          }
-        });
-      }
     } else {
       container.innerHTML = `
         <a href="#" class="login" id="navLoginBtn">دخول</a>

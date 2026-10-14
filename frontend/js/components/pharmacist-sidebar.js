@@ -48,9 +48,28 @@ class PharmacistSidebar extends HTMLElement {
           <a class="${current === 'notifications.html' ? 'active' : ''}" href="notifications.html">
             <i class="fa-solid fa-bell me-2"></i> الإشعارات
           </a>
+          <a class="text-danger border-top mt-2 pt-2" href="#" id="pharmacistLogoutBtn" style="color: #ef4444 !important;">
+            <i class="fa-solid fa-right-from-bracket me-2"></i> تسجيل الخروج
+          </a>
         </nav>
       </aside>
     `;
+
+    const logoutBtn = this.querySelector('#pharmacistLogoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (window.Auth && typeof window.Auth.logout === 'function') {
+          window.Auth.logout('../../index.html');
+        } else {
+          localStorage.removeItem('token');
+          localStorage.removeItem('currentUser');
+          localStorage.removeItem('user');
+          localStorage.setItem('isLoggedIn', 'false');
+          window.location.href = '../../index.html';
+        }
+      });
+    }
   }
 
   async loadPharmacyInfo() {

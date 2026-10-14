@@ -54,9 +54,32 @@ class AdminSidebar extends HTMLElement {
             </span>
             <span class="nav-label">التقارير والإحصائيات</span>
           </a>
+
+          <a href="#" class="nav-item text-danger border-top mt-2 pt-2" id="adminLogoutBtn" style="color: #ef4444 !important;">
+            <span class="nav-icon" style="color: #ef4444;">
+              <i class="fa-solid fa-right-from-bracket"></i>
+            </span>
+            <span class="nav-label">تسجيل الخروج</span>
+          </a>
         </nav>
       </aside>
     `;
+
+    const logoutBtn = this.querySelector('#adminLogoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (window.Auth && typeof window.Auth.logout === 'function') {
+          window.Auth.logout('../../index.html');
+        } else {
+          localStorage.removeItem('token');
+          localStorage.removeItem('currentUser');
+          localStorage.removeItem('user');
+          localStorage.setItem('isLoggedIn', 'false');
+          window.location.href = '../../index.html';
+        }
+      });
+    }
   }
 }
 
