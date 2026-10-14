@@ -1,0 +1,351 @@
+/* ==========================================================================
+   Teryak Platform - Unified Design System Components (components.css)
+   Based on variables.css tokens:
+   - Primary: var(--primary-color), var(--primary-hover), var(--primary-light)
+   - Secondary: var(--secondary-color)
+   - Backgrounds: var(--bg-main), var(--bg-card), var(--bg-muted), var(--bg-dark)
+   - Texts: var(--text-main), var(--text-muted), var(--text-light)
+   - Borders: var(--border-color), var(--border-radius-sm), md, lg
+   - Shadows: var(--shadow-sm), md, lg
+   - Fonts: var(--font-arabic), var(--font-heading)
+   ========================================================================== */
+
+/* Universal Focus Outline */
+:focus-visible {
+  outline: 3px solid var(--secondary-color) !important;
+  outline-offset: 3px !important;
+}
+
+/* ==========================================================================
+   1. Buttons System (.btn & Variants)
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  border-radius: var(--border-radius-md);
+  padding: 12px 26px;
+  font-size: 16px;
+  line-height: 1.4;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: transform 0.15s ease, background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+  box-sizing: border-box;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:disabled,
+.btn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+}
+
+/* Primary / Brand Buttons */
+.btn-brand,
+.btn-primary,
+.btn-success {
+  background-color: var(--primary-color) !important;
+  color: var(--text-light) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.btn-brand:hover,
+.btn-primary:hover,
+.btn-success:hover {
+  background-color: var(--primary-hover) !important;
+  border-color: var(--primary-hover) !important;
+  color: var(--text-light) !important;
+}
+
+/* Outline / Line Buttons */
+.btn-line,
+.btn-outline-primary,
+.btn-outline-success {
+  background-color: transparent !important;
+  color: var(--primary-color) !important;
+  border: 1.5px solid var(--primary-color) !important;
+  padding: 10px 22px;
+  font-size: 16px;
+}
+
+.btn-line:hover,
+.btn-outline-primary:hover,
+.btn-outline-success:hover {
+  background-color: var(--primary-color) !important;
+  color: var(--text-light) !important;
+  border-color: var(--primary-color) !important;
+}
+
+/* White / Light Neutral Buttons */
+.btn-white,
+.btn-light {
+  background-color: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.btn-white:hover,
+.btn-light:hover {
+  background-color: var(--bg-muted) !important;
+  border-color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+}
+
+/* Secondary Neutral Buttons */
+.btn-secondary,
+.btn-outline-secondary {
+  background-color: var(--bg-muted) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.btn-secondary:hover,
+.btn-outline-secondary:hover {
+  background-color: var(--bg-card) !important;
+  border-color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+}
+
+/* Square / Icon Action Buttons */
+.icon-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  display: inline-grid;
+  place-items: center;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
+}
+
+.icon-btn:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.icon-btn svg,
+.icon-btn i {
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* ==========================================================================
+   2. Unified Cards System (.card & variants)
+   ========================================================================== */
+.card,
+.auth-card,
+.order-card,
+.medicine-card,
+.pharmacy-card,
+.stat-card,
+.kpi-card,
+.toolbar-card,
+.profile-card {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  box-sizing: border-box;
+}
+
+.card:hover,
+.medicine-card:hover,
+.pharmacy-card:hover,
+.order-card:hover {
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-md);
+}
+
+/* ==========================================================================
+   3. Unified Form Controls (Inputs, Select, Textarea)
+   ========================================================================== */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+select,
+textarea,
+.form-control,
+.form-select {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 10px 16px;
+  font-family: var(--font-arabic);
+  font-size: 16px;
+  line-height: 1.5;
+  box-sizing: border-box;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):focus,
+select:focus,
+textarea:focus,
+.form-control:focus,
+.form-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 139, 94, 0.18);
+  background-color: var(--bg-card);
+  color: var(--text-main);
+}
+
+input::placeholder,
+textarea::placeholder,
+.form-control::placeholder {
+  color: var(--text-muted);
+  opacity: 0.9;
+}
+
+/* ==========================================================================
+   4. Badges, Tags & Pills
+   ========================================================================== */
+.badge,
+.pill-count,
+.tag-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  border: 1px solid transparent;
+}
+
+.badge-light,
+.badge-secondary,
+.pill-count {
+  background-color: var(--bg-muted);
+  color: var(--text-muted);
+  border-color: var(--border-color);
+}
+
+.badge-success,
+.badge.bg-success {
+  background-color: var(--primary-light) !important;
+  color: var(--primary-color) !important;
+  border-color: rgba(0, 139, 94, 0.2) !important;
+}
+
+/* Filter / Nav Pills */
+.tab-pill,
+.tab-btn,
+.filter-pill,
+.cat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 99px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-family: var(--font-arabic);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.tab-pill:hover,
+.tab-btn:hover,
+.filter-pill:hover,
+.cat-pill:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.tab-pill.active,
+.tab-btn.active,
+.filter-pill.active,
+.cat-pill.active {
+  background-color: var(--primary-color) !important;
+  color: var(--text-light) !important;
+  border-color: var(--primary-color) !important;
+}
+
+/* ==========================================================================
+   5. Modals System (.modal-content)
+   ========================================================================== */
+.modal-content,
+.teryak-modal-box {
+  background-color: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--border-radius-lg) !important;
+  box-shadow: var(--shadow-lg) !important;
+  overflow: hidden;
+}
+
+.modal-header,
+.modal-footer {
+  border-color: var(--border-color) !important;
+  background-color: var(--bg-card);
+}
+
+/* ==========================================================================
+   6. Tables System (.table)
+   ========================================================================== */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--text-main);
+  background-color: var(--bg-card);
+}
+
+.table th {
+  background-color: var(--bg-muted);
+  color: var(--text-muted);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-color);
+  text-align: right;
+}
+
+.table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-main);
+  font-size: 15px;
+  vertical-align: middle;
+}
+
+.table tbody tr:hover td {
+  background-color: var(--bg-muted);
+}
+
+/* ==========================================================================
+   7. Accessibility: prefers-reduced-motion
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

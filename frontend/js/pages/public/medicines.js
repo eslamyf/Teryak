@@ -719,7 +719,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Parse URL Parameters (e.g. medicines.html?search=panadol or ?category=مسكنات)
   const urlParams = new URLSearchParams(window.location.search);
-  const searchParam = urlParams.get('search');
+  const searchParam = urlParams.get('q') || urlParams.get('search');
   const catParam = urlParams.get('category');
   if (searchParam) {
     state.search = searchParam;

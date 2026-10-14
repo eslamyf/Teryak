@@ -42,7 +42,7 @@ class AppNavbar extends HTMLElement {
   }
 
   initTheme() {
-    const savedTheme = localStorage.getItem('teryak_theme') || 'light';
+    const savedTheme = localStorage.getItem('teryak_theme') || localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     this.applyTheme(savedTheme, false);
   }
 
@@ -58,6 +58,7 @@ class AppNavbar extends HTMLElement {
 
     if (save) {
       localStorage.setItem('teryak_theme', isDark ? 'dark' : 'light');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
     }
 
     // Update icons

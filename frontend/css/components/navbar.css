@@ -762,3 +762,9 @@ body.dark-theme .mobile-rx-box,
   background-color: rgba(16, 185, 129, 0.08) !important;
   border-color: rgba(16, 185, 129, 0.25) !important;
 }
+
+body.dark-theme .header,
+[data-theme="dark"] .header {
+  background: rgba(30, 41, 59, 0.95) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
