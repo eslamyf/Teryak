@@ -4,14 +4,18 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  const tabs = document.querySelectorAll('.tab');
+  const tabs = document.querySelectorAll('.tab, .tabs button');
   let selectedUserType = 'مريض';
 
   tabs.forEach(tab => {
     tab.addEventListener('click', (e) => {
       e.preventDefault();
-      tabs.forEach(t => t.classList.remove('active'));
+      tabs.forEach(t => {
+        t.classList.remove('active');
+        t.classList.remove('on');
+      });
       tab.classList.add('active');
+      tab.classList.add('on');
       selectedUserType = tab.textContent.trim();
     });
   });
