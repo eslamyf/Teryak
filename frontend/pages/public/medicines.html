@@ -2,182 +2,141 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ترياق | دليل الأدوية والمنتجات الصحية</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>الأدوية | تِرياق</title>
+  <meta name="description" content="دليل الأدوية الشامل في تِرياق - دوّر على دواك، وقارن الأسعار، واحجز من أقرب صيدلية معتمدة.">
 
   <!-- Anti-flicker Theme Script -->
   <script>
     (function(){try{var t=localStorage.getItem('teryak_theme')||localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');if(t==='dark'){document.documentElement.setAttribute('data-theme','dark');if(document.body){document.body.classList.add('dark-theme');}else{document.addEventListener('DOMContentLoaded',function(){document.body.classList.add('dark-theme');});}}else{document.documentElement.removeAttribute('data-theme');}}catch(e){}})();
   </script>
 
-  <!-- Vendor CSS -->
-    <!-- High-Performance Typography: Tajawal (Preferred by Egyptian & Modern Pharmacies) -->
+  <!-- Typography: Cairo, Alexandria, Tajawal -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Alexandria:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Alexandria:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
 
   <!-- Base & Component CSS -->
   <link rel="stylesheet" href="../../css/base/variables.css">
   <link rel="stylesheet" href="../../css/base/global.css">
-  <link rel="stylesheet" href="../../css/components/navbar.css">
-  <link rel="stylesheet" href="../../css/components/footer.css">
+  <link rel="stylesheet" href="../../css/components/components.css">
   <link rel="stylesheet" href="../../css/components/modal.css">
 
   <!-- Page Custom CSS -->
   <link rel="stylesheet" href="../../css/pages/public/medicines.css">
 </head>
-<body>
+<body data-page="medicines">
 
   <!-- Reusable App Navbar -->
   <app-navbar></app-navbar>
 
-  <main class="container">
-    <!-- Page Header & Filter Section -->
-    <div class="top">
-      <div class="catalog-header-wrap">
-        <div>
-          <h2>دليل الأدوية والمنتجات الصحية</h2>
-          <p>تصفح الأدوية ومنتجات العناية المتاحة وقارن الأسعار وأماكن التوفر في أقرب صيدلية لك</p>
-        </div>
-      </div>
-      
-      <!-- Main Search & Sort Toolbar -->
-      <div class="toolbar-card">
-        <div class="search-box-wrap">
-          <i class="fa-solid fa-magnifying-glass search-icon"></i>
-          <input type="text" placeholder="ابحث بالاسم التجاري، المادة الفعالة، أو الاستخدام..." id="searchInput" autocomplete="off">
-          <button type="button" id="clearSearchBtn" class="clear-search-btn hide" aria-label="مسح البحث">&times;</button>
-        </div>
-        
-        <div class="toolbar-actions">
-          <div class="sort-wrap">
-            <i class="fa-solid fa-arrow-down-short-wide sort-icon"></i>
-            <select id="sortSelect" aria-label="ترتيب النتائج">
-              <option value="default">الترتيب الافتراضي</option>
-              <option value="priceLow">السعر: من الأقل للأعلى</option>
-              <option value="priceHigh">السعر: من الأعلى للأقل</option>
-              <option value="rating">الأعلى تقييماً ★</option>
-              <option value="availability">الأكثر توفراً في الصيدليات</option>
-              <option value="name">الاسم أبجدياً (أ - ي)</option>
-            </select>
-          </div>
+  <main class="wrap">
+    <!-- Right-Aligned Page Header Pitch -->
+    <div class="ph">
+      <h1>دليل الأدوية</h1>
+      <p>دوّر على دواك، وقارن الأسعار، واحجز من أقرب صيدلية.</p>
+    </div>
 
-          <button type="button" id="filterBtn" class="filter-toggle-btn" aria-expanded="false">
-            <i class="fa-solid fa-sliders"></i>
-            <span>الفلاتر المتقدمة</span>
-            <span id="activeFilterBadge" class="filter-badge hide">0</span>
-            <i id="arrow" class="fa-solid fa-chevron-down ms-1"></i>
-          </button>
-        </div>
-      </div>
+    <!-- Search & Sort Bar -->
+    <div class="bar">
+      <label class="field">
+        <svg class="i" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
+        </svg>
+        <input type="search" id="searchInput" placeholder="اسم الدوا، المادة الفعالة، أو الاستخدام" aria-label="بحث عن دواء">
+        <button type="button" id="clearSearchBtn" class="clear-search-btn hide" aria-label="مسح البحث" style="border:none;background:none;font-size:18px;color:var(--text-muted);cursor:pointer;padding:0 4px;">&times;</button>
+      </label>
 
-      <!-- Quick Category Pills (Horizontal scrolling/flex) -->
-      <div class="quick-categories-bar" id="quickCategoriesBar">
-        <button class="cat-pill active" data-category="all">
-          <i class="fa-solid fa-border-all me-1"></i> جميع الأدوية
-        </button>
-        <button class="cat-pill" data-category="مسكنات">
-          <i class="fa-solid fa-pills me-1"></i> مسكنات وسيولة
-        </button>
-        <button class="cat-pill" data-category="مضادات حيوية">
-          <i class="fa-solid fa-shield-virus me-1"></i> مضادات حيوية
-        </button>
-        <button class="cat-pill" data-category="فيتامينات">
-          <i class="fa-solid fa-capsules me-1"></i> فيتامينات
-        </button>
-        <button class="cat-pill" data-category="مكملات غذائية">
-          <i class="fa-solid fa-heart-pulse me-1"></i> مكملات غذائية
-        </button>
-        <button class="cat-pill" data-category="نزلات برد">
-          <i class="fa-solid fa-snowflake me-1"></i> نزلات البرد
-        </button>
-        <button class="cat-pill" data-category="هضمي">
-          <i class="fa-solid fa-shield-heart me-1"></i> جهاز هضمي
-        </button>
-        <button class="cat-pill" data-category="عناية شخصية">
-          <i class="fa-solid fa-pump-soap me-1"></i> عناية شخصية
-        </button>
-        <button class="cat-pill" data-category="مستلزمات طبية">
-          <i class="fa-solid fa-kit-medical me-1"></i> مستلزمات طبية
-        </button>
-      </div>
+      <select class="sel" id="sortSelect" aria-label="الترتيب">
+        <option value="default">الترتيب الافتراضي</option>
+        <option value="priceLow">الأرخص</option>
+        <option value="priceHigh">الأعلى سعراً</option>
+        <option value="rating">الأعلى تقييماً</option>
+        <option value="availability">الأكثر توفراً</option>
+        <option value="name">الاسم أبجدياً (أ - ي)</option>
+      </select>
 
-      <!-- Advanced Collapsible Filter Drawer -->
-      <div id="filter" class="advanced-filter-drawer">
-        <div class="filter-grid">
-          <!-- Availability Filter Section -->
-          <div class="filter-section">
-            <label class="filter-section-title"><i class="fa-solid fa-boxes-stacked me-1"></i> حالة التوفر في الصيدليات</label>
-            <div class="filter-pills-group" id="statusFilterGroup">
-              <button type="button" class="filter-pill active" data-filter="all">الكل</button>
-              <button type="button" class="filter-pill" data-filter="available"><i class="fa-solid fa-circle-check text-success me-1"></i> متوفر فوراً</button>
-              <button type="button" class="filter-pill" data-filter="limited"><i class="fa-solid fa-circle-exclamation text-warning me-1"></i> كمية محدودة</button>
-              <button type="button" class="filter-pill" data-filter="unavailable"><i class="fa-solid fa-circle-xmark text-danger me-1"></i> غير متوفر</button>
-            </div>
-          </div>
+      <button class="sel" id="filterBtn" type="button">
+        فلاتر
+        <span id="activeFilterBadge" class="filter-badge hide" style="background:var(--primary-color);color:#fff;border-radius:99px;font-size:11px;padding:1px 6px;margin-inline-start:4px;">0</span>
+      </button>
+    </div>
 
-          <!-- Price Range Filter Section -->
-          <div class="filter-section">
-            <label class="filter-section-title"><i class="fa-solid fa-tag me-1"></i> نطاق السعر (ج.م)</label>
-            <div class="filter-pills-group" id="priceFilterGroup">
-              <button type="button" class="filter-pill active" data-price-range="all">جميع الأسعار</button>
-              <button type="button" class="filter-pill" data-price-range="under30">أقل من 30 ج.م</button>
-              <button type="button" class="filter-pill" data-price-range="30to60">30 - 60 ج.م</button>
-              <button type="button" class="filter-pill" data-price-range="over60">أكثر من 60 ج.م</button>
-            </div>
+    <!-- Quick Category Chips (Scrollable with hidden scrollbar) -->
+    <div class="chips" role="tablist" id="quickCategoriesBar">
+      <button type="button" class="chip on active" data-category="all">كل الأدوية</button>
+      <button type="button" class="chip" data-category="مسكنات">مسكنات وسيولة</button>
+      <button type="button" class="chip" data-category="مضادات حيوية">مضادات حيوية</button>
+      <button type="button" class="chip" data-category="قلب وضغط">قلب وضغط</button>
+      <button type="button" class="chip" data-category="فيتامينات">فيتامينات</button>
+      <button type="button" class="chip" data-category="مكملات غذائية">مكملات غذائية</button>
+      <button type="button" class="chip" data-category="نزلات برد">نزلات البرد</button>
+      <button type="button" class="chip" data-category="هضمي">جهاز هضمي</button>
+      <button type="button" class="chip" data-category="عناية شخصية">عناية شخصية</button>
+      <button type="button" class="chip" data-category="مستلزمات طبية">مستلزمات طبية</button>
+    </div>
+
+    <!-- Advanced Collapsible Filter Drawer -->
+    <div id="filter" class="advanced-filter-drawer hide" style="display:none;background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--border-radius-lg);padding:20px;margin-top:16px;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:20px;">
+        <div class="filter-section">
+          <label style="display:block;font-weight:700;margin-bottom:10px;font-size:15px;color:var(--text-main);">حالة التوفر في الصيدليات</label>
+          <div class="filter-pills-group" id="statusFilterGroup" style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button type="button" class="chip filter-pill on active" data-filter="all">الكل</button>
+            <button type="button" class="chip filter-pill" data-filter="available">متوفر فوراً</button>
+            <button type="button" class="chip filter-pill" data-filter="limited">كمية محدودة</button>
+            <button type="button" class="chip filter-pill" data-filter="unavailable">غير متوفر</button>
           </div>
         </div>
 
-        <div class="filter-drawer-footer">
-          <button type="button" id="resetFiltersBtn" class="btn-reset-filters">
-            <i class="fa-solid fa-rotate-left me-1"></i> إعادة تعيين كافة الفلاتر
-          </button>
+        <div class="filter-section">
+          <label style="display:block;font-weight:700;margin-bottom:10px;font-size:15px;color:var(--text-main);">نطاق السعر (ج.م)</label>
+          <div class="filter-pills-group" id="priceFilterGroup" style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button type="button" class="chip filter-pill on active" data-price-range="all">جميع الأسعار</button>
+            <button type="button" class="chip filter-pill" data-price-range="under30">أقل من 30 ج.م</button>
+            <button type="button" class="chip filter-pill" data-price-range="30to60">30 - 60 ج.م</button>
+            <button type="button" class="chip filter-pill" data-price-range="over60">أكثر من 60 ج.م</button>
+          </div>
         </div>
       </div>
 
-      <!-- Results Info & Active Filter Chips Bar -->
-      <div class="results-meta-bar">
-        <div class="results-count-text">
-          <i class="fa-solid fa-list-check me-1 text-success"></i>
-          عرض <strong id="resultsCount">13</strong> من أصل <span id="totalCount">13</span> أدوية
-        </div>
-        <div class="active-chips-container" id="activeChipsContainer"></div>
+      <div style="margin-top:16px;text-align:start;">
+        <button type="button" id="resetFiltersBtn" class="btn btn-line" style="font-size:14px;padding:6px 18px;">
+          إعادة تعيين كافة الفلاتر
+        </button>
       </div>
     </div>
 
-    <!-- Medicine Cards Grid (Populated Dynamically via medicines.js) -->
-    <div class="row cards-row g-4 my-3" id="medicinesGrid">
-      <div class="col-12 text-center py-5">
+    <!-- Results Count Line & Active Filter Chips -->
+    <p class="count" id="countLine">عرض <b id="resultsCount">1 - 6</b> من <b id="totalCount">13</b> دوا</p>
+    <div class="active-chips-container" id="activeChipsContainer" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;"></div>
+
+    <!-- Medicines Grid (3 Columns Desktop, 2 Tablet, 1 Mobile) -->
+    <div class="grid3" id="medicinesGrid">
+      <div style="grid-column:1/-1;text-align:center;padding:48px 0;">
         <i class="fa-solid fa-circle-notch fa-spin text-success fs-1 mb-3"></i>
-        <p class="text-muted font-bold">جاري تحميل وتحديث قائمة الأدوية المتوفرة...</p>
+        <p style="color:var(--text-muted);font-weight:700;">جاري تحميل الأدوية...</p>
       </div>
     </div>
 
-    <!-- Pagination Controls (1, 2, 3...) -->
-    <div id="paginationNav" class="pagination-container hide">
-      <button type="button" class="pagination-btn" id="prevPageBtn" aria-label="الصفحة السابقة">
-        <i class="fa-solid fa-chevron-right me-1"></i> السابق
-      </button>
-      <div id="pageNumbersContainer" class="d-flex gap-1 align-items-center"></div>
-      <button type="button" class="pagination-btn" id="nextPageBtn" aria-label="الصفحة التالية">
-        التالي <i class="fa-solid fa-chevron-left ms-1"></i>
-      </button>
+    <!-- Square Pagination Navigation -->
+    <div class="pager hide" id="paginationNav">
+      <button type="button" id="prevPageBtn" aria-label="السابق">السابق</button>
+      <div id="pageNumbersContainer" style="display:inline-flex;gap:8px;"></div>
+      <button type="button" id="nextPageBtn" aria-label="التالي">التالي</button>
     </div>
-    <div id="paginationInfo" class="pagination-info hide"></div>
+    <div id="paginationInfo" class="pagination-info hide" style="text-align:center;margin-top:12px;color:var(--text-muted);font-size:14px;"></div>
 
-    <!-- Empty State (Shown when no matching medicines found) -->
-    <div id="noResultsState" class="empty-results-box hide">
-      <div class="empty-icon-wrap">
-        <i class="fa-solid fa-magnifying-glass-chart"></i>
-      </div>
-      <h3 class="empty-title">لم يتم العثور على أدوية مطابقة</h3>
-      <p class="empty-desc">جرب تعديل مصطلحات البحث أو إزالة بعض الفلاتر المحددة لعرض المزيد من الأدوية.</p>
-      <button type="button" class="btn btn-success btn-reset-all" id="emptyResetBtn">
-        <i class="fa-solid fa-rotate-left me-1"></i> إعادة ضبط وعرض كافة الأدوية
+    <!-- Empty State -->
+    <div id="noResultsState" class="card hide" style="display:none;padding:50px 24px;text-align:center;margin-top:24px;">
+      <h3 style="margin-bottom:8px;font-size:22px;">لم نجد أدوية مطابقة للبحث</h3>
+      <p style="color:var(--text-muted);margin-bottom:20px;">جرّب تعديل مصطلحات البحث أو مسح الفلاتر المحددة لعرض أدوية تانية.</p>
+      <button type="button" class="btn btn-brand" id="emptyResetBtn" style="margin-inline:auto;">
+        عرض كل الأدوية
       </button>
     </div>
   </main>

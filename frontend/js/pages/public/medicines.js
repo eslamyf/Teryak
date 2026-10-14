@@ -12,9 +12,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const filterDrawer = document.getElementById('filter');
   const arrowIcon = document.getElementById('arrow');
   const activeFilterBadge = document.getElementById('activeFilterBadge');
-  const quickCategoryButtons = document.querySelectorAll('.cat-pill');
-  const statusButtons = document.querySelectorAll('#statusFilterGroup .filter-pill');
-  const priceButtons = document.querySelectorAll('#priceFilterGroup .filter-pill');
+  const quickCategoryButtons = document.querySelectorAll('.chip[data-category], .cat-pill');
+  const statusButtons = document.querySelectorAll('#statusFilterGroup .chip, #statusFilterGroup .filter-pill');
+  const priceButtons = document.querySelectorAll('#priceFilterGroup .chip, #priceFilterGroup .filter-pill');
   const resetFiltersBtn = document.getElementById('resetFiltersBtn');
   const emptyResetBtn = document.getElementById('emptyResetBtn');
   const resultsCountEl = document.getElementById('resultsCount');
@@ -278,12 +278,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Toggle Advanced Filter Drawer
   if (filterBtn && filterDrawer) {
     filterBtn.addEventListener('click', () => {
-      const isExpanded = filterDrawer.classList.toggle('show');
-      filterBtn.classList.toggle('active', isExpanded);
-      filterBtn.setAttribute('aria-expanded', isExpanded);
+      const isClosed = filterDrawer.style.display === 'none' || filterDrawer.classList.contains('hide');
+      filterDrawer.style.display = isClosed ? 'block' : 'none';
+      filterDrawer.classList.toggle('hide', !isClosed);
+      filterBtn.classList.toggle('active', isClosed);
+      filterBtn.setAttribute('aria-expanded', isClosed);
       if (arrowIcon) {
-        arrowIcon.classList.toggle('fa-chevron-down', !isExpanded);
-        arrowIcon.classList.toggle('fa-chevron-up', isExpanded);
+        arrowIcon.classList.toggle('fa-chevron-down', !isClosed);
+        arrowIcon.classList.toggle('fa-chevron-up', isClosed);
       }
     });
   }
@@ -368,7 +370,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Dynamic Card Rendering Function (3 Columns per row: col-lg-4)
+  // Dynamic Card Rendering Function (3 Columns in .grid3)
   function renderCards(medicines, totalFiltered, startIndex) {
     if (!grid) return;
     grid.innerHTML = '';
@@ -380,76 +382,76 @@ document.addEventListener('DOMContentLoaded', async () => {
       } else {
         const from = startIndex + 1;
         const to = Math.min(startIndex + medicines.length, totalFiltered);
-        resultsCountEl.textContent = `${from} - ${to} من أصل ${totalFiltered}`;
+        resultsCountEl.textContent = `${from} - ${to}`;
       }
     }
 
     if (medicines.length === 0) {
-      if (noResultsState) noResultsState.classList.remove('hide');
+      if (noResultsState) {
+        noResultsState.style.display = 'block';
+        noResultsState.classList.remove('hide');
+      }
       return;
     } else {
-      if (noResultsState) noResultsState.classList.add('hide');
+      if (noResultsState) {
+        noResultsState.style.display = 'none';
+        noResultsState.classList.add('hide');
+      }
     }
 
     medicines.forEach((med) => {
-      const col = document.createElement('div');
-      col.className = 'col-12 col-md-6 col-lg-4 medicine-item';
-      col.dataset.category = med.category;
-      col.dataset.status = med.status;
-      col.dataset.price = med.price;
-      col.dataset.rating = med.rating;
-      col.dataset.availability = med.pharmaciesCount;
-      col.dataset.name = med.nameAr;
-      col.dataset.nameEn = med.nameEn;
-      col.dataset.activeIng = med.activeIngredient;
+      const article = document.createElement('article');
+      article.className = 'card hov med medicine-item';
+      article.dataset.category = med.category;
+      article.dataset.status = med.status;
+      article.dataset.price = med.price;
+      article.dataset.rating = med.rating;
+      article.dataset.availability = med.pharmaciesCount;
+      article.dataset.name = med.nameAr;
+      article.dataset.nameEn = med.nameEn;
+      article.dataset.activeIng = med.activeIngredient;
 
       const statusBadge =
         med.status === 'available'
-          ? '<span class="available">متوفر</span>'
+          ? '<span class="tag">متوفر</span>'
           : med.status === 'limited'
-          ? '<span class="limited">كمية محدودة</span>'
-          : '<span class="unavailable">غير متوفر</span>';
+          ? '<span class="tag" style="background:#eab308;">كمية محدودة</span>'
+          : '<span class="tag" style="background:#ef4444;">غير متوفر</span>';
 
       const detailUrl = `medicine-detail.html?med=${encodeURIComponent(med.id || med.slug || med.nameEn || med.nameAr)}`;
       const safeName = escapeHTML(med.nameAr);
-      const safeNameEn = escapeHTML(med.nameEn);
       const safeCategory = escapeHTML(med.category);
       const safeIngredient = escapeHTML(med.productType === 'product' ? med.category : (med.activeIngredient || med.nameEn));
       const safeImage = escapeHTML(med.image || '');
       const safeId = escapeHTML(med.id);
 
-      col.innerHTML = `
-        <div class="card">
-          <div class="img-box">
-            <a href="${detailUrl}">
-              ${safeImage ? `<img src="${safeImage}" class="card-img-top" alt="${safeName}" loading="lazy" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\\'medicine-image-placeholder\\' aria-label=\\'لا توجد صورة للمنتج\\'><i class=\\'fa-solid fa-box-open\\'></i></span>';">` : '<span class="medicine-image-placeholder" aria-label="لا توجد صورة للمنتج"><i class="fa-solid fa-box-open"></i></span>'}
-            </a>
-            <span class="rate"><i class="fa-solid fa-star"></i> ${med.rating}</span>
-            ${statusBadge}
+      const imageContent = safeImage
+        ? `<img src="${safeImage}" alt="${safeName}" style="max-height:140px;max-width:90%;object-fit:contain;" loading="lazy" onerror="this.onerror=null;this.parentElement.innerHTML='<svg class=\\'i\\' style=\\'width:56px;height:56px;\\' viewBox=\\'0 0 24 24\\'><rect x=\\'3\\' y=\\'9\\' width=\\'18\\' height=\\'7\\' rx=\\'3.5\\' transform=\\'rotate(-35 12 12.5)\\'/><path d=\\'M10.5 7.5l5 7\\'/></svg>';">`
+        : `<svg class="i" style="width:56px;height:56px;" viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="7" rx="3.5" transform="rotate(-35 12 12.5)"/><path d="M10.5 7.5l5 7"/></svg>`;
+
+      article.innerHTML = `
+        <div class="med-img">
+          ${statusBadge}
+          <span class="rate">★ ${med.rating}</span>
+          <a href="${detailUrl}" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:inherit;text-decoration:none;">
+            ${imageContent}
+          </a>
+        </div>
+        <div class="med-b">
+          <small>${safeCategory}${safeIngredient ? ` · ${safeIngredient}` : ''}</small>
+          <h3><a href="${detailUrl}">${safeName}</a></h3>
+          <div class="med-p">
+            <small>${med.pharmaciesCount > 0 ? `متوفر في ${med.pharmaciesCount} صيدلية` : 'غير متوفر حالياً'}</small>
+            <div class="price">${Math.round(med.price)}<span>ج.م</span></div>
           </div>
-          <div class="card-body">
-            <small>${med.productType === 'product' ? 'منتج صحي' : safeNameEn} · ${safeCategory}</small>
-            <p class="card-title"><a href="${detailUrl}">${safeName}</a></p>
-            <small class="text-truncate" style="max-width: 100%;">${safeIngredient}</small>
-            <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
-              <div>
-                <small class="text-muted">السعر الرسمي</small>
-                <p class="parg">${med.price.toFixed(2)} ج.م</p>
-              </div>
-              <div class="mrT text-end">
-                <small class="text-muted">متوفر في</small><br>
-                <small class="sml ${med.pharmaciesCount === 0 ? 'text-danger' : ''}">${med.pharmaciesCount} صيدلية</small>
-              </div>
-            </div>
-            <button class="addCart w-100" data-id="${safeId}" data-name="${safeName}">
-              <i class="fa-solid fa-store me-1"></i> <span>اختر صيدلية للطلب</span>
-            </button>
-          </div>
+          <button type="button" class="btn btn-brand btn-block addCart" data-id="${safeId}" data-name="${safeName}">
+            اختار صيدلية للطلب
+          </button>
         </div>
       `;
 
       // Bind Cart Button Click
-      const addBtn = col.querySelector('.addCart');
+      const addBtn = article.querySelector('.addCart');
       if (addBtn) {
         addBtn.dataset.handledByPage = 'true';
         addBtn.addEventListener('click', (e) => {
@@ -459,7 +461,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
       }
 
-      grid.appendChild(col);
+      grid.appendChild(article);
     });
   }
 
@@ -489,7 +491,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     for (let i = 1; i <= totalPages; i++) {
       const pageBtn = document.createElement('button');
       pageBtn.type = 'button';
-      pageBtn.className = `pagination-btn ${i === state.page ? 'active' : ''}`;
+      pageBtn.className = `${i === state.page ? 'on active' : ''}`;
       pageBtn.textContent = i;
       pageBtn.setAttribute('aria-label', `الصفحة رقم ${i}`);
       pageBtn.addEventListener('click', () => {
@@ -613,7 +615,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   function setCategory(cat) {
     state.category = cat;
     quickCategoryButtons.forEach((btn) => {
-      btn.classList.toggle('active', btn.dataset.category === cat);
+      const isMatch = btn.dataset.category === cat;
+      btn.classList.toggle('active', isMatch);
+      btn.classList.toggle('on', isMatch);
     });
     applyFilters(true);
   }
@@ -622,7 +626,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   function setStatus(st) {
     state.status = st;
     statusButtons.forEach((btn) => {
-      btn.classList.toggle('active', btn.dataset.filter === st);
+      const isMatch = btn.dataset.filter === st;
+      btn.classList.toggle('active', isMatch);
+      btn.classList.toggle('on', isMatch);
     });
     applyFilters(true);
   }
@@ -631,7 +637,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   function setPriceRange(range) {
     state.priceRange = range;
     priceButtons.forEach((btn) => {
-      btn.classList.toggle('active', btn.dataset.priceRange === range);
+      const isMatch = btn.dataset.priceRange === range;
+      btn.classList.toggle('active', isMatch);
+      btn.classList.toggle('on', isMatch);
     });
     applyFilters(true);
   }
