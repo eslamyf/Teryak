@@ -2,120 +2,124 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ترياق | من نحن - رؤيتنا ورسالتنا</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>من نحن | تِرياق</title>
+  <meta name="description" content="بنوصّل المريض بالدوا، في الوقت الصح. تِرياق بتخلّيك تعرف الدوا موجود فين وبكام، وتحجزه قبل ما تنزل من بيتك.">
 
   <!-- Anti-flicker Theme Script -->
   <script>
     (function(){try{var t=localStorage.getItem('teryak_theme')||localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');if(t==='dark'){document.documentElement.setAttribute('data-theme','dark');if(document.body){document.body.classList.add('dark-theme');}else{document.addEventListener('DOMContentLoaded',function(){document.body.classList.add('dark-theme');});}}else{document.documentElement.removeAttribute('data-theme');}}catch(e){}})();
   </script>
 
-  <!-- Vendor CSS -->
-    <!-- High-Performance Typography: Tajawal (Preferred by Egyptian & Modern Pharmacies) -->
+  <!-- Typography: Cairo, Alexandria, Tajawal -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Alexandria:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Alexandria:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" defer></script>
 
   <!-- Base & Component CSS -->
   <link rel="stylesheet" href="../../css/base/variables.css">
   <link rel="stylesheet" href="../../css/base/global.css">
-  <link rel="stylesheet" href="../../css/components/navbar.css">
-  <link rel="stylesheet" href="../../css/components/footer.css">
+  <link rel="stylesheet" href="../../css/components/components.css">
   <link rel="stylesheet" href="../../css/components/modal.css">
 
   <!-- Page Custom CSS -->
   <link rel="stylesheet" href="../../css/pages/public/about.css">
 </head>
-<body>
+<body data-page="about">
 
   <!-- Reusable App Navbar -->
   <app-navbar></app-navbar>
 
-  <main class="about-page">
-    <div class="container">
-      <section class="hero">
-        <span class="badge-about">⭐ منصة الصحة الرقمية رقم 1 في مصر</span>
-        <h1 class="hero-title">
-          تِرْيَاق — نربط المرضى بالدواء
-          <span class="highlight">في الوقت الصحيح</span>
-        </h1>
-        <p class="hero-desc">
-          منصة رقمية متكاملة تحل مشكلة نقص الأدوية وصعوبة إيجادها، عن طريق ربط المرضى بالصيدليات القريبة منهم فوراً وبذكاء.
-        </p>
-      </section>
+  <main style="flex:1;width:100%;">
+    <div class="wrap">
+      <!-- Centered Hero Pitch -->
+      <div class="ph center" style="padding-top:64px">
+        <h1 style="font-size:clamp(34px,5vw,56px);max-width:14em;margin-inline:auto">بنوصّل المريض بالدوا، في الوقت الصح.</h1>
+        <p style="margin-top:14px">تِرياق بتخلّيك تعرف الدوا موجود فين وبكام، وتحجزه قبل ما تنزل من بيتك.</p>
+      </div>
 
-      <section class="stats-section">
-        <div class="stats-grid">
-          <div class="stat-card stat-green">
-            <span class="stat-num">+245</span>
-            <span class="stat-label">صيدلية شريكة</span>
-          </div>
-          <div class="stat-card stat-blue">
-            <span class="stat-num">+12K</span>
-            <span class="stat-label">دواء في قاعدة البيانات</span>
-          </div>
-          <div class="stat-card stat-purple">
-            <span class="stat-num">+50K</span>
-            <span class="stat-label">مستخدم نشط</span>
-          </div>
-          <div class="stat-card stat-amber">
-            <span class="stat-num">98%</span>
-            <span class="stat-label">نسبة رضا المستخدمين</span>
-          </div>
+      <!-- 4 Green Stats -->
+      <div class="stats">
+        <div class="card stat">
+          <b>245+</b>
+          <span>صيدلية شريكة</span>
         </div>
-      </section>
+        <div class="card stat">
+          <b>12K+</b>
+          <span>دوا في قاعدة البيانات</span>
+        </div>
+        <div class="card stat">
+          <b>50K+</b>
+          <span>مستخدم نشط</span>
+        </div>
+        <div class="card stat">
+          <b>98%</b>
+          <span>نسبة رضا المستخدمين</span>
+        </div>
+      </div>
 
-      <section class="mission-card">
+      <!-- Mission Card -->
+      <div class="card mission" style="margin-top:28px">
         <h2>مهمتنا</h2>
-        <p>
-          نحن نؤمن بأن الوصول للدواء حق أساسي لكل إنسان، لذلك أطلقنا منصة ترياق لتكون الجسر الذكي بين المرضى والصيدليات، بتوفير الوقت والمجهود وضمان وصول الدواء المناسب في وقته.
-        </p>
-        <p>
-          نعمل مع شبكة واسعة من الصيدليات المعتمدة لضمان دقة البيانات وسرعة التحديث، مع تجربة استخدام سلسة وآمنة تراعي كل الفئات.
-        </p>
-      </section>
+        <p>الدوا حق لكل حد، ووقت المريض مش لازم يضيع في اللف على الصيدليات. بنربطك بالصيدليات المعتمدة، وبنراجع البيانات باستمرار، عشان تلاقي اللي محتاجه بسرعة وبثقة.</p>
+      </div>
 
-      <section class="features-section">
-        <h2 class="section-title">ما الذي يميزنا؟</h2>
-        <div class="features-grid">
-          <article class="feature-card">
-            <div class="icon-box icon-green">
-              <i class="fa-solid fa-magnifying-glass"></i>
-            </div>
-            <h3>البحث الذكي عن الأدوية</h3>
-            <p>ابحث عن دوائك بالاسم التجاري أو المادة الفعالة، وسنعرض لك أقرب صيدلية متوفر فيها الدواء مع السعر والكمية والبدائل المتاحة.</p>
-          </article>
+      <!-- 2x2 Features Grid -->
+      <h2 class="sec-t">إيه اللي بيميزنا؟</h2>
+      <div class="grid2">
+        <article class="card feat">
+          <i>
+            <svg class="i" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
+            </svg>
+          </i>
+          <h3>البحث الذكي عن الأدوية</h3>
+          <p>اكتب اسم الدوا أو المادة الفعالة، وهنوريك أقرب صيدلية فيها بسعره وبدائله.</p>
+        </article>
 
-          <article class="feature-card">
-            <div class="icon-box icon-blue">
-              <i class="fa-solid fa-bell"></i>
-            </div>
-            <h3>نظام الإشعارات الفوري</h3>
-            <p>فعّل الإشعارات لأي دواء غير متوفر لتصلك رسالة فورية بمجرد توفره في أقرب صيدلية إليك.</p>
-          </article>
+        <article class="card feat">
+          <i>
+            <svg class="i" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+            </svg>
+          </i>
+          <h3>الحجز المسبق</h3>
+          <p>احجز قبل ما تروح، وهتستلم في ميعاد محدد من غير انتظار.</p>
+        </article>
 
-          <article class="feature-card">
-            <div class="icon-box icon-amber">
-              <i class="fa-solid fa-calendar-check"></i>
-            </div>
-            <h3>الحجز المسبق</h3>
-            <p>احجز دواءك قبل الذهاب لضمان توفره وقت وصولك، مع تأكيد فوري وميعاد استلام محدد.</p>
-          </article>
+        <article class="card feat">
+          <i>
+            <svg class="i" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/>
+            </svg>
+          </i>
+          <h3>تنبيهات فورية</h3>
+          <p>لو الدوا مش متاح، هنبعتلك إشعار أول ما يرجع في أي صيدلية قريبة.</p>
+        </article>
 
-          <article class="feature-card">
-            <div class="icon-box icon-purple">
-              <i class="fa-solid fa-hand-holding-heart"></i>
-            </div>
-            <h3>التبرع والاستبدال</h3>
-            <p>تبرع بالأدوية الصالحة التي لا تحتاجها، أو استبدلها بأدوية تحتاجها بأسعار رمزية لمساعدة غير القادرين.</p>
-          </article>
-        </div>
-      </section>
+        <article class="card feat">
+          <i>
+            <svg class="i" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 13h18M12 8c-2-4-6-4-6-1s3 1 6 1zM12 8c2-4 6-4 6-1s-3 1-6 1z"/>
+            </svg>
+          </i>
+          <h3>التبرع والاستبدال</h3>
+          <p>تبرّع بالأدوية الصالحة اللي مش محتاجها، أو استبدلها بأدوية محتاجها.</p>
+        </article>
+      </div>
     </div>
+
+    <!-- CTA Section -->
+    <section class="cta">
+      <div class="wrap">
+        <h2>جرّب تدوّر على دواك دلوقتي.</h2>
+        <a href="medicines.html" class="btn btn-white">دوّر على دوا</a>
+      </div>
+    </section>
   </main>
 
   <!-- Reusable App Footer -->
