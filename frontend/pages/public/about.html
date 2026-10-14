@@ -35,7 +35,8 @@
   <!-- Reusable App Navbar -->
   <app-navbar></app-navbar>
 
-  <main style="flex:1;width:100%;">
+  <div id="spa-content">
+    <main style="flex:1;width:100%;">
     <div class="wrap">
       <!-- Centered Hero Pitch -->
       <div class="ph center" style="padding-top:64px">
@@ -123,8 +124,9 @@
     </section>
   </main>
 
-  <!-- Reusable App Footer -->
-  <app-footer></app-footer>
+    <!-- Reusable App Footer -->
+    <app-footer></app-footer>
+  </div>
 
   <!-- Reusable Cart Modal -->
   <app-cart-modal></app-cart-modal>
@@ -142,5 +144,6 @@
   <script src="../../js/components/app-navbar.js"></script>
   <script src="../../js/components/app-footer.js"></script>
   <script src="../../js/components/app-cart-modal.js"></script>
+  <script src="../../js/core/spa-router.js"></script>
 </body>
 </html>

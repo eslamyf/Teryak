@@ -30,11 +30,12 @@
   <!-- Page Custom CSS -->
   <link rel="stylesheet" href="../../css/pages/public/donation.css">
 </head>
-<body>
+<body data-page="donation">
 
   <!-- Reusable App Navbar -->
   <app-navbar></app-navbar>
 
+  <div id="spa-content">
   <div class="con pt-5">
     <div class="app-container">
       <header class="main-header">
@@ -206,6 +207,7 @@
 
   <!-- Reusable App Footer -->
   <app-footer></app-footer>
+  </div>
 
   <!-- Reusable Cart Modal -->
   <app-cart-modal></app-cart-modal>
@@ -224,6 +226,7 @@
   <script src="../../js/components/app-footer.js"></script>
   <script src="../../js/components/app-cart-modal.js"></script>
 
+  <script src="../../js/core/spa-router.js"></script>
   <!-- Page Script -->
   <script src="../../js/pages/public/donation.js"></script>
 </body>

@@ -3,7 +3,7 @@
  * Fully Dynamic Data Engine Connected with Live Database & Local Storage
  */
 
-document.addEventListener('DOMContentLoaded', async () => {
+window.initPatientDashboardPage = async function () {
   const items = document.querySelectorAll('.list ul li');
   const sections = [
     document.querySelector('.hidden1'),
@@ -275,5 +275,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         );
       }
     });
+  }
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', window.initPatientDashboardPage);
+} else {
+  window.initPatientDashboardPage();
+}
+
+window.addEventListener('teryak:page-mounted', (e) => {
+  if (e.detail?.page === 'patient-dashboard') {
+    window.initPatientDashboardPage();
   }
 });

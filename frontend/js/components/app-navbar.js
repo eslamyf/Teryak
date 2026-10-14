@@ -192,10 +192,11 @@ class AppNavbar extends HTMLElement {
                                Boolean(localStorage.getItem('currentUser')) || 
                                Boolean(localStorage.getItem('user')) || 
                                Boolean(localStorage.getItem('token'));
-          if (!isRegistered) {
-            window.location.href = base + 'pages/public/register.html';
+          const targetUrl = !isRegistered ? base + 'pages/public/register.html' : base + 'pages/public/login.html';
+          if (window.SPARouterInstance) {
+            window.SPARouterInstance.navigateTo(targetUrl);
           } else {
-            window.location.href = base + 'pages/public/login.html';
+            window.location.href = targetUrl;
           }
         });
       }

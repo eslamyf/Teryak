@@ -70,13 +70,22 @@ body.dark-theme .hero::before {
 }
 
 /* Hero Navbar */
+body[data-page="home"] .site-header,
 .hero app-navbar,
 .hero .site-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
   background: transparent !important;
   border-bottom: none !important;
-  position: static !important;
   box-shadow: none !important;
   width: 100%;
+}
+
+body[data-page="home"] .hero {
+  padding-top: 86px;
 }
 
 .hero nav,

@@ -10,6 +10,7 @@
    - Fonts: var(--font-arabic), var(--font-heading)
    /* Import Unified Navbar System */
 @import url('navbar.css');
+@import url('spa.css');
 
 /* Universal Reset & Focus */
 :focus-visible {

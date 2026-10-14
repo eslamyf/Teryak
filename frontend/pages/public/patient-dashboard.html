@@ -27,13 +27,13 @@
 
   <!-- Page Custom CSS -->
   <link rel="stylesheet" href="../../css/pages/public/patient-dashboard.css">
-</head>
-<body>
+<body data-page="patient-dashboard">
 
   <!-- Reusable App Navbar -->
   <app-navbar></app-navbar>
 
-  <main class="container my-5 pt-4">
+  <div id="spa-content">
+    <main class="container my-5 pt-4">
     <!-- User Welcome Card -->
     <div class="d-flex user align-items-center gap-3 p-3 bg-white border rounded mb-4 shadow-sm">
       <i class="fa-solid fa-circle-user fs-1 text-success"></i>
@@ -178,8 +178,9 @@
     </div>
   </main>
 
-  <!-- Reusable App Footer -->
-  <app-footer></app-footer>
+    <!-- Reusable App Footer -->
+    <app-footer></app-footer>
+  </div>
 
   <!-- Reusable Cart Modal -->
   <app-cart-modal></app-cart-modal>
@@ -197,6 +198,7 @@
   <script src="../../js/components/app-navbar.js"></script>
   <script src="../../js/components/app-footer.js"></script>
   <script src="../../js/components/app-cart-modal.js"></script>
+  <script src="../../js/core/spa-router.js"></script>
 
   <!-- Page Script -->
   <script src="../../js/pages/public/patient-dashboard.js"></script>

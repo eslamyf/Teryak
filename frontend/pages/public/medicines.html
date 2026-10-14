@@ -35,7 +35,8 @@
   <!-- Reusable App Navbar -->
   <app-navbar></app-navbar>
 
-  <main class="wrap">
+  <div id="spa-content">
+    <main class="wrap">
     <!-- Right-Aligned Page Header Pitch -->
     <div class="ph">
       <h1>دليل الأدوية</h1>
@@ -142,8 +143,9 @@
     </div>
   </main>
 
-  <!-- Reusable App Footer -->
-  <app-footer></app-footer>
+    <!-- Reusable App Footer -->
+    <app-footer></app-footer>
+  </div>
 
   <!-- Reusable Cart Modal -->
   <app-cart-modal></app-cart-modal>
@@ -161,6 +163,7 @@
   <script src="../../js/components/app-navbar.js"></script>
   <script src="../../js/components/app-footer.js"></script>
   <script src="../../js/components/app-cart-modal.js"></script>
+  <script src="../../js/core/spa-router.js"></script>
 
   <!-- Page Script -->
   <script src="../../js/pages/public/medicines.js"></script>

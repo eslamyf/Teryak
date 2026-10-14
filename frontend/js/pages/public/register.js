@@ -3,7 +3,7 @@
  * Integrated with Real-Time Validation & Side-Sliding Toast Notifications
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+window.initRegisterPage = function () {
   const pharmacistFields = document.querySelectorAll(".pharmacist-field");
   const tabs = document.querySelectorAll(".tab");
   let selectedUserType = "مريض";
@@ -305,5 +305,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     });
+  }
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', window.initRegisterPage);
+} else {
+  window.initRegisterPage();
+}
+
+window.addEventListener('teryak:page-mounted', (e) => {
+  if (e.detail?.page === 'register') {
+    window.initRegisterPage();
   }
 });

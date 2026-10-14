@@ -29,12 +29,13 @@
   <!-- Page Custom CSS -->
   <link rel="stylesheet" href="../../css/pages/public/login.css">
 </head>
-<body>
+<body data-page="register">
 
   <!-- Reusable App Navbar -->
   <app-navbar></app-navbar>
 
-  <main class="container my-5 pt-4">
+  <div id="spa-content">
+    <main class="container my-5 pt-4">
     <section class="hero text-center mb-4">
       <h1>إنشاء حساب جديد</h1>
       <p class="text-muted">انضم إلى شبكة منصة ترياق الطبية</p>
@@ -140,8 +141,9 @@
     </form>
   </main>
 
-  <!-- Reusable App Footer -->
-  <app-footer></app-footer>
+    <!-- Reusable App Footer -->
+    <app-footer></app-footer>
+  </div>
 
   <!-- Reusable Cart Modal -->
   <app-cart-modal></app-cart-modal>
@@ -159,6 +161,7 @@
   <script src="../../js/components/app-navbar.js"></script>
   <script src="../../js/components/app-footer.js"></script>
   <script src="../../js/components/app-cart-modal.js"></script>
+  <script src="../../js/core/spa-router.js"></script>
 
   <!-- Page Script -->
   <script src="../../js/pages/public/register.js"></script>

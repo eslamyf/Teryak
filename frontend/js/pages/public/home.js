@@ -8,7 +8,7 @@
  * - Prescription Modal with File Dropzone & Order Submission
  */
 
-document.addEventListener('DOMContentLoaded', async () => {
+window.initHomePage = async function () {
   // ---------------------------------------------------------
   // 1. Theme Switcher (Delegated to unified <app-navbar> or fallback)
   // ---------------------------------------------------------
@@ -34,7 +34,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const executeSearch = (queryText) => {
     const val = (queryText !== undefined ? queryText : (qInput ? qInput.value : '')).trim();
     const targetUrl = 'pages/public/medicines.html' + (val ? `?q=${encodeURIComponent(val)}` : '');
-    window.location.href = targetUrl;
+    if (window.SPARouterInstance) {
+      window.SPARouterInstance.navigateTo(targetUrl);
+    } else {
+      window.location.href = targetUrl;
+    }
   };
 
   if (searchForm) {
@@ -327,5 +331,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (rxDropzoneInner) rxDropzoneInner.classList.remove('hide');
       if (rxFilePreview) rxFilePreview.classList.add('hide');
     });
+  }
+};
+
+// Immediate / DOM Ready Execution
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', window.initHomePage);
+} else {
+  window.initHomePage();
+}
+
+// Re-initialize on SPA Navigation
+window.addEventListener('teryak:page-mounted', (e) => {
+  if (e.detail?.page === 'home' || window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+    window.initHomePage();
   }
 });

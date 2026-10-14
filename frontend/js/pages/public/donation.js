@@ -3,7 +3,7 @@
  * Integrated with Side-Sliding Toast Notifications & Real-Time Validation
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+window.initDonationPage = function() {
   const browseTabBtn = document.getElementById('tabBrowseBtn');
   const donateTabBtn = document.getElementById('tabDonateBtn');
   const browseTabContent = document.getElementById('browseTabContent');
@@ -163,4 +163,16 @@ document.addEventListener('DOMContentLoaded', () => {
       switchMainTab('browse');
     }, 1200);
   });
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', window.initDonationPage);
+} else {
+  window.initDonationPage();
+}
+
+document.addEventListener('teryak:page-mounted', (e) => {
+  if (e.detail?.page === 'donation' || document.querySelector('.cards-grid#mainMedicinesGrid')) {
+    window.initDonationPage();
+  }
 });

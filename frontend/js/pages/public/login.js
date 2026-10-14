@@ -3,9 +3,7 @@
  * Integrated with Form Validation & Side-Sliding Toast Notifications
  */
 
-document.addEventListener('DOMContentLoaded', () => {
-
-
+window.initLoginPage = function () {
   const tabs = document.querySelectorAll('.tab, .tabs button');
   let selectedUserType = 'مريض';
 
@@ -180,5 +178,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     });
+  }
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', window.initLoginPage);
+} else {
+  window.initLoginPage();
+}
+
+window.addEventListener('teryak:page-mounted', (e) => {
+  if (e.detail?.page === 'login') {
+    window.initLoginPage();
   }
 });

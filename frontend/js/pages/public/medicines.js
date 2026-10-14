@@ -3,7 +3,7 @@
  * Fetches Live Data from Backend API (MongoDB Atlas) & Supports Multi-Criteria Filtering
  */
 
-document.addEventListener('DOMContentLoaded', async () => {
+window.initMedicinesPage = async function () {
   // DOM Elements
   const searchInput = document.getElementById('searchInput');
   const clearSearchBtn = document.getElementById('clearSearchBtn');
@@ -743,4 +743,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Initial Filter & Render Application
   applyFilters(true);
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', window.initMedicinesPage);
+} else {
+  window.initMedicinesPage();
+}
+
+window.addEventListener('teryak:page-mounted', (e) => {
+  if (e.detail?.page === 'medicines') {
+    window.initMedicinesPage();
+  }
 });
