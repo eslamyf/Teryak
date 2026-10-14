@@ -4,6 +4,68 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Check if user is already logged in
+  const token = localStorage.getItem('token');
+  const userRaw = localStorage.getItem('currentUser') || localStorage.getItem('user');
+  let currentUser = null;
+  try { currentUser = userRaw ? JSON.parse(userRaw) : null; } catch(e) {}
+  const isLoggedIn = (window.Auth && window.Auth.isLoggedIn()) || Boolean(token) || localStorage.getItem('isLoggedIn') === 'true';
+
+  if (isLoggedIn && currentUser) {
+    const authBox = document.querySelector('.auth-box, form#loginForm');
+    const phHeader = document.querySelector('.ph.center, .ph');
+    if (phHeader) {
+      phHeader.innerHTML = `
+        <h1>أنت مسجّل دخولك بالفعل</h1>
+        <p>مرحباً بك مجدداً يا <strong>${currentUser.name || 'مستخدم ترياق'}</strong> في حسابك الحالي.</p>
+      `;
+    }
+    if (authBox) {
+      const role = currentUser.role || currentUser.userType || 'مريض';
+      const roleLabel = (role === 'pharmacist' || role === 'صيدلي') ? 'صيدلي' : (role === 'admin' || role === 'إدارة') ? 'مسؤول' : 'مريض';
+      let dashboardUrl = 'patient-dashboard.html';
+      if (role === 'pharmacist' || role === 'صيدلي') dashboardUrl = '../pharmacist/index.html';
+      else if (role === 'admin' || role === 'إدارة') dashboardUrl = '../admin/index.html';
+
+      authBox.innerHTML = `
+        <div style="text-align:center; padding:16px 0;">
+          <div style="width:72px; height:72px; border-radius:50%; background:var(--primary-light); color:var(--primary-color); display:grid; place-items:center; margin:0 auto 16px; font-size:32px;">
+            <i class="fa-solid fa-user-check"></i>
+          </div>
+          <h3 style="font-size:21px; font-weight:700; margin-bottom:6px; color:var(--text-main);">${currentUser.name || 'حسابك النشط'}</h3>
+          <span style="display:inline-block; padding:4px 16px; border-radius:99px; background:var(--bg-muted); color:var(--primary-color); font-weight:700; font-size:13px; margin-bottom:24px;">${roleLabel}</span>
+          
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <a href="${dashboardUrl}" class="btn btn-brand btn-block" style="font-size:16px;">
+              <i class="fa-solid fa-gauge-high me-2"></i> الانتقال إلى لوحة التحكم
+            </a>
+            <button type="button" class="btn btn-line btn-block" id="pageLogoutBtn" style="color:#ef4444; border-color:#ef4444;">
+              <i class="fa-solid fa-right-from-bracket me-2"></i> تسجيل الخروج والتبديل لحساب آخر
+            </button>
+          </div>
+        </div>
+      `;
+
+      const pageLogoutBtn = authBox.querySelector('#pageLogoutBtn');
+      if (pageLogoutBtn) {
+        pageLogoutBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (window.Auth && typeof window.Auth.logout === 'function') {
+            window.Auth.logout();
+          } else {
+            localStorage.removeItem('token');
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('user');
+            localStorage.setItem('isLoggedIn', 'false');
+          }
+          window.dispatchEvent(new CustomEvent('teryak:auth-change'));
+          window.location.reload();
+        });
+      }
+      return;
+    }
+  }
+
   const tabs = document.querySelectorAll('.tab, .tabs button');
   let selectedUserType = 'مريض';
 

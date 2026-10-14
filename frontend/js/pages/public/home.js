@@ -109,16 +109,68 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if ((token || localStorage.getItem('isLoggedIn') === 'true') && user) {
       const displayName = user.name ? user.name.split(' ')[0] : 'حسابي';
+      const fullName = user.name || user.fullName || displayName;
+      const role = user.role || user.userType || 'مريض';
+      const roleLabel = (role === 'pharmacist' || role === 'صيدلي') ? 'صيدلي' : (role === 'admin' || role === 'إدارة') ? 'مسؤول' : 'مريض';
       let dashboardUrl = 'pages/public/patient-dashboard.html';
-      if (user.role === 'pharmacist' || user.userType === 'صيدلي') dashboardUrl = 'pages/pharmacist/index.html';
-      else if (user.role === 'admin' || user.userType === 'إدارة') dashboardUrl = 'pages/admin/index.html';
+      if (role === 'pharmacist' || role === 'صيدلي') dashboardUrl = 'pages/pharmacist/index.html';
+      else if (role === 'admin' || role === 'إدارة') dashboardUrl = 'pages/admin/index.html';
 
       authNavContainer.innerHTML = `
-        <a href="${dashboardUrl}" class="login" title="لوحة التحكم">
-          <i class="fa-solid fa-user-circle"></i>
-          <span>${displayName}</span>
-        </a>
+        <div class="user-menu-wrap" id="homeUserMenuWrap">
+          <button type="button" class="user-menu-btn" id="homeUserMenuBtn" aria-expanded="false" title="خيارات الحساب">
+            <i class="fa-solid fa-user-circle user-icon"></i>
+            <span>${displayName}</span>
+            <i class="fa-solid fa-chevron-down chevron-icon"></i>
+          </button>
+          <div class="user-dropdown-card" id="homeUserDropdown">
+            <div class="user-dropdown-header">
+              <strong>${fullName}</strong>
+              <small>${roleLabel}</small>
+            </div>
+            <a href="${dashboardUrl}" class="user-dropdown-item">
+              <i class="fa-solid fa-gauge-high" style="color:var(--primary-color);"></i>
+              <span>لوحة التحكم</span>
+            </a>
+            <button type="button" class="user-dropdown-item logout-item" id="homeLogoutBtn">
+              <i class="fa-solid fa-right-from-bracket"></i>
+              <span>تسجيل الخروج</span>
+            </button>
+          </div>
+        </div>
       `;
+
+      const homeUserMenuWrap = authNavContainer.querySelector('#homeUserMenuWrap');
+      const homeUserMenuBtn = authNavContainer.querySelector('#homeUserMenuBtn');
+      const homeLogoutBtn = authNavContainer.querySelector('#homeLogoutBtn');
+
+      if (homeUserMenuBtn && homeUserMenuWrap) {
+        homeUserMenuBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          homeUserMenuWrap.classList.toggle('open');
+        });
+        document.addEventListener('click', (e) => {
+          if (!homeUserMenuWrap.contains(e.target)) {
+            homeUserMenuWrap.classList.remove('open');
+          }
+        });
+      }
+
+      if (homeLogoutBtn) {
+        homeLogoutBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (window.Auth && typeof window.Auth.logout === 'function') {
+            window.Auth.logout('index.html');
+          } else {
+            localStorage.removeItem('token');
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('user');
+            localStorage.setItem('isLoggedIn', 'false');
+            window.dispatchEvent(new CustomEvent('teryak:auth-change'));
+            window.location.reload();
+          }
+        });
+      }
     } else {
       authNavContainer.innerHTML = `
         <a href="#" class="login" id="homeLoginBtn">دخول</a>
