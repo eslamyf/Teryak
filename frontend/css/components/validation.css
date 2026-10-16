@@ -28,19 +28,24 @@ textarea.is-valid {
 /* Error Message Text */
 .invalid-feedback-custom,
 .teryak-error-message {
-  display: block;
-  font-size: 12.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
   font-weight: 600;
-  color: #e53e3e;
+  color: #dc2626;
   margin-top: 5px;
-  margin-bottom: 2px;
+  margin-bottom: 0;
   direction: rtl;
   text-align: right;
-  animation: teryakFadeInDown 0.25s ease-out;
+  width: 100%;
+  animation: teryakFadeInDown 0.2s ease-out;
 }
 
 .teryak-error-message i {
-  margin-left: 5px;
+  color: #ef4444;
+  font-size: 13px;
+  flex-shrink: 0;
 }
 
 /* Shake Animation for Invalid Inputs */

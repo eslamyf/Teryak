@@ -12,14 +12,25 @@ window.initRegisterPage = function () {
   function toggleFields(type) {
     const pharmacyName = document.getElementById("pharmacyName");
     const licenseNumber = document.getElementById("licenseNumber");
+    const nameLabel = document.getElementById("nameLabel");
+    const fullNameInput = document.getElementById("fullName");
 
     pharmacistFields.forEach(field => {
-      field.style.display = type === "صيدلي" ? "block" : "none";
+      if (field.classList.contains('form-row')) {
+        field.style.display = type === "صيدلي" ? "grid" : "none";
+      } else {
+        field.style.display = type === "صيدلي" ? "block" : "none";
+      }
     });
+
     if (type === "صيدلي") {
+      if (nameLabel) nameLabel.textContent = "اسم الصيدلي المسؤول";
+      if (fullNameInput) fullNameInput.placeholder = "مثال: د. أحمد محمد علي";
       if (pharmacyName) pharmacyName.required = true;
       if (licenseNumber) licenseNumber.required = true;
     } else {
+      if (nameLabel) nameLabel.textContent = "الاسم بالكامل";
+      if (fullNameInput) fullNameInput.placeholder = "مثال: أحمد محمد علي";
       if (pharmacyName) {
         pharmacyName.required = false;
         pharmacyName.value = "";
@@ -35,9 +46,13 @@ window.initRegisterPage = function () {
 
   tabs.forEach(tab => {
     tab.addEventListener("click", () => {
-      tabs.forEach(t => t.classList.remove("active"));
+      tabs.forEach(t => {
+        t.classList.remove("active");
+        t.classList.remove("on");
+      });
       tab.classList.add("active");
-      selectedUserType = tab.textContent.trim();
+      tab.classList.add("on");
+      selectedUserType = tab.dataset.type || (tab.textContent.includes("صيدلي") ? "صيدلي" : "مريض");
       localStorage.setItem("userType", selectedUserType);
       toggleFields(selectedUserType);
     });
@@ -102,7 +117,7 @@ window.initRegisterPage = function () {
   if (fullNameInput && window.TeryakValidator) {
     fullNameInput.addEventListener("blur", () => {
       if (!fullNameInput.value || fullNameInput.value.trim().length < 3) {
-        window.TeryakValidator.setError(fullNameInput, 'الاسم يجب أن يحتوي على 3 أحرف على الأقل');
+        window.TeryakValidator.setError(fullNameInput, 'يجب أن يحتوي الاسم على 3 أحرف على الأقل');
       } else {
         window.TeryakValidator.setValid(fullNameInput);
       }
@@ -134,7 +149,7 @@ window.initRegisterPage = function () {
   if (confirmPasswordInput && passwordInput && window.TeryakValidator) {
     confirmPasswordInput.addEventListener("input", () => {
       if (confirmPasswordInput.value !== passwordInput.value) {
-        window.TeryakValidator.setError(confirmPasswordInput, 'كلمتا المرور غير متطابقتين');
+        window.TeryakValidator.setError(confirmPasswordInput, 'كلمتا المرور غير متطابقتين، يرجى إعادة التأكد');
       } else {
         window.TeryakValidator.setValid(confirmPasswordInput);
       }

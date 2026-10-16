@@ -50,35 +50,42 @@
           <form class="card auth-box" id="loginForm" novalidate>
             <!-- Role Selector Tabs -->
             <div class="tabs" role="tablist">
-              <button type="button" class="tab on active" id="tabPatient">مريض</button>
-              <button type="button" class="tab" id="tabPharmacist">صيدلي</button>
+              <button type="button" class="tab on active" id="tabPatient">
+                <i class="fa-solid fa-user me-1"></i> مريض
+              </button>
+              <button type="button" class="tab" id="tabPharmacist">
+                <i class="fa-solid fa-prescription-bottle-medical me-1"></i> صيدلي
+              </button>
             </div>
 
             <!-- Email Field with Label Above -->
             <div class="form-group">
               <label class="lbl" for="loginEmail">البريد الإلكتروني</label>
-              <input class="in" id="loginEmail" type="email" placeholder="name@email.com" dir="ltr" style="text-align:start" required autocomplete="email">
+              <div class="input-wrap">
+                <i class="fa-regular fa-envelope field-icon"></i>
+                <input class="in has-icon" id="loginEmail" type="email" placeholder="name@email.com" dir="ltr" style="text-align:start" required autocomplete="email">
+              </div>
             </div>
 
             <!-- Password Field with Label Above & Eye Toggle -->
             <div class="form-group">
               <label class="lbl" for="password">كلمة المرور</label>
-              <div class="password-box" style="position:relative;">
-                <input class="in" id="password" type="password" placeholder="••••••••" dir="ltr" style="text-align:start;padding-inline-end:46px;margin-bottom:0;" required autocomplete="current-password">
-                <button type="button" class="eye-btn" aria-label="عرض / إخفاء كلمة المرور" tabindex="-1" style="position:absolute;top:50%;transform:translateY(-50%);inset-inline-end:14px;border:none;background:none;color:var(--text-muted);cursor:pointer;display:grid;place-items:center;padding:4px;font-size:16px;">
+              <div class="password-box">
+                <input class="in" id="password" type="password" placeholder="••••••••" dir="ltr" required autocomplete="current-password">
+                <button type="button" class="eye-btn" aria-label="عرض / إخفاء كلمة المرور" tabindex="-1">
                   <i class="fa-solid fa-eye"></i>
                 </button>
               </div>
             </div>
 
             <!-- Submit Button -->
-            <button class="btn btn-brand btn-block" type="submit" style="margin-top:16px;">تسجيل الدخول</button>
+            <button class="btn btn-brand btn-block w-100" type="submit" style="margin-top:16px;">تسجيل الدخول</button>
 
             <!-- Divider -->
             <div class="or">أو</div>
 
             <!-- Google Auth Ghost Button -->
-            <button class="btn btn-ghost btn-block" id="loginWithG" type="button">
+            <button class="btn btn-ghost btn-block w-100" id="loginWithG" type="button">
               <i class="fa-brands fa-google text-danger me-2"></i> الدخول بحساب Google
             </button>
 

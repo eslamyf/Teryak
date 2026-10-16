@@ -1,84 +1,358 @@
 /* ==========================================================================
-   Teryak Platform - Auth Pages (Login & Register) Unified Styles
-   Inherits design tokens and components from components.css
+   Teryak Platform - Unified Auth Pages (Login & Register) Styles
+   High-end Compact Medical Platform Authentication Design System
    ========================================================================== */
 
-.auth-card {
-  width: min(520px, 100%);
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-lg);
-  padding: 32px 28px;
-  box-shadow: var(--shadow-sm);
-  margin-inline: auto;
+/* Main Auth Layout Container - Compact & Centered */
+.auth {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px 40px;
+  min-height: calc(100vh - 140px);
+  box-sizing: border-box;
 }
 
-.input-box {
+.auth-header,
+.ph.center {
+  text-align: center;
+  margin: 0 auto 16px;
+  width: min(540px, 100%);
+}
+
+.auth-badge-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(0, 139, 94, 0.1);
+  color: var(--primary-color);
+  display: inline-grid;
+  place-items: center;
+  font-size: 20px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(0, 139, 94, 0.18);
+  box-shadow: 0 4px 12px rgba(0, 139, 94, 0.08);
+}
+
+.auth-header h1,
+.ph.center h1 {
+  font-family: var(--font-heading);
+  font-size: clamp(22px, 2.8vw, 28px);
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 4px;
+  line-height: 1.25;
+}
+
+.auth-header p,
+.ph.center p {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Elevated Auth Card - Compact Padding & Ergonomic Width */
+.auth-box,
+.auth-card {
+  width: min(540px, 100%);
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  border-radius: 20px;
+  padding: 24px 22px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+  margin-inline: auto;
+  box-sizing: border-box;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+[data-theme="dark"] .auth-box,
+[data-theme="dark"] .auth-card {
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.28);
+}
+
+/* Role Selector Tabs (Patient / Pharmacist) */
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--bg-muted);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 16px;
+  gap: 4px;
+}
+
+.tabs button,
+.tabs .tab {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-muted);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.tabs .tab:hover {
+  color: var(--text-main);
+}
+
+.tabs .tab.active,
+.tabs .tab.on,
+.tabs button.active {
+  background: var(--primary-color) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(0, 139, 94, 0.25);
+}
+
+/* 2-Column Responsive Form Row */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 520px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+/* Form Groups & Labels */
+.form-group {
+  margin-bottom: 12px;
+}
+
+.lbl {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 5px;
+  color: var(--text-main);
+  text-align: start;
+}
+
+/* Inputs with Leading Icon */
+.input-wrap {
   position: relative;
   display: flex;
   align-items: center;
-  background: var(--bg-card);
-  border: 1.5px solid var(--border-color);
-  border-radius: var(--border-radius-md);
-  transition: border-color var(--transition-fast);
-}
-
-.input-box:focus-within {
-  border-color: var(--primary-color);
+  width: 100%;
 }
 
 .field-icon {
   position: absolute;
   inset-inline-start: 14px;
-  color: var(--text-muted);
-  font-size: 16px;
-  pointer-events: none;
-}
-
-.floating-input {
-  width: 100%;
-  border: none;
-  background: transparent;
-  padding: 14px 44px 14px 14px;
-  font-size: 15.5px;
-  color: var(--text-main);
-  outline: none;
-  font-family: inherit;
-}
-
-.floating-label {
-  position: absolute;
-  inset-inline-start: 44px;
   top: 50%;
   transform: translateY(-50%);
   color: var(--text-muted);
-  font-size: 14.5px;
+  font-size: 15px;
   pointer-events: none;
-  transition: all 0.2s ease;
+  z-index: 2;
+}
+
+.in {
+  width: 100%;
+  border: 1.5px solid var(--border-color);
+  border-radius: 10px;
+  padding: 10px 14px;
   background: var(--bg-card);
-  padding-inline: 4px;
+  font-size: 14px;
+  color: var(--text-main);
+  box-sizing: border-box;
+  outline: none;
+  font-family: inherit;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.floating-input:focus ~ .floating-label,
-.floating-input.has-value ~ .floating-label,
-.floating-input:not(:placeholder-shown) ~ .floating-label {
-  top: 0;
-  font-size: 12px;
-  color: var(--primary-color);
+.in.has-icon {
+  padding-inline-start: 42px !important;
 }
 
+.in:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 139, 94, 0.12);
+}
+
+.in::placeholder {
+  color: var(--text-muted);
+  opacity: 0.65;
+}
+
+/* ==========================================================================
+   PASSWORD BOX & EYE TOGGLE FIX
+   ========================================================================== */
+.password-box {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.password-box .in,
+.password-box input {
+  width: 100%;
+  padding-left: 44px !important; /* Space for eye toggle */
+  padding-right: 14px !important;
+  text-align: start !important;
+  margin-bottom: 0 !important;
+  box-sizing: border-box;
+  font-family: inherit;
+  letter-spacing: 0.5px;
+}
+
+.password-box .in[type="password"] {
+  letter-spacing: 2px;
+}
+
+.password-box .eye-btn,
 .eye-btn {
   position: absolute;
-  inset-inline-end: 12px;
+  left: 12px !important;
+  right: auto !important;
+  top: 50%;
+  transform: translateY(-50%);
   border: none;
-  background: none;
+  background: transparent;
   color: var(--text-muted);
   cursor: pointer;
   padding: 4px;
+  font-size: 15px;
   display: grid;
   place-items: center;
+  z-index: 5;
+  transition: color var(--transition-fast), transform var(--transition-fast);
+  line-height: 1;
 }
 
+.password-box .eye-btn:hover,
 .eye-btn:hover {
   color: var(--primary-color);
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Pharmacist Smooth Animated Transition */
+.pharmacist-field {
+  transition: all 0.25s ease-out;
+}
+
+/* Custom Checkbox */
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: start;
+  margin-block: 8px 12px !important;
+}
+
+.form-check-input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--primary-color);
+}
+
+.form-check-label {
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+/* Primary Action Button */
+.btn-brand,
+.btn.btn-success {
+  background: linear-gradient(135deg, #008b5e 0%, #08a370 100%) !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 11px 18px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast);
+  box-shadow: 0 4px 12px rgba(0, 139, 94, 0.2);
+}
+
+.btn-brand:hover,
+.btn.btn-success:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 139, 94, 0.28);
+}
+
+.btn-brand:active,
+.btn.btn-success:active {
+  transform: translateY(0);
+}
+
+/* Google OAuth Ghost Button */
+.google-btn,
+.btn.btn-ghost {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  color: var(--text-main);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.google-btn:hover,
+.btn.btn-ghost:hover {
+  background: var(--bg-muted);
+  border-color: rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Divider & Switch Links */
+.or {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-block: 14px;
+}
+
+.or::before,
+.or::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border-color);
+}
+
+.sw {
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--text-muted);
+  margin-top: 14px;
+  margin-bottom: 0;
+}
+
+.sw a {
+  color: var(--primary-color);
+  font-weight: 700;
+  text-decoration: none;
+  transition: opacity var(--transition-fast);
+}
+
+.sw a:hover {
+  text-decoration: underline;
+  opacity: 0.85;
 }

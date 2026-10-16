@@ -22,7 +22,7 @@
       const cleaned = (value || '').trim();
       const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
       if (!regex.test(cleaned)) {
-        return 'يرجى إدخال بريد إلكتروني صحيح (مثال: name@example.com)';
+        return 'يرجى إدخال بريد إلكتروني صالح مثل: <bdi dir="ltr">name@example.com</bdi>';
       }
       return true;
     },
@@ -31,7 +31,7 @@
     password: (value) => {
       const val = value || '';
       if (val.length < 6) {
-        return 'كلمة المرور يجب أن تكون 6 أحرف أو أرقام على الأقل';
+        return 'يجب ألا تقل كلمة المرور عن 6 خانات (أحرف أو أرقام)';
       }
       return true;
     },
@@ -74,10 +74,10 @@
     inputEl.classList.add('is-invalid');
     inputEl.classList.remove('is-valid');
 
-    const inputBox = inputEl.closest('.input-box');
-    if (inputBox) {
-      inputBox.classList.add('is-invalid');
-      inputBox.classList.remove('is-valid');
+    const wrapper = inputEl.closest('.input-wrap, .password-box, .input-box');
+    if (wrapper) {
+      wrapper.classList.add('is-invalid');
+      wrapper.classList.remove('is-valid');
     }
 
     // Remove existing error message
@@ -85,17 +85,12 @@
 
     const errorDiv = document.createElement('div');
     errorDiv.className = 'teryak-error-message';
-    errorDiv.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${message}`;
+    errorDiv.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> <span>${message}</span>`;
 
-    const formGroup = inputEl.closest('.form-group') || (inputBox ? inputBox.parentNode : inputEl.parentNode);
-    if (inputBox && inputBox.nextSibling) {
-      inputBox.parentNode.insertBefore(errorDiv, inputBox.nextSibling);
-    } else if (inputBox) {
-      inputBox.parentNode.appendChild(errorDiv);
-    } else if (inputEl.nextSibling) {
-      inputEl.parentNode.insertBefore(errorDiv, inputEl.nextSibling);
-    } else {
-      formGroup.appendChild(errorDiv);
+    // Always place error message directly below the input/wrapper (never inside flex)
+    const targetEl = wrapper || inputEl;
+    if (targetEl.parentNode) {
+      targetEl.parentNode.insertBefore(errorDiv, targetEl.nextSibling);
     }
   }
 
@@ -106,12 +101,12 @@
     if (!inputEl) return;
     inputEl.classList.remove('is-invalid');
 
-    const inputBox = inputEl.closest('.input-box');
-    if (inputBox) {
-      inputBox.classList.remove('is-invalid');
+    const wrapper = inputEl.closest('.input-wrap, .password-box, .input-box');
+    if (wrapper) {
+      wrapper.classList.remove('is-invalid');
     }
 
-    const container = inputEl.closest('.form-group') || (inputBox ? inputBox.parentNode : inputEl.parentNode);
+    const container = inputEl.closest('.form-group') || (wrapper ? wrapper.parentNode : inputEl.parentNode);
     if (container) {
       const existingMsgs = container.querySelectorAll('.teryak-error-message');
       existingMsgs.forEach(msg => msg.remove());
@@ -126,10 +121,10 @@
     clearError(inputEl);
     inputEl.classList.add('is-valid');
 
-    const inputBox = inputEl.closest('.input-box');
-    if (inputBox) {
-      inputBox.classList.add('is-valid');
-      inputBox.classList.remove('is-invalid');
+    const wrapper = inputEl.closest('.input-wrap, .password-box, .input-box');
+    if (wrapper) {
+      wrapper.classList.remove('is-invalid');
+      wrapper.classList.add('is-valid');
     }
   }
 

@@ -421,31 +421,32 @@ window.initMedicinesPage = async function () {
       const detailUrl = `medicine-detail.html?med=${encodeURIComponent(med.id || med.slug || med.nameEn || med.nameAr)}`;
       const safeName = escapeHTML(med.nameAr);
       const safeCategory = escapeHTML(med.category);
-      const safeIngredient = escapeHTML(med.productType === 'product' ? med.category : (med.activeIngredient || med.nameEn));
+      const rawIngredient = med.productType === 'product' ? '' : (med.activeIngredient || med.nameEn || '');
+      const safeIngredient = (rawIngredient && rawIngredient !== med.category) ? escapeHTML(rawIngredient) : '';
       const safeImage = escapeHTML(med.image || '');
       const safeId = escapeHTML(med.id);
 
       const imageContent = safeImage
-        ? `<img src="${safeImage}" alt="${safeName}" style="max-height:140px;max-width:90%;object-fit:contain;" loading="lazy" onerror="this.onerror=null;this.parentElement.innerHTML='<svg class=\\'i\\' style=\\'width:56px;height:56px;\\' viewBox=\\'0 0 24 24\\'><rect x=\\'3\\' y=\\'9\\' width=\\'18\\' height=\\'7\\' rx=\\'3.5\\' transform=\\'rotate(-35 12 12.5)\\'/><path d=\\'M10.5 7.5l5 7\\'/></svg>';">`
+        ? `<img class="med-thumb-img" src="${safeImage}" alt="${safeName}" loading="lazy" onerror="this.onerror=null;this.parentElement.innerHTML='<svg class=\\'i\\' style=\\'width:56px;height:56px;\\' viewBox=\\'0 0 24 24\\'><rect x=\\'3\\' y=\\'9\\' width=\\'18\\' height=\\'7\\' rx=\\'3.5\\' transform=\\'rotate(-35 12 12.5)\\'/><path d=\\'M10.5 7.5l5 7\\'/></svg>';">`
         : `<svg class="i" style="width:56px;height:56px;" viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="7" rx="3.5" transform="rotate(-35 12 12.5)"/><path d="M10.5 7.5l5 7"/></svg>`;
 
       article.innerHTML = `
         <div class="med-img">
           ${statusBadge}
-          <span class="rate">★ ${med.rating}</span>
-          <a href="${detailUrl}" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:inherit;text-decoration:none;">
+          <span class="rate"><i class="fa-solid fa-star text-warning"></i> ${med.rating}</span>
+          <a href="${detailUrl}" class="med-img-link" title="${safeName}">
             ${imageContent}
           </a>
         </div>
         <div class="med-b">
-          <small>${safeCategory}${safeIngredient ? ` · ${safeIngredient}` : ''}</small>
-          <h3><a href="${detailUrl}">${safeName}</a></h3>
+          <span class="med-cat">${safeCategory}${safeIngredient ? ` · ${safeIngredient}` : ''}</span>
+          <h3 class="med-title"><a href="${detailUrl}" title="${safeName}">${safeName}</a></h3>
           <div class="med-p">
-            <small>${med.pharmaciesCount > 0 ? `متوفر في ${med.pharmaciesCount} صيدلية` : 'غير متوفر حالياً'}</small>
+            <span class="med-avail"><i class="fa-solid fa-store me-1"></i>${med.pharmaciesCount > 0 ? `متوفر في ${med.pharmaciesCount} صيدلية` : 'غير متوفر حالياً'}</span>
             <div class="price">${Math.round(med.price)}<span>ج.م</span></div>
           </div>
           <button type="button" class="btn btn-brand btn-block addCart" data-id="${safeId}" data-name="${safeName}">
-            اختار صيدلية للطلب
+            <i class="fa-solid fa-bag-shopping me-1"></i> اختار صيدلية للطلب
           </button>
         </div>
       `;

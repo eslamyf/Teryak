@@ -75,6 +75,10 @@ tmp/
 # ---------------------------------------------------
 .vscode/
 .idea/
+.venv/
+venv/
+ENV/
+env/
 *.suo
 *.ntvs*
 *.njsproj
