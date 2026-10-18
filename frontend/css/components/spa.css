@@ -29,6 +29,7 @@
   position: relative;
   min-height: calc(100vh - 86px);
   will-change: opacity, transform;
+  background-color: transparent;
 }
 
 .spa-entering {

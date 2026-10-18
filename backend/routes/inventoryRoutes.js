@@ -7,6 +7,7 @@ const {
   deleteInventoryItem,
   getLowStockItems,
   bulkImportInventory,
+  syncCatalogInventory,
 } = require('../controllers/inventoryController');
 const { protect } = require('../middlewares/authMiddleware');
 const { authorize } = require('../middlewares/roleMiddleware');
@@ -17,6 +18,7 @@ router.use(authorize('pharmacist', 'admin'));
 
 router.get('/low-stock', getLowStockItems);
 router.post('/bulk-import', bulkImportInventory);
+router.post('/sync', syncCatalogInventory);
 
 router.route('/')
   .get(getMyInventory)

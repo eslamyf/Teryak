@@ -76,10 +76,15 @@ class SPARouter {
     const key = this.normalizeUrl(window.location.href);
     const container = document.getElementById('spa-content') || document.querySelector('main');
     if (container) {
+      const pageScripts = Array.from(document.querySelectorAll('script[src]'))
+        .map(s => s.getAttribute('src'))
+        .filter(src => src && (src.includes('/pages/') || src.includes('site.js')));
+
       this.cache.set(key, {
         title: document.title,
         bodyPage: document.body.getAttribute('data-page') || '',
         contentHtml: container.innerHTML,
+        pageScripts,
         timestamp: Date.now()
       });
     }
@@ -108,6 +113,18 @@ class SPARouter {
       const url = new URL(anchor.href, window.location.origin);
       if (url.origin !== window.location.origin) return false;
       if (url.protocol !== 'http:' && url.protocol !== 'https:') return false;
+
+      // Exclude standalone dashboard portals with custom sidebars (pharmacist, admin)
+      const currentPath = window.location.pathname.replace(/\\/g, '/');
+      const targetPath = url.pathname.replace(/\\/g, '/');
+      if (
+        targetPath.includes('/pages/pharmacist/') ||
+        targetPath.includes('/pages/admin/') ||
+        currentPath.includes('/pages/pharmacist/') ||
+        currentPath.includes('/pages/admin/')
+      ) {
+        return false;
+      }
 
       // Hash link on same page
       if (url.pathname === window.location.pathname && url.search === window.location.search && url.hash) {
@@ -205,6 +222,23 @@ class SPARouter {
     if (this.isNavigating) return;
     this.isNavigating = true;
 
+    // 1. Immediately dismiss any open Bootstrap modals and backdrops
+    try {
+      document.querySelectorAll('.modal.show').forEach(m => {
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+          const inst = bootstrap.Modal.getInstance(m);
+          if (inst) inst.hide();
+        }
+        m.classList.remove('show');
+        m.style.display = 'none';
+        m.setAttribute('aria-hidden', 'true');
+      });
+      document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+      document.body.classList.remove('modal-open');
+      document.body.style.removeProperty('overflow');
+      document.body.style.removeProperty('padding-right');
+    } catch (e) {}
+
     const currentContainer = document.getElementById('spa-content') || document.querySelector('main');
     if (!currentContainer) {
       window.location.href = url;
@@ -245,6 +279,16 @@ class SPARouter {
         });
       }
 
+      // Preserve Dark Theme Consistency During SPA Navigation
+      const activeTheme = localStorage.getItem('teryak_theme') || localStorage.getItem('theme') || (document.documentElement.getAttribute('data-theme') || 'light');
+      if (activeTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.documentElement.classList.add('dark-theme');
+        document.documentElement.style.backgroundColor = '#0b1120';
+        document.documentElement.style.colorScheme = 'dark';
+        document.body.classList.add('dark-theme');
+      }
+
       // Swap Content
       currentContainer.innerHTML = pageData.contentHtml;
       currentContainer.classList.remove('spa-leaving');
@@ -270,7 +314,7 @@ class SPARouter {
         if (typeof navbar.updateCartCount === 'function') navbar.updateCartCount();
       }
 
-      // Load & execute page scripts dynamically
+      // Load & execute page scripts dynamically and await their completion
       await this.executePageScripts(pageData.pageScripts, pageData.bodyPage);
 
       // Fire Page Mounted Global Event
@@ -302,11 +346,18 @@ class SPARouter {
       const existing = document.querySelector(`script[data-spa-script="${scriptName}"]`);
       if (existing) existing.remove();
 
-      const scriptEl = document.createElement('script');
-      scriptEl.src = src + (src.includes('?') ? '&' : '?') + 't=' + Date.now();
-      scriptEl.setAttribute('data-spa-script', scriptName);
-      scriptEl.async = false;
-      document.body.appendChild(scriptEl);
+      await new Promise((resolve) => {
+        const scriptEl = document.createElement('script');
+        scriptEl.src = src + (src.includes('?') ? '&' : '?') + 't=' + Date.now();
+        scriptEl.setAttribute('data-spa-script', scriptName);
+        scriptEl.async = false;
+        scriptEl.onload = () => resolve();
+        scriptEl.onerror = (err) => {
+          console.warn(`[Teryak SPA]: Failed to load script: ${src}`, err);
+          resolve();
+        };
+        document.body.appendChild(scriptEl);
+      });
     }
   }
 }

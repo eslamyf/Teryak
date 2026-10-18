@@ -8,7 +8,9 @@
    - Borders: var(--border-color), var(--border-radius-sm), md, lg
    - Shadows: var(--shadow-sm), md, lg
    - Fonts: var(--font-arabic), var(--font-heading)
-   /* Import Unified Navbar System */
+   ========================================================================== */
+
+/* Import Unified Navbar & SPA Systems */
 @import url('navbar.css');
 @import url('spa.css');
 
@@ -165,6 +167,11 @@ svg.i {
   line-height: 1;
 }
 
+.icon-btn.hamburger-btn,
+.hamburger-btn {
+  display: none !important;
+}
+
 .sun {
   display: none !important;
 }
@@ -203,15 +210,23 @@ body.dark-theme .moon {
 /* ==========================================================================
    2. Unified Header (Site-wide Navbar matching Home Page)
    ========================================================================== */
+app-navbar {
+  display: block !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 1040 !important;
+  width: 100% !important;
+}
+
 .site-header,
 .hd {
-  position: sticky;
-  top: 0;
-  z-index: 1030;
+  position: relative;
+  width: 100%;
   background: var(--bg-card);
   border-bottom: 1px solid var(--border-color);
-  width: 100%;
-  transition: background var(--transition-normal), border-color var(--transition-normal);
+  transition: background var(--transition-normal), border-color var(--transition-normal), box-shadow 0.25s ease;
 }
 
 .site-header nav,
@@ -455,9 +470,12 @@ body.dark-theme .moon {
 
 .chips {
   display: flex;
-  gap: 10px;
+  flex-wrap: nowrap;
+  gap: 8px;
   overflow-x: auto;
-  padding-block: 18px 4px;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-block: 16px 6px;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -468,12 +486,13 @@ body.dark-theme .moon {
 
 .chip {
   flex: none;
-  padding: 6px 20px;
+  white-space: nowrap;
+  padding: 6.5px 16px;
   border-radius: 99px;
   border: 1px solid var(--border-color);
   background: var(--bg-card);
   font-weight: 600;
-  font-size: 15px;
+  font-size: 14.5px;
   color: var(--text-main);
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -633,10 +652,19 @@ a.card:hover,
 /* Pagination (.pager) */
 .pager {
   display: flex;
+  align-items: center;
   justify-content: center;
   gap: 8px;
   margin-top: 36px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  max-width: 100%;
+}
+
+.pager #pageNumbersContainer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
 }
 
 .pager button {
@@ -649,19 +677,86 @@ a.card:hover,
   font-weight: 700;
   color: var(--text-main);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: all var(--transition-fast);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.pager button:hover {
+.pager button:hover:not(:disabled) {
   border-color: var(--primary-color);
   color: var(--primary-color);
+  background: rgba(0, 139, 94, 0.08);
+}
+
+.pager button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .pager button.on,
 .pager button.active {
-  background: var(--primary-color) !important;
-  border-color: var(--primary-color) !important;
+  background: var(--primary-color, #008b5e) !important;
+  border-color: var(--primary-color, #008b5e) !important;
   color: #fff !important;
+  box-shadow: 0 4px 12px rgba(0, 139, 94, 0.35);
+}
+
+.pager .pager-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 42px;
+  color: var(--text-muted);
+  font-weight: 800;
+  user-select: none;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 600px) {
+  .pager {
+    gap: 4px;
+    margin-top: 24px;
+  }
+  .pager button {
+    min-width: 34px;
+    height: 36px;
+    padding-inline: 8px;
+    font-size: 13px;
+    border-radius: 8px;
+  }
+  .pager .pager-ellipsis {
+    width: 20px;
+    height: 36px;
+  }
+}
+
+/* Dark mode for pagination */
+body.dark-theme .pager button,
+[data-theme="dark"] .pager button {
+  background-color: #111827 !important;
+  border-color: #1f2937 !important;
+  color: #f1f5f9 !important;
+}
+
+body.dark-theme .pager button:hover:not(:disabled),
+[data-theme="dark"] .pager button:hover:not(:disabled) {
+  border-color: #10B981 !important;
+  color: #34d399 !important;
+  background-color: rgba(16, 185, 129, 0.15) !important;
+}
+
+body.dark-theme .pager button.on,
+body.dark-theme .pager button.active,
+[data-theme="dark"] .pager button.on,
+[data-theme="dark"] .pager button.active {
+  background-color: #10B981 !important;
+  border-color: #10B981 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4) !important;
 }
 
 /* ==========================================================================
@@ -1092,6 +1187,8 @@ a.card:hover,
     display: flex;
   }
   .mobile-menu-btn,
+  .icon-btn.hamburger-btn,
+  .hamburger-btn,
   .menu {
     display: grid !important;
   }

@@ -30,9 +30,21 @@ class AppCartModal extends HTMLElement {
     }
   }
 
+  getCheckoutUrl() {
+    const path = window.location.pathname.replace(/\\/g, '/');
+    if (path.includes('/pages/public/')) {
+      return 'checkout.html';
+    } else if (path.includes('/pages/pharmacist/') || path.includes('/pages/admin/')) {
+      return '../public/checkout.html';
+    } else if (path.includes('/pages/')) {
+      return 'public/checkout.html';
+    } else {
+      return 'pages/public/checkout.html';
+    }
+  }
+
   render() {
-    const base = this.getBasePath();
-    const checkoutUrl = base + 'pages/public/checkout.html';
+    const checkoutUrl = this.getCheckoutUrl();
 
     this.innerHTML = `
       <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
@@ -57,7 +69,7 @@ class AppCartModal extends HTMLElement {
                 <button type="button" class="btn btn-outline-secondary btn-sm" id="clearCartBtn">
                   <i class="fa-solid fa-trash-can me-1"></i> تفريغ السلة
                 </button>
-                <a href="${checkoutUrl}" id="proceedToCheckoutBtn" class="btn-checkout-cart">
+                <a href="${checkoutUrl}" id="proceedToCheckoutBtn" class="btn-checkout-cart" data-bs-dismiss="modal">
                   إتمام الطلب <i class="fa-solid fa-arrow-left ms-1"></i>
                 </a>
               </div>
@@ -76,6 +88,40 @@ class AppCartModal extends HTMLElement {
           window.Cart.clearCart();
           if (window.Toast) {
             window.Toast.info('تم تفريغ سلة المشتريات بالكامل', 'السلة', 2500);
+          }
+        }
+      });
+    }
+
+    // Handle checkout button: close modal and clean backdrop
+    const checkoutBtn = this.querySelector('#proceedToCheckoutBtn');
+    if (checkoutBtn) {
+      checkoutBtn.addEventListener('click', (e) => {
+        const modalEl = this.querySelector('#exampleModalToggle');
+        if (modalEl) {
+          if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            const inst = bootstrap.Modal.getInstance(modalEl);
+            if (inst) inst.hide();
+          }
+          modalEl.classList.remove('show');
+          modalEl.style.display = 'none';
+          modalEl.setAttribute('aria-hidden', 'true');
+        }
+
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        document.body.classList.remove('modal-open');
+        document.body.style.removeProperty('overflow');
+        document.body.style.removeProperty('padding-right');
+
+        // If already on checkout page, smooth scroll to shipping form and refresh view
+        if (window.location.pathname.includes('checkout.html')) {
+          e.preventDefault();
+          const formCard = document.getElementById('shippingForm') || document.querySelector('.checkout-form-card');
+          if (formCard) {
+            formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+          if (window.initCheckoutPage) {
+            window.initCheckoutPage();
           }
         }
       });
@@ -165,7 +211,8 @@ class AppCartModal extends HTMLElement {
             ${imgSrc ? `<img src="${imgSrc}" alt="${item.name}" class="cart-item-thumb" loading="lazy" onerror="this.remove()">` : '<span class="cart-item-thumb med-thumb-placeholder" aria-label="لا توجد صورة"><i class="fa-solid fa-box-open"></i></span>'}
             <div>
               <p class="NameOfMedicine">${item.name}</p>
-              <div class="d-flex align-items-center gap-2">
+              ${(item.pharmacy || item.pharmacyName) ? `<small class="text-success font-bold d-block"><i class="fa-solid fa-store me-1"></i>${item.pharmacy || item.pharmacyName}</small>` : ''}
+              <div class="d-flex align-items-center gap-2 mt-1">
                 <span class="PriceOfMedicine">${numPrice.toFixed(2)} ج.م</span>
                 <small class="text-muted">(${itemTotal} ج.م الإجمالي)</small>
               </div>

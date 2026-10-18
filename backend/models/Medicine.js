@@ -85,4 +85,11 @@ const medicineSchema = new mongoose.Schema(
 // Compound index for fast text search on Arabic/English names and active ingredient
 medicineSchema.index({ nameAr: 'text', nameEn: 'text', activeIngredient: 'text' });
 
+// Performance compound indexes for catalog browsing, sorting, and filtering
+medicineSchema.index({ status: 1, createdAt: -1 });
+medicineSchema.index({ status: 1, category: 1, createdAt: -1 });
+medicineSchema.index({ status: 1, price: 1 });
+medicineSchema.index({ status: 1, price: -1 });
+medicineSchema.index({ status: 1, nameAr: 1 });
+
 module.exports = mongoose.model('Medicine', medicineSchema);

@@ -70,13 +70,22 @@ const getMyPharmacy = async (req, res, next) => {
   try {
     let pharmacy = await Pharmacy.findOne({ ownerId: req.user._id });
 
+    if (!pharmacy && req.user.pharmacyName) {
+      pharmacy = await Pharmacy.findOne({ name: new RegExp(req.user.pharmacyName, 'i') });
+      if (pharmacy && !pharmacy.ownerId) {
+        pharmacy.ownerId = req.user._id;
+        await pharmacy.save();
+      }
+    }
+
     if (!pharmacy) {
       // Auto-create if not yet created for this pharmacist
       pharmacy = await Pharmacy.create({
         ownerId: req.user._id,
         name: req.user.pharmacyName || `صيدلية د. ${req.user.name}`,
         licenseNumber: req.user.licenseNumber || 'LIC-' + Date.now(),
-        phone: req.user.phone || '01000000000',
+        phone: req.user.phone || '01028103634',
+        isApproved: true,
         address: req.user.address || { governorate: 'القاهرة', city: 'مدينة نصر' },
       });
     }
@@ -93,6 +102,9 @@ const getMyPharmacy = async (req, res, next) => {
 const updateMyPharmacy = async (req, res, next) => {
   try {
     let pharmacy = await Pharmacy.findOne({ ownerId: req.user._id });
+    if (!pharmacy && req.user.pharmacyName) {
+      pharmacy = await Pharmacy.findOne({ name: new RegExp(req.user.pharmacyName, 'i') });
+    }
 
     if (!pharmacy) {
       return errorResponse(res, 404, 'الصيدلية غير موجودة');

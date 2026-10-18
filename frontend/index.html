@@ -4,27 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>تِرياق | دوّر على دواءك وهنلاقيهولك</title>
+  <!-- Favicon / Brand Logo -->
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+  <link rel="apple-touch-icon" href="assets/images/logo.png">
   <meta name="description" content="اكتب اسم الدوا، وشوف مين عنده دلوقتي وبكام، واحجز قبل ما تروح من أقرب صيدلية معتمدة.">
 
-  <!-- Anti-flicker Theme Script (Instant Execution Before Paint) -->
+    <!-- Anti-flicker Theme Script: Executed synchronously before ANY CSS or DOM paint -->
   <script>
-    (function(){
-      try {
-        var t = localStorage.getItem('teryak_theme') || localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        if (t === 'dark') {
-          document.documentElement.setAttribute('data-theme', 'dark');
-          if (document.body) {
-            document.body.classList.add('dark-theme');
-          } else {
-            document.addEventListener('DOMContentLoaded', function(){
-              document.body.classList.add('dark-theme');
-            });
-          }
-        } else {
-          document.documentElement.removeAttribute('data-theme');
-        }
-      } catch(e){}
-    })();
+    (function(){try{var saved=localStorage.getItem('teryak_theme')||localStorage.getItem('theme');var prefersDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches;var isDark=saved==='dark'||(!saved&&prefersDark);if(isDark){document.documentElement.setAttribute('data-theme','dark');document.documentElement.classList.add('dark-theme');document.documentElement.style.backgroundColor='#0b1120';document.documentElement.style.colorScheme='dark';}else{document.documentElement.setAttribute('data-theme','light');document.documentElement.classList.remove('dark-theme');document.documentElement.style.backgroundColor='#f8fafc';document.documentElement.style.colorScheme='light';}}catch(e){}})();
   </script>
 
   <!-- Typography: Cairo, Alexandria, Tajawal -->
@@ -39,6 +26,7 @@
   <!-- Base & Component CSS -->
   <link rel="stylesheet" href="css/base/variables.css">
   <link rel="stylesheet" href="css/base/global.css">
+  <link rel="stylesheet" href="css/components/navbar.css">
   <link rel="stylesheet" href="css/components/components.css">
   <link rel="stylesheet" href="css/components/modal.css">
 
@@ -52,18 +40,7 @@
 
   <!-- Single Page Application Content Container -->
   <div id="spa-content">
-    <!-- Reusable SVG Symbols -->
-    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-      <symbol id="i-pill" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="5" y="17" width="38" height="14" rx="7" transform="rotate(-35 24 24)"/>
-        <path d="M19 14.5l10 14"/>
-      </symbol>
-      <symbol id="i-bottle" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="14" y="5" width="20" height="8" rx="2"/>
-        <path d="M16 13h16v28a3 3 0 0 1-3 3H19a3 3 0 0 1-3-3z"/>
-        <path d="M24 22v10M19 27h10"/>
-      </symbol>
-    </svg>
+
 
     <!-- Back to top floating button -->
     <a href="#" id="arow" aria-label="العودة لأعلى الصفحة" title="العودة للأعلى" style="display:none;">
@@ -76,12 +53,12 @@
     <header class="hero">
       <!-- Center Hero Pitch & Search Box -->
     <div class="hero-main wrap">
-      <h1>الدوا ناقص؟ هنلاقيهولك النهاردة.</h1>
-      <p class="lead">اكتب اسم الدوا، وشوف مين عنده دلوقتي وبكام، وتحجز قبل ما تروح.</p>
+      <h1>مش لاقي دواك؟ خلّي البحث علينا</h1>
+      <p class="lead">اعرف الصيدليات اللي ممكن تلاقي فيها دواءك، ووفّر وقتك ومجهودك في البحث.</p>
 
       <form class="search" id="searchForm" role="search">
         <input id="q" type="text" placeholder="اسم الدوا، مثلاً أوجمنتين 1 جم" aria-label="اسم الدوا" autocomplete="off">
-        <button class="btn btn-brand" type="submit">دوّر</button>
+        <button class="btn btn-brand" type="submit">دوّر على دواك</button>
       </form>
 
       <div class="chips">
@@ -91,7 +68,7 @@
         <button type="button" data-q="كتافلام 50 مجم">كتافلام</button>
       </div>
 
-      <p class="rx-link">معاك روشتة؟ <a href="#rx">صوّرها وإحنا نسعّرها</a></p>
+      <p class="rx-link">معاك روشتة؟ <a href="pages/public/prescription.html">صوّرها وهنوفرهالك من أقرب صيدلية</a></p>
     </div>
 
     <!-- Featured Medicine Cards at Bottom of Hero -->
@@ -105,7 +82,7 @@
         <!-- Card 1 -->
         <article class="med" data-id="panadol" data-price="34">
           <a href="pages/public/medicine-detail.html?med=panadol" class="med-link">
-            <div class="med-img"><svg><use href="#i-pill"/></svg></div>
+            <div class="med-img"><i class="fa-solid fa-pills" style="font-size:38px;color:var(--primary-color);"></i></div>
             <h3>باندول إكسترا</h3>
             <small>500 مجم، 24 قرص</small>
           </a>
@@ -118,7 +95,7 @@
         <!-- Card 2 -->
         <article class="med" data-id="augmentin" data-price="99">
           <a href="pages/public/medicine-detail.html?med=augmentin" class="med-link">
-            <div class="med-img"><svg><use href="#i-pill"/></svg></div>
+            <div class="med-img"><i class="fa-solid fa-pills" style="font-size:38px;color:var(--primary-color);"></i></div>
             <h3>أوجمنتين</h3>
             <small>1 جم، 14 قرص</small>
           </a>
@@ -131,7 +108,7 @@
         <!-- Card 3 -->
         <article class="med" data-id="aspirin" data-price="28">
           <a href="pages/public/medicine-detail.html?med=aspirin" class="med-link">
-            <div class="med-img"><svg><use href="#i-pill"/></svg></div>
+            <div class="med-img"><i class="fa-solid fa-pills" style="font-size:38px;color:var(--primary-color);"></i></div>
             <h3>أسبرين بروتكت</h3>
             <small>100 مجم، 30 قرص</small>
           </a>
@@ -144,7 +121,7 @@
         <!-- Card 4 -->
         <article class="med" data-id="vitamind" data-price="85">
           <a href="pages/public/medicine-detail.html?med=vitamind" class="med-link">
-            <div class="med-img"><svg><use href="#i-bottle"/></svg></div>
+            <div class="med-img"><i class="fa-solid fa-bottle-droplet" style="font-size:38px;color:var(--primary-color);"></i></div>
             <h3>فيتامين د3</h3>
             <small>10,000 وحدة، 30 كبسولة</small>
           </a>
@@ -177,7 +154,7 @@
       <div class="wrap">
         <div class="rx-head">
           <h2>الروشتة بخط الدكتور؟ سيبها علينا.</h2>
-          <p>صوّر الروشتة، وصيدلي حقيقي بيقراها ويجهزلك الأدوية المتاحة وسعرها من أقرب صيدلية.</p>
+          <p>صوّر الروشتة، وصيدلي حقيقي بيقراها ويجهّزلك الأدوية المتاحة من أقرب صيدلية.</p>
         </div>
 
         <div class="flow">
@@ -188,8 +165,8 @@
           </div>
           <div class="step">
             <div class="dot">2</div>
-            <h3>راجع السعر</h3>
-            <p>بتشوف كل دوا متاح وبكام قبل ما تدفع.</p>
+            <h3>تجهيز الأدوية</h3>
+            <p>بتشوف كل دوا متوفر في الصيدلية وبدائله الرسمية.</p>
           </div>
           <div class="step">
             <div class="dot">3</div>
@@ -198,10 +175,11 @@
           </div>
         </div>
 
-        <div class="rx-cta">
-          <button type="button" class="btn btn-brand" data-bs-toggle="modal" data-bs-target="#prescriptionModal">
-            ارفع صورة الروشتة
-          </button>
+        <div class="rx-cta" style="text-align:center;">
+          <a href="pages/public/prescription.html" class="btn btn-brand" style="padding:14px 34px;font-size:16px;font-weight:800;border-radius:14px;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,139,94,0.32);">
+            <i class="fa-solid fa-file-prescription"></i>
+            <span>ارفع روشتتك الآن</span>
+          </a>
         </div>
       </div>
     </section>
@@ -331,80 +309,12 @@
     <div class="wrap">
       <span>© 2026 تِرياق</span>
       <div class="footer-links">
-        <a href="pages/public/register.html">للصيادلة</a>
+        <a href="pages/pharmacist/index.html">للصيادلة</a>
         <a href="pages/public/about.html">الخصوصية</a>
         <a href="pages/public/about.html">تواصل معانا</a>
       </div>
     </div>
   </footer>
-
-  <!-- =========================================================================
-       MODALS: PRESCRIPTION UPLOAD MODAL
-       ========================================================================= -->
-  <div class="modal fade" id="prescriptionModal" tabindex="-1" aria-labelledby="prescriptionModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content teryak-rx-modal">
-        <div class="modal-header border-bottom pb-3">
-          <div class="d-flex align-items-center gap-2">
-            <div class="rx-modal-icon"><i class="fa-solid fa-camera text-success"></i></div>
-            <div>
-              <h5 class="modal-title font-bold m-0" id="prescriptionModalLabel">رفع روشتة طبية سريعة</h5>
-              <small class="text-muted">مراجعة وتجهيز فوري عبر صيدلي معتمد</small>
-            </div>
-          </div>
-          <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="إغلاق"></button>
-        </div>
-        <div class="modal-body p-4">
-          <form id="rxUploadForm">
-            <!-- Upload Box -->
-            <div class="upload-dropzone mb-3" id="rxDropzone">
-              <input type="file" id="rxFileInput" accept="image/*,.pdf" class="d-none">
-              <div class="dropzone-inner" id="rxDropzoneInner">
-                <i class="fa-solid fa-cloud-arrow-up dropzone-icon"></i>
-                <h6 class="font-bold mb-1">انقر لاختيار صورة الروشتة أو اسحبها هنا</h6>
-                <small class="text-muted">يدعم صيغ JPG، PNG، أو PDF (بحد أقصى 10 ميجابايت)</small>
-              </div>
-              <div class="file-preview-wrap hide" id="rxFilePreview">
-                <img id="rxPreviewImg" src="" alt="معاينة الروشتة">
-                <button type="button" class="btn-remove-file" id="rxRemoveFileBtn" title="إزالة الملف"><i class="fa-solid fa-xmark"></i></button>
-              </div>
-            </div>
-
-            <!-- Form Fields -->
-            <div class="mb-3">
-              <label for="rxPatientName" class="form-label font-bold">اسم المريض / صاحب الطلب *</label>
-              <input type="text" class="form-control" id="rxPatientName" placeholder="اكتب اسمك بالكامل..." required>
-            </div>
-
-            <div class="mb-3">
-              <label for="rxPatientPhone" class="form-label font-bold">رقم الهاتف للتواصل *</label>
-              <input type="tel" class="form-control" id="rxPatientPhone" placeholder="01xxxxxxxxx" required dir="ltr">
-            </div>
-
-            <div class="mb-3">
-              <label for="rxPreferredPharmacy" class="form-label font-bold">الصيدلية المفضلة (اختياري)</label>
-              <select class="form-select" id="rxPreferredPharmacy">
-                <option value="">أقرب صيدلية لموقعي تلقائياً</option>
-                <option value="صيدلية الشفاء">صيدلية الشفاء (مدينة نصر)</option>
-                <option value="صيدلية الأمل">صيدلية الأمل (الدقي)</option>
-                <option value="صيدلية الرعاية">صيدلية الرعاية (المعادي)</option>
-                <option value="صيدلية النهضة">صيدلية النهضة (مصر الجديدة)</option>
-              </select>
-            </div>
-
-            <div class="mb-3">
-              <label for="rxNotes" class="form-label font-bold">ملاحظات إضافية أو بدائل مقبولة</label>
-              <textarea class="form-control" id="rxNotes" rows="2" placeholder="هل لديك حساسية من أدوية معينة؟ هل تفضل البدائل الأقل سعراً؟"></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-brand w-100 font-bold py-2 mt-2" id="submitRxBtn">
-              <i class="fa-solid fa-paper-plane me-1"></i> إرسال الروشتة للمراجعة
-            </button>
-          </form>
-        </div>
-      </div>
-  </div>
-  </div>
 
   <!-- Reusable Cart Modal -->
   <app-cart-modal></app-cart-modal>

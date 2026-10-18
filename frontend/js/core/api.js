@@ -22,14 +22,30 @@
       headers['Authorization'] = `Bearer ${token}`;
     }
 
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+      if (currentUser) {
+        if (currentUser._id || currentUser.id) {
+          headers['X-User-Id'] = String(currentUser._id || currentUser.id);
+        }
+        if (currentUser.pharmacyName) {
+          headers['X-Pharmacy-Name'] = encodeURIComponent(currentUser.pharmacyName);
+        }
+      }
+    } catch (e) {}
+
     if (!isFormData && !headers['Content-Type']) {
       headers['Content-Type'] = 'application/json';
     }
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), options.timeout || 20000);
 
     try {
       const config = {
         ...options,
         headers,
+        signal: controller.signal
       };
 
       if (options.body && typeof options.body === 'object' && !isFormData) {
@@ -37,6 +53,7 @@
       }
 
       const response = await fetch(url, config);
+      clearTimeout(timeoutId);
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
@@ -45,8 +62,11 @@
 
       return data;
     } catch (error) {
-      console.error(`[API Error] ${endpoint}:`, error.message);
-      throw error;
+      clearTimeout(timeoutId);
+      const isTimeout = error.name === 'AbortError';
+      const msg = isTimeout ? 'انتهت مهلة الاتصال بالخادم، يرجى المحاولة مرة أخرى' : error.message;
+      console.error(`[API Error] ${endpoint}:`, msg);
+      throw new Error(msg);
     }
   };
 
@@ -84,15 +104,44 @@
       changePassword: (data) => API.put('/auth/change-password', data),
     },
 
-    // 2. Medicines Catalog Services
+    // 2. Medicines Catalog Services with Instant Client-Side Cache
     medicines: {
-      getAll: (params) => API.get('/medicines', params),
+      getAll: async (params = {}) => {
+        const queryKey = 'teryak_meds_' + new URLSearchParams(params).toString();
+        try {
+          const cached = sessionStorage.getItem(queryKey);
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            if (parsed && Date.now() - parsed.time < 300000) { // 5 minutes fresh cache
+              return parsed.data;
+            }
+          }
+        } catch (e) {}
+
+        const res = await API.get('/medicines', params);
+        try {
+          sessionStorage.setItem(queryKey, JSON.stringify({ time: Date.now(), data: res }));
+        } catch (e) {}
+        return res;
+      },
       getById: (id) => API.get(`/medicines/${id}`),
       getAlternatives: (id) => API.get(`/medicines/${id}/alternatives`),
-      create: (data) => API.post('/medicines', data),
-      bulkImport: (medicines) => API.post('/medicines/bulk-import', { medicines }),
-      update: (id, data) => API.put(`/medicines/${id}`, data),
-      delete: (id) => API.delete(`/medicines/${id}`),
+      create: (data) => {
+        try { sessionStorage.clear(); } catch (e) {}
+        return API.post('/medicines', data);
+      },
+      bulkImport: (medicines) => {
+        try { sessionStorage.clear(); } catch (e) {}
+        return API.post('/medicines/bulk-import', { medicines });
+      },
+      update: (id, data) => {
+        try { sessionStorage.clear(); } catch (e) {}
+        return API.put(`/medicines/${id}`, data);
+      },
+      delete: (id) => {
+        try { sessionStorage.clear(); } catch (e) {}
+        return API.delete(`/medicines/${id}`);
+      },
     },
 
     // 3. Pharmacies Services
@@ -111,6 +160,7 @@
       update: (id, data) => API.put(`/inventory/${id}`, data),
       delete: (id) => API.delete(`/inventory/${id}`),
       getLowStock: () => API.get('/inventory/low-stock'),
+      sync: () => API.post('/inventory/sync'),
     },
 
     // 5. Orders Services

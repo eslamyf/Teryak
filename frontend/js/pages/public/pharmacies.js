@@ -123,17 +123,16 @@ function renderTopPanel() {
       <button type="button" id="closeDetailBtn" style="font-size:13px;color:var(--primary-color);cursor:pointer;border:none;background:none;font-weight:700;">إلغاء التحديد ×</button>
     </div>
     <div style="height:120px;border-radius:var(--border-radius-md);overflow:hidden;margin-bottom:12px;background:var(--bg-muted);border:1px solid var(--border-color);">
-      <img src="${p.photo}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.onerror=null;this.parentElement.innerHTML='<div style=\\'display:grid;place-items:center;height:100%;color:var(--primary-color);\\'><svg class=\\'i\\' style=\\'width:44px;height:44px;\\' viewBox=\\'0 0 24 24\\'><path d=\\'M3 9l1.5-5h15L21 9M3 9v11h18V9M3 9h18M9 20v-6h6v6\\'/></svg></div>';">
+      <img src="${p.photo}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.onerror=null;this.parentElement.innerHTML='<div style=\\'display:grid;place-items:center;height:100%;color:var(--primary-color);\\'><i class=\\'fa-solid fa-hospital\\' style=\\'font-size:38px;\\'></i></div>';">
     </div>
     <h4 style="font-size:17px;font-weight:700;margin-bottom:6px;color:var(--text-main);">${p.name}</h4>
-    <div class="srow"><span>التقييم</span><b>★ ${p.rating} (${p.reviews})</b></div>
+    <div class="srow"><span>التقييم</span><b><i class="fa-solid fa-star text-warning me-1"></i> ${p.rating} (${p.reviews})</b></div>
     <div class="srow"><span>العنوان</span><small>${p.address}</small></div>
     <div class="srow"><span>المواعيد</span><small>${p.hours}</small></div>
     <div class="srow"><span>الأدوية المتاحة</span><b>${p.meds} دوا</b></div>
     <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
       <a href="tel:${p.phone}" class="btn btn-line btn-block" style="font-size:14px;padding:8px;">
-        <svg class="i" viewBox="0 0 24 24"><path d="M22 17v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
-        ${p.phone}
+        <i class="fa-solid fa-phone me-1"></i> ${p.phone}
       </a>
       <a href="medicines.html" class="btn btn-brand btn-block" style="font-size:14px;padding:8px;">
         دوّر على دوا في الصيدلية دي
@@ -209,8 +208,8 @@ function renderList() {
       <div class="ph-img">
         ${
           p.photo
-            ? `<img src="${p.photo}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" onerror="this.onerror=null;this.parentElement.innerHTML='<svg class=\\'i\\' style=\\'width:52px;height:52px;\\' viewBox=\\'0 0 24 24\\'><path d=\\'M3 9l1.5-5h15L21 9M3 9v11h18V9M3 9h18M9 20v-6h6v6\\'/></svg>';">`
-            : `<svg class="i" style="width:52px;height:52px;" viewBox="0 0 24 24"><path d="M3 9l1.5-5h15L21 9M3 9v11h18V9M3 9h18M9 20v-6h6v6"/></svg>`
+            ? `<img src="${p.photo}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" onerror="this.onerror=null;this.parentElement.innerHTML='<div style=\\'display:grid;place-items:center;height:100%;color:var(--primary-color);\\'><i class=\\'fa-solid fa-hospital\\' style=\\'font-size:42px;\\'></i></div>';">`
+            : `<div style="display:grid;place-items:center;height:100%;color:var(--primary-color);"><i class="fa-solid fa-hospital" style="font-size:42px;"></i></div>`
         }
       </div>
       <div>
@@ -219,21 +218,20 @@ function renderList() {
         </span>
         <h3 style="margin-top:4px;">${p.name}</h3>
         <div class="meta">
-          <span><svg class="i" viewBox="0 0 24 24" style="width:16px;height:16px;display:inline-block;vertical-align:middle;margin-inline-end:4px;"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>${p.address}</span>
+          <span><i class="fa-solid fa-location-dot me-1 text-primary"></i> ${p.address}</span>
         </div>
         <div class="meta">
-          <span>${p.distance} كم</span>
-          <span>${p.hours}</span>
-          <span>★ <b>${p.rating}</b> (${p.reviews})</span>
-          <span><b>${p.meds}</b> دوا</span>
+          <span><i class="fa-solid fa-route me-1 text-muted"></i> ${p.distance} كم</span>
+          <span><i class="fa-solid fa-clock me-1 text-muted"></i> ${p.hours}</span>
+          <span><i class="fa-solid fa-star text-warning me-1"></i> <b>${p.rating}</b> (${p.reviews})</span>
+          <span><i class="fa-solid fa-pills me-1 text-success"></i> <b>${p.meds}</b> دوا</span>
         </div>
         <div class="tags">
           ${p.tags && p.tags.length > 0 ? p.tags.map((t) => `<span>${t}</span>`).join('') : '<span>أدوية عامة</span><span>طوارئ</span><span>توصيل منزلي</span>'}
         </div>
         <div class="ph-act">
           <a href="tel:${p.phone}" class="btn btn-line call-btn" onclick="event.stopPropagation()">
-            <svg class="i" viewBox="0 0 24 24"><path d="M22 17v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
-            ${p.phone}
+            <i class="fa-solid fa-phone me-1"></i> ${p.phone}
           </a>
           <a href="medicines.html" class="btn btn-brand search-med-btn" onclick="event.stopPropagation()">
             دوّر على دوا في الصيدلية دي

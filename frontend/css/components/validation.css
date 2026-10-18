@@ -1,6 +1,6 @@
 /**
- * Teryak Platform - Form Validation Styles
- * Real-time feedback, shake animations, and error helper text
+ * Teryak Platform - Premium Form Validation Styles
+ * State-of-the-Art Error Cards, Soft Gradients, and Micro-Animations
  */
 
 /* Input Validation States */
@@ -10,9 +10,15 @@ input.is-invalid,
 select.is-invalid,
 textarea.is-invalid {
   border-color: #ef4444 !important;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+  background-color: #fff9f9 !important;
+  box-shadow: 0 0 0 3.5px rgba(239, 68, 68, 0.12) !important;
   background-image: none !important;
-  animation: teryakInputShake 0.4s ease-in-out;
+  animation: teryakInputShake 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+.input-group-custom:has(.is-invalid) .input-icon,
+.input-group-custom.is-invalid .input-icon {
+  color: #ef4444 !important;
 }
 
 .form-control.is-valid,
@@ -21,44 +27,78 @@ input.is-valid,
 select.is-valid,
 textarea.is-valid {
   border-color: #10b981 !important;
+  background-color: #f0fdf4 !important;
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12) !important;
   background-image: none !important;
 }
 
-/* Error Message Text */
+.input-group-custom:has(.is-valid) .input-icon,
+.input-group-custom.is-valid .input-icon {
+  color: #10b981 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Modern Validation Error Callout (Design: Luxury Alert Card with Accent Edge)
+   -------------------------------------------------------------------------- */
 .invalid-feedback-custom,
 .teryak-error-message {
-  display: flex;
+  display: flex !important;
   align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #dc2626;
-  margin-top: 5px;
-  margin-bottom: 0;
+  gap: 8px;
+  background: linear-gradient(135deg, #fff7f7 0%, #fee2e2 100%);
+  border: 1px solid #fecaca;
+  border-right: 3.5px solid #ef4444;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: 7px;
+  margin-bottom: 2px;
   direction: rtl;
   text-align: right;
   width: 100%;
-  animation: teryakFadeInDown 0.2s ease-out;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.08);
+  animation: teryakErrorSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+  clear: both;
 }
 
-.teryak-error-message i {
-  color: #ef4444;
-  font-size: 13px;
+.teryak-error-icon-box {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+}
+
+.teryak-error-icon-box i,
+.teryak-error-message > i {
+  color: #dc2626 !important;
+  font-size: 11px;
+}
+
+.teryak-error-text {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #991b1b;
+  line-height: 1.4;
+  flex: 1;
 }
 
 /* Shake Animation for Invalid Inputs */
 @keyframes teryakInputShake {
   0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(5px); }
-  40%, 80% { transform: translateX(-5px); }
+  20%, 60% { transform: translateX(4px); }
+  40%, 80% { transform: translateX(-4px); }
 }
 
-@keyframes teryakFadeInDown {
+/* Smooth Slide & Fade for Error Callouts */
+@keyframes teryakErrorSlide {
   from {
     opacity: 0;
-    transform: translateY(-4px);
+    transform: translateY(-6px);
   }
   to {
     opacity: 1;

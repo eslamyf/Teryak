@@ -38,6 +38,13 @@ body.dark-theme .exchange-card,
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
 }
 
+body.dark-theme .exchange-card:hover,
+[data-theme="dark"] .exchange-card:hover {
+  transform: translateY(-4px) !important;
+  border-color: rgba(16, 185, 129, 0.5) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5), 0 0 16px rgba(16, 185, 129, 0.15) !important;
+}
+
 body.dark-theme .exchange-card img,
 [data-theme="dark"] .exchange-card img {
   background: #0f172a !important;

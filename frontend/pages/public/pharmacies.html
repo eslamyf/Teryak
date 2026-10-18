@@ -4,11 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>الصيدليات | تِرياق</title>
+  <!-- Favicon / Brand Logo -->
+  <link rel="icon" type="image/png" href="../../assets/images/logo.png">
+  <link rel="apple-touch-icon" href="../../assets/images/logo.png">
   <meta name="description" content="الصيدليات القريبة منك - كل الصيدليات اللي معانا، وأقربهم ليك أول حاجة.">
 
-  <!-- Anti-flicker Theme Script -->
+    <!-- Anti-flicker Theme Script: Executed synchronously before ANY CSS or DOM paint -->
   <script>
-    (function(){try{var t=localStorage.getItem('teryak_theme')||localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');if(t==='dark'){document.documentElement.setAttribute('data-theme','dark');if(document.body){document.body.classList.add('dark-theme');}else{document.addEventListener('DOMContentLoaded',function(){document.body.classList.add('dark-theme');});}}else{document.documentElement.removeAttribute('data-theme');}}catch(e){}})();
+    (function(){try{var saved=localStorage.getItem('teryak_theme')||localStorage.getItem('theme');var prefersDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches;var isDark=saved==='dark'||(!saved&&prefersDark);if(isDark){document.documentElement.setAttribute('data-theme','dark');document.documentElement.classList.add('dark-theme');document.documentElement.style.backgroundColor='#0b1120';document.documentElement.style.colorScheme='dark';}else{document.documentElement.setAttribute('data-theme','light');document.documentElement.classList.remove('dark-theme');document.documentElement.style.backgroundColor='#f8fafc';document.documentElement.style.colorScheme='light';}}catch(e){}})();
   </script>
 
   <!-- Typography: Cairo, Alexandria, Tajawal -->
@@ -46,9 +49,7 @@
     <!-- Toolbar: Search, Sort, Filter -->
     <div class="bar">
       <label class="field">
-        <svg class="i" viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
-        </svg>
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
         <input type="search" id="searchInput" placeholder="اسم الصيدلية أو العنوان" aria-label="بحث عن صيدلية">
       </label>
 

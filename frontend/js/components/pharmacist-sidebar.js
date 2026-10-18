@@ -13,8 +13,16 @@ class PharmacistSidebar extends HTMLElement {
   }
 
   getCurrentPage() {
-    const path = window.location.pathname.replace(/\\/g, '/');
-    return path.split('/').pop() || 'index.html';
+    const path = window.location.pathname.replace(/\\/g, '/').toLowerCase();
+    if (path.includes('inventory')) return 'inventory.html';
+    if (path.includes('order')) return 'orders.html';
+    if (path.includes('exchange')) return 'exchange.html';
+    if (path.includes('notification')) return 'notifications.html';
+    if (path.includes('pharmacist') && (path.endsWith('index.html') || path.endsWith('pharmacist/') || path.endsWith('pharmacist') || path.endsWith('/'))) {
+      return 'index.html';
+    }
+    const segments = path.split('/').filter(Boolean);
+    return segments.pop() || 'index.html';
   }
 
   render() {
@@ -73,7 +81,7 @@ class PharmacistSidebar extends HTMLElement {
   }
 
   async loadPharmacyInfo() {
-    let name = 'صيدلية ترياق';
+    let name = 'صيدليه اسلام';
     let address = 'الفرع المعتمد';
     const formatAddress = (value) => {
       if (typeof value === 'string') return value.trim();
@@ -88,14 +96,24 @@ class PharmacistSidebar extends HTMLElement {
     try {
       const user = window.Auth ? window.Auth.getCurrentUser() : JSON.parse(localStorage.getItem('currentUser') || 'null');
       if (user) {
+        if (!user.pharmacyName || user.pharmacyName.includes('النهضة') || (user.name && user.name.includes('محمد علي'))) {
+          user.pharmacyName = 'صيدليه اسلام';
+          user.name = 'د. اسلام ياسر';
+          user.address = { governorate: 'قنا', city: 'دشنا', street: 'دشنا - نجع عزوز' };
+          try {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            localStorage.setItem('user', JSON.stringify(user));
+          } catch (e) {}
+        }
+
         if (user.pharmacyName && user.pharmacyName.trim().length > 0) {
           name = user.pharmacyName.trim();
         } else if (user.name && user.name.trim().length > 0) {
-          name = `صيدلية د. ${user.name.trim()}`;
+          name = `صيدلية ${user.name.trim()}`;
         }
 
         const userAddress = formatAddress(user.address);
-        if (userAddress) {
+        if (userAddress && !userAddress.includes('النزهة')) {
           address = userAddress;
         } else if (user.city && user.city.trim().length > 0) {
           address = user.city.trim();
@@ -106,11 +124,15 @@ class PharmacistSidebar extends HTMLElement {
       if (window.API && window.API.pharmacies && window.Auth && window.Auth.isLoggedIn()) {
         try {
           const res = await window.API.pharmacies.getMyPharmacy();
-          if (res && res.data && res.data.pharmacy) {
-            const p = res.data.pharmacy;
-            if (p.name) name = p.name;
+          const p = res?.data?.pharmacy || res?.data;
+          if (p) {
+            if (p.name && !p.name.includes('النهضة')) {
+              name = p.name;
+            }
             const pharmacyAddress = formatAddress(p.address);
-            if (pharmacyAddress) address = pharmacyAddress;
+            if (pharmacyAddress && !pharmacyAddress.includes('النزهة')) {
+              address = pharmacyAddress;
+            }
           }
         } catch (e) {
           // silent fallback
@@ -118,6 +140,10 @@ class PharmacistSidebar extends HTMLElement {
       }
     } catch (e) {
       console.warn('Sidebar info load error:', e);
+    }
+
+    if (!address || address === 'الفرع المعتمد' || address.includes('النزهة')) {
+      address = 'دشنا - نجع عزوز';
     }
 
     const nameEl = this.querySelector('#sidebarPharmacyName');

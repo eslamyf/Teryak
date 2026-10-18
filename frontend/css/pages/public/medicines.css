@@ -249,12 +249,165 @@
   transform: translateY(0);
 }
 
-/* Hide scrollbar on chips */
+/* ==========================================================================
+   Quick Category Filter Pills Bar (All Visible, Zero Scroll)
+   ========================================================================== */
+#quickCategoriesBar,
+body[data-page="medicines"] .chips,
+.medicines-page .chips {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  justify-content: space-between !important;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  overflow: visible !important;
+  overflow-x: visible !important;
+  padding-block: 16px 6px;
+  margin-bottom: 6px;
+}
+
+#quickCategoriesBar::-webkit-scrollbar,
+body[data-page="medicines"] .chips::-webkit-scrollbar,
 .chips::-webkit-scrollbar {
-  display: none;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+#quickCategoriesBar .chip,
+body[data-page="medicines"] .chips .chip {
+  flex: 1 1 0px !important;
+  min-width: 0 !important;
+  white-space: nowrap !important;
+  padding: 7px 4px !important;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-arabic);
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-main);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.35;
+}
+
+#quickCategoriesBar .chip:hover,
+body[data-page="medicines"] .chips .chip:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+#quickCategoriesBar .chip:active,
+body[data-page="medicines"] .chips .chip:active {
+  transform: scale(0.97);
+}
+
+#quickCategoriesBar .chip.on,
+#quickCategoriesBar .chip.active,
+body[data-page="medicines"] .chips .chip.on,
+body[data-page="medicines"] .chips .chip.active {
+  background: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  box-shadow: 0 3px 14px rgba(0, 139, 94, 0.32) !important;
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] #quickCategoriesBar .chip,
+body.dark-theme body[data-page="medicines"] .chips .chip {
+  background: var(--bg-card);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+}
+
+[data-theme="dark"] #quickCategoriesBar .chip:hover,
+body.dark-theme body[data-page="medicines"] .chips .chip:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+[data-theme="dark"] #quickCategoriesBar .chip.on,
+[data-theme="dark"] #quickCategoriesBar .chip.active,
+body.dark-theme body[data-page="medicines"] .chips .chip.on,
+body.dark-theme body[data-page="medicines"] .chips .chip.active {
+  background: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 16px rgba(0, 139, 94, 0.45) !important;
 }
 
 /* Advanced filter drawer transitions */
 .advanced-filter-drawer {
   transition: all var(--transition-normal);
+}
+
+/* Mobile responsive enhancements for medicines catalog & filters (Zero Horizontal Scroll) */
+@media (max-width: 1080px) {
+  #quickCategoriesBar .chip,
+  body[data-page="medicines"] .chips .chip {
+    font-size: 12px;
+    padding: 6.5px 2px !important;
+  }
+}
+
+@media (max-width: 860px) {
+  #quickCategoriesBar,
+  body[data-page="medicines"] .chips {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    overflow: visible !important;
+  }
+
+  #quickCategoriesBar .chip,
+  body[data-page="medicines"] .chips .chip {
+    flex: 0 0 auto !important;
+    padding: 6px 12px !important;
+    font-size: 13px !important;
+  }
+}
+
+  .med-img {
+    height: 150px;
+  }
+  .price {
+    font-size: 19px;
+  }
+  .addCart,
+  .med .btn-brand {
+    padding: 10px 14px;
+    font-size: 13.5px;
+  }
+}
+
+@media (max-width: 480px) {
+  #quickCategoriesBar .chip,
+  body[data-page="medicines"] .chips .chip {
+    padding: 5px 11px;
+    font-size: 13px;
+  }
+
+  .med-img {
+    height: 135px;
+  }
+  .med-title {
+    font-size: 15px;
+  }
+  .med-avail {
+    font-size: 12px;
+  }
+  .price {
+    font-size: 18px;
+  }
 }

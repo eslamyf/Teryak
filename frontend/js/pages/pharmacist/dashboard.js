@@ -34,10 +34,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 1. Fetch Pharmacy Profile
     try {
-      if (window.API && window.API.pharmacies && window.Auth && window.Auth.isLoggedIn()) {
+      if (window.API && window.API.pharmacies) {
         const pharmRes = await window.API.pharmacies.getMyPharmacy();
-        if (pharmRes && pharmRes.data && pharmRes.data.pharmacy) {
-          const p = pharmRes.data.pharmacy;
+        const p = pharmRes?.data?.pharmacy || pharmRes?.data;
+        if (p) {
           if (p.name) pharmacyName = p.name;
           if (p.address) pharmacyAddress = typeof p.address === 'string' ? p.address : `${p.address.city || ''} - ${p.address.street || ''}`;
         }

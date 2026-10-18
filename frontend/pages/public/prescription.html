@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>طلب روشتة طبية | تِرياق</title>
+  <!-- Favicon / Brand Logo -->
+  <link rel="icon" type="image/png" href="../../assets/images/logo.png">
+  <link rel="apple-touch-icon" href="../../assets/images/logo.png">
+  <meta name="description" content="صوّر الروشتة وارفعها هنا، وصيدلي معتمد هيراجعها ويحددلك الأدوية المتاحة وسعرها الرسمي من أقرب صيدلية معتمدة.">
+
+  <!-- Anti-flicker Theme Script: Executed synchronously before ANY CSS or DOM paint -->
+  <script>
+    (function(){try{var saved=localStorage.getItem('teryak_theme')||localStorage.getItem('theme');var prefersDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches;var isDark=saved==='dark'||(!saved&&prefersDark);if(isDark){document.documentElement.setAttribute('data-theme','dark');document.documentElement.classList.add('dark-theme');document.documentElement.style.backgroundColor='#0b1120';document.documentElement.style.colorScheme='dark';}else{document.documentElement.setAttribute('data-theme','light');document.documentElement.classList.remove('dark-theme');document.documentElement.style.backgroundColor='#f8fafc';document.documentElement.style.colorScheme='light';}}catch(e){}})();
+  </script>
+
+  <!-- Typography: Cairo, Alexandria, Tajawal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Alexandria:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <!-- Base & Component CSS -->
+  <link rel="stylesheet" href="../../css/base/variables.css">
+  <link rel="stylesheet" href="../../css/base/global.css">
+  <link rel="stylesheet" href="../../css/components/navbar.css">
+  <link rel="stylesheet" href="../../css/components/components.css">
+  <link rel="stylesheet" href="../../css/components/modal.css">
+
+  <!-- Page Custom CSS -->
+  <link rel="stylesheet" href="../../css/pages/public/prescription.css">
+</head>
+<body data-page="prescription">
+
+  <!-- Reusable App Navbar -->
+  <app-navbar></app-navbar>
+
+  <div id="spa-content">
+    <main class="rx-page">
+      <div class="wrap">
+        <!-- Hero Pitch -->
+        <header class="rx-hero">
+          <div class="rx-badge">
+            <i class="fa-solid fa-file-prescription"></i>
+            <span>خدمة قراءة وتجهيز الروشتات</span>
+          </div>
+          <h1 class="rx-title">الروشتة بخط الدكتور؟ سيبها على تِرياق.</h1>
+          <p class="rx-subtitle">
+            صوّر الروشتة وارفعها هنا، وصيدلي حقيقي معتمد بيقراها، يجهّزلك الأدوية المتاحة وبدائلها الرسمية، ويوفرها من أقرب صيدلية إليك خلال دقائق.
+          </p>
+        </header>
+
+        <!-- Main Layout Grid -->
+        <div class="rx-grid">
+          <!-- Right Column: Interactive Upload & Form Card -->
+          <section class="rx-card" aria-label="نموذج رفع الروشتة">
+            <h2 class="rx-card-title">
+              <i class="fa-solid fa-cloud-arrow-up text-success"></i>
+              <span>رفع صورة الروشتة</span>
+            </h2>
+            <p class="rx-card-subtitle">التقط صورة واضحة بكاميرا الموبايل أو اسحب الملف هنا</p>
+
+            <form id="pageRxForm">
+              <!-- Upload Dropzone -->
+              <div class="rx-dropzone" id="pageRxDropzone">
+                <input type="file" id="pageRxFileInput" accept="image/*,.pdf" class="d-none">
+
+                <div id="pageRxDropzoneContent">
+                  <div class="rx-dropzone-icon">
+                    <i class="fa-solid fa-camera"></i>
+                  </div>
+                  <h3 class="rx-dropzone-title">انقر هنا لاختيار الصورة أو اسحبها</h3>
+                  <p class="rx-dropzone-hint">يدعم صيغ JPG و PNG و PDF (بحد أقصى 10 ميجابايت)</p>
+                </div>
+
+                <!-- Preview Area -->
+                <div class="rx-preview-container" id="pageRxPreviewContainer">
+                  <img id="pageRxPreviewImg" class="rx-preview-img" src="" alt="معاينة الروشتة المرفوعة">
+                  <button type="button" class="rx-preview-remove" id="pageRxRemoveBtn" title="إزالة الصورة">
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Patient Contact Info -->
+              <div class="rx-form-group">
+                <label for="pageRxName" class="rx-form-label">اسم المريض / صاحب الطلب *</label>
+                <input type="text" id="pageRxName" class="rx-input" placeholder="اكتب اسمك بالكامل..." required>
+              </div>
+
+              <div class="rx-form-group">
+                <label for="pageRxPhone" class="rx-form-label">رقم الهاتف للتواصل وتأكيد الطلب *</label>
+                <input type="tel" id="pageRxPhone" class="rx-input" placeholder="01xxxxxxxxx" dir="ltr" required>
+              </div>
+
+              <!-- Delivery Options -->
+              <div class="rx-form-group">
+                <label class="rx-form-label">طريقة الاستلام المفضلة</label>
+                <div class="rx-delivery-options">
+                  <label class="rx-option-pill active">
+                    <input type="radio" name="rxDeliveryType" value="delivery" checked>
+                    <div>
+                      <span class="rx-option-title"><i class="fa-solid fa-motorcycle me-1 text-success"></i> توصيل للمنزل</span>
+                      <span class="rx-option-sub">دليفري مباشر لباب البيت</span>
+                    </div>
+                  </label>
+                  <label class="rx-option-pill">
+                    <input type="radio" name="rxDeliveryType" value="pickup">
+                    <div>
+                      <span class="rx-option-title"><i class="fa-solid fa-store me-1 text-success"></i> استلام من الصيدلية</span>
+                      <span class="rx-option-sub">تجهيز مسبق واستلام فوري</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Pharmacy Preference -->
+              <div class="rx-form-group">
+                <label for="pageRxPharmacy" class="rx-form-label">الصيدلية المفضلة (اختياري)</label>
+                <select id="pageRxPharmacy" class="rx-input">
+                  <option value="">أقرب صيدلية معتمدة لموقعي تلقائياً</option>
+                  <option value="صيدلية الشفاء">صيدلية الشفاء</option>
+                  <option value="صيدلية الأمل">صيدلية الأمل</option>
+                  <option value="صيدلية الرعاية">صيدلية الرعاية</option>
+                  <option value="صيدلية السلامة">صيدلية السلامة</option>
+                </select>
+              </div>
+
+              <!-- Notes & Substitutes -->
+              <div class="rx-form-group">
+                <label for="pageRxNotes" class="rx-form-label">ملاحظات طبية أو بدائل مقبولة</label>
+                <textarea id="pageRxNotes" class="rx-input" rows="3" placeholder="هل تعاني من حساسية لأدوية معينة؟ هل تفضل البدائل الاقتصادية الأقل سعراً؟"></textarea>
+              </div>
+
+              <button type="submit" class="rx-submit-btn" id="pageRxSubmitBtn">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>إرسال الروشتة للمراجعة والتجهيز</span>
+              </button>
+            </form>
+          </section>
+
+          <!-- Left Column: Step Flow & Guarantees -->
+          <aside class="rx-sidebar-info">
+            <!-- How It Works Card -->
+            <div class="rx-info-card">
+              <h3 class="rx-info-title">
+                <i class="fa-solid fa-list-check text-success"></i>
+                <span>إزاي خدمة الروشتة بتشتغل؟</span>
+              </h3>
+              <div class="rx-steps">
+                <div class="rx-step-item">
+                  <div class="rx-step-num">1</div>
+                  <div class="rx-step-content">
+                    <h4>صوّر الروشتة بكاميرا موبايلك</h4>
+                    <p>صورة واحدة واضحة تكفي لكل أصناف العلاج المكتوبة من قِبل الطبيب.</p>
+                  </div>
+                </div>
+
+                <div class="rx-step-item">
+                  <div class="rx-step-num">2</div>
+                  <div class="rx-step-content">
+                    <h4>صيدلي معتمد بيراجعها ويجهّزها</h4>
+                    <p>صيدلي مرخّص بيراجع الأسماء والجرعات، ويوفرلك الأدوية المتاحة وبدائلها الرسمية.</p>
+                  </div>
+                </div>
+
+                <div class="rx-step-item">
+                  <div class="rx-step-num">3</div>
+                  <div class="rx-step-content">
+                    <h4>أكّد طلبك واستلم أدويتك</h4>
+                    <p>بيوصلك تفصيل كامل بالأدوية المتوفرة وبدائلها الرسمية لتأكيد استلامها وتوصيلها.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Trust & Guarantees Card -->
+            <div class="rx-info-card">
+              <h3 class="rx-info-title">
+                <i class="fa-solid fa-shield-halved text-success"></i>
+                <span>ضمانات منصة تِرياق</span>
+              </h3>
+              <div class="rx-trust-badges">
+                <div class="rx-trust-item">
+                  <i class="fa-solid fa-user-doctor"></i>
+                  <span>مراجعة بواسطة صيادلة مرخصين 100%</span>
+                </div>
+                <div class="rx-trust-item">
+                  <i class="fa-solid fa-tags"></i>
+                  <span>التزام تام بالتسعيرة الجبرية لوزارة الصحة</span>
+                </div>
+                <div class="rx-trust-item">
+                  <i class="fa-solid fa-lock"></i>
+                  <span>حماية وسرية تامة لبياناتك الطبية</span>
+                </div>
+                <div class="rx-trust-item">
+                  <i class="fa-solid fa-truck-fast"></i>
+                  <span>توصيل سريع ومباشر في حدود 15-30 دقيقة</span>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Reusable App Footer -->
+  <app-footer></app-footer>
+
+  <!-- Reusable Cart Modal -->
+  <app-cart-modal></app-cart-modal>
+
+  <!-- Vendor Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core & Component Scripts -->
+  <script src="../../js/config.js"></script>
+  <script src="../../js/core/toast.js"></script>
+  <script src="../../js/core/validation.js"></script>
+  <script src="../../js/core/api.js"></script>
+  <script src="../../js/core/auth.js"></script>
+  <script src="../../js/core/cart.js"></script>
+  <script src="../../js/components/app-navbar.js"></script>
+  <script src="../../js/components/app-footer.js"></script>
+  <script src="../../js/components/app-cart-modal.js"></script>
+  <script src="../../js/core/spa-router.js"></script>
+
+  <!-- Page Script -->
+  <script src="../../js/pages/public/prescription.js"></script>
+</body>
+</html>

@@ -57,5 +57,8 @@ const pharmacyInventorySchema = new mongoose.Schema(
 // Prevent duplicate inventory entry for same medicine in same pharmacy
 pharmacyInventorySchema.index({ pharmacyId: 1, medicineId: 1 }, { unique: true });
 pharmacyInventorySchema.index({ medicineId: 1, isAvailable: 1, quantity: 1, pharmacyId: 1 });
+pharmacyInventorySchema.index({ pharmacyId: 1, isAvailable: 1, quantity: 1 });
+pharmacyInventorySchema.index({ pharmacyId: 1, quantity: 1 });
+pharmacyInventorySchema.index({ pharmacyId: 1, updatedAt: -1 });
 
 module.exports = mongoose.model('PharmacyInventory', pharmacyInventorySchema);

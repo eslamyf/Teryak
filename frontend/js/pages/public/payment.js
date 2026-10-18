@@ -3,7 +3,7 @@
  * Integrated with Auth Protection, Cart Synchronization & Payment Validation
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+function initPaymentPage() {
   // 1. Auth Protection Check
   const isLoggedIn = window.Auth ? window.Auth.isLoggedIn() : Boolean(localStorage.getItem('token') || localStorage.getItem('isLoggedIn') === 'true');
   if (!isLoggedIn) {
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const qty = Number(item.quantity) || 1;
       const price = typeof item.price === 'number' ? item.price : parseFloat(String(item.price).replace(/[^0-9.]/g, '')) || 25;
       const itemSubtotal = (price * qty).toFixed(2);
-      const pharmacy = item.pharmacy || 'صيدلية النهضة';
+      const pharmacy = item.pharmacy || item.pharmacyName || 'صيدليه اسلام';
 
       itemsHtml += `
         <div class="summary-item-row">
@@ -199,8 +199,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
       setTimeout(() => {
         window.location.href = 'order-summary.html';
-      }, 400);
+      }, 300);
     });
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPaymentPage);
+} else {
+  initPaymentPage();
+}
+
+window.addEventListener('teryak:page-mounted', () => {
+  if (window.location.pathname.includes('payment.html')) {
+    initPaymentPage();
   }
 });
 

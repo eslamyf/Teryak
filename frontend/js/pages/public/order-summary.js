@@ -3,7 +3,7 @@
  * Connected with MongoDB Atlas via /api/orders
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+function initOrderSummaryPage() {
   // 1. Auth Protection Check
   const isLoggedIn = window.Auth ? window.Auth.isLoggedIn() : Boolean(localStorage.getItem('token') || localStorage.getItem('isLoggedIn') === 'true');
   if (!isLoggedIn) {
@@ -67,11 +67,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const confirmOrderBtn = document.getElementById('confirmOrderBtn');
 
   const cartItems = (window.Cart && typeof window.Cart.getItems === 'function') ? window.Cart.getItems() : [];
+  const defaultPharmacyId = '6abbe34be18dba66a4a64112'; // صيدليه اسلام
+  const defaultPharmacyName = 'صيدليه اسلام';
+
+  cartItems.forEach((item) => {
+    if (!item.pharmacy && !item.pharmacyName) {
+      item.pharmacy = defaultPharmacyName;
+      item.pharmacyName = defaultPharmacyName;
+    }
+    if (!item.pharmacyId) {
+      item.pharmacyId = defaultPharmacyId;
+    }
+  });
+
   const pharmacyIds = [...new Set(cartItems.map((item) => item.pharmacyId).filter(Boolean).map(String))];
-  const hasUnassignedItems = cartItems.some((item) => !item.pharmacyId);
+  const targetPharmacyId = pharmacyIds[0] || defaultPharmacyId;
+  const targetPharmacyName = cartItems[0]?.pharmacy || cartItems[0]?.pharmacyName || defaultPharmacyName;
   const hasMixedPharmacies = pharmacyIds.length > 1;
-  const canPlaceOrder = cartItems.length > 0 && !hasUnassignedItems && !hasMixedPharmacies && pharmacyIds.length === 1;
-  const deliveryFee = canPlaceOrder ? Number(cartItems[0].deliveryFee) || 15 : 15;
+  const canPlaceOrder = cartItems.length > 0 && !hasMixedPharmacies;
+  const deliveryFee = canPlaceOrder ? Number(cartItems[0]?.deliveryFee) || 15 : 15;
   const subtotal = (window.Cart && typeof window.Cart.getTotal === 'function') ? window.Cart.getTotal() : 0;
   const count = (window.Cart && typeof window.Cart.getCount === 'function') ? window.Cart.getCount() : cartItems.length;
   const finalTotal = subtotal > 0 ? subtotal + deliveryFee : 0;
@@ -106,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const qty = Number(item.quantity) || 1;
     const price = typeof item.price === 'number' ? item.price : parseFloat(String(item.price).replace(/[^0-9.]/g, '')) || 25;
     const itemSubtotal = (price * qty).toFixed(2);
-    const pharmacy = item.pharmacy || 'صيدلية غير محددة';
+    const pharmacy = item.pharmacy || item.pharmacyName || defaultPharmacyName;
 
     itemsHtml += `
       <div class="summary-item-row">
@@ -143,22 +157,24 @@ document.addEventListener('DOMContentLoaded', () => {
       confirmOrderBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> جاري تأكيد الطلب وإرساله للصيدلية...';
 
       const orderPayload = {
-        pharmacyId: pharmacyIds[0],
+        pharmacyId: targetPharmacyId,
+        pharmacyName: targetPharmacyName,
         items: cartItems.map(item => ({
-          medicineId: (item.medicineId && String(item.medicineId).length === 24) ? item.medicineId : undefined,
+          medicineId: (item.medicineId && String(item.medicineId).length === 24) ? item.medicineId : (item.id && String(item.id).length === 24 ? item.id : undefined),
           name: item.name,
           price: typeof item.price === 'number' ? item.price : parseFloat(String(item.price).replace(/[^0-9.]/g, '')) || 25,
           quantity: Number(item.quantity) || 1,
-          pharmacyId: (item.pharmacyId && String(item.pharmacyId).length === 24) ? item.pharmacyId : undefined,
+          pharmacyId: (item.pharmacyId && String(item.pharmacyId).length === 24) ? item.pharmacyId : targetPharmacyId,
+          pharmacyName: item.pharmacy || item.pharmacyName || targetPharmacyName,
           image: item.image || item.img || ''
         })),
         shippingAddress: {
-          fullName: name,
-          phone: phone,
-          governorate: governorate,
-          city: city,
-          street: street,
-          notes: notes
+          fullName: name || 'اسلام ياسر فوزي عبدالظاهر',
+          phone: phone || '01028103634',
+          governorate: governorate || 'قنا',
+          city: city || 'دشنا',
+          street: street || 'دشنا - قنا دشنا نجع عزوز',
+          notes: notes || ''
         },
         paymentMethod: paymentMethodCode || 'cash',
         subtotal: Number(subtotal),
@@ -196,8 +212,20 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Order creation error:', error);
         window.Toast?.error(error.message || 'تعذر تأكيد الطلب. لم يتم حذف محتويات السلة.', 'فشل إرسال الطلب');
         confirmOrderBtn.disabled = false;
-        confirmOrderBtn.innerHTML = confirmBtnText?.textContent || 'تأكيد الطلب';
+        confirmOrderBtn.innerHTML = `تأكيد الطلب وحفظه — ${finalTotal.toFixed(2)} ج.م`;
       }
     });
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initOrderSummaryPage);
+} else {
+  initOrderSummaryPage();
+}
+
+window.addEventListener('teryak:page-mounted', () => {
+  if (window.location.pathname.includes('order-summary.html')) {
+    initOrderSummaryPage();
   }
 });

@@ -1,584 +1,490 @@
 /* ==========================================================================
-   Teryak Platform - Medicine Details Page Styles (Balanced & Responsive)
+   Teryak Platform - Modern Medicine Detail Page Styles
+   Clean, Minimal, High-Performance & Aesthetic Design
    ========================================================================== */
 
-body {
-  background-color: #f8fafc;
-  padding-top: 75px;
+body[data-page="medicine-detail"] {
+  background-color: var(--bg-main, #f8fafc);
+  color: var(--text-main, #1e293b);
   font-family: var(--font-arabic, 'Tajawal', sans-serif);
-  color: #1e293b;
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1180px;
   margin: 0 auto;
-  padding: 30px 16px 60px;
+  padding-inline: 16px;
   direction: rtl;
 }
 
-/* ---------------- Top Section ---------------- */
-.top {
-  margin-bottom: 24px;
+/* ---------------- Breadcrumb ---------------- */
+.breadcrumb-bar {
+  font-size: 13.5px;
+  font-weight: 500;
 }
 
-.top .font {
-  font-size: 28px;
-  font-weight: 800;
-  color: #0f172a;
-  margin-bottom: 6px;
-  line-height: 1.3;
+.breadcrumb-bar a {
+  color: var(--text-muted, #64748b);
+  transition: color 0.2s ease;
 }
 
-.top .grey {
-  font-size: 15px;
-  color: #64748b;
-  margin: 0;
-}
-
-.top .grey b {
+.breadcrumb-bar a:hover {
   color: var(--primary-color, #008b5e);
 }
 
-/* ---------------- Main Layout ---------------- */
-.d-flexMain {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-  align-items: start;
-  width: 100%;
-}
-
-#availablePharmaciesList {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.pharmacy-stock-card {
-  margin: 0;
-}
-
-.DIV1,
-.DIV2,
-.DIV3,
-.left {
-  display: none;
-}
-
-.mainDIV {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  width: 100%;
-  min-width: 0;
-}
-
-.parg2 {
-  font-size: 18px;
-  font-weight: 800;
-  color: #0f172a;
-  margin-bottom: 12px;
-}
-
-/* Pharmacy Cards */
-.DIV1, .DIV2, .DIV3 {
-  width: 100%;
-}
-
-.DIV {
-  background: #ffffff;
-  border-radius: 16px;
-  border: 1.5px solid #e2e8f0;
-  padding: 22px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-  transition: all 0.25s ease;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.DIV:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
-}
-
-/* Pharmacy Header in Card */
-.d-flex1 {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.pharmacy-name-box .parg {
-  font-size: 20px;
-  font-weight: 800;
-  color: #0f172a;
-  margin-bottom: 4px;
-}
-
-.pharmacy-name-box small {
-  font-size: 13px;
-}
-
-.available {
-  background: rgba(16, 185, 129, 0.12);
-  color: #059669;
-  font-size: 13px;
+.active-breadcrumb {
+  color: var(--text-main, #0f172a);
   font-weight: 700;
-  padding: 5px 12px;
-  border-radius: 20px;
-  margin: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  max-width: 320px;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.limited {
-  background: rgba(245, 158, 11, 0.12);
-  color: #d97706;
-  font-size: 13px;
-  font-weight: 700;
-  padding: 5px 12px;
+/* ---------------- 1. Main Medicine Hero Card ---------------- */
+.medicine-hero-card {
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
   border-radius: 20px;
-  margin: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.unAvailable {
-  background: rgba(239, 68, 68, 0.12);
-  color: #dc2626;
-  font-size: 13px;
-  font-weight: 700;
-  padding: 5px 12px;
-  border-radius: 20px;
-  margin: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-}
-
-/* Secondary Meta Row */
-.mtop {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-}
-
-.badge-dist {
-  font-size: 12.5px;
-  color: #475569;
-  background: #f1f5f9;
-  padding: 4px 10px;
-  border-radius: 8px;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-}
-
-.badge-status {
-  font-size: 12.5px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 8px;
-  display: inline-flex;
-  align-items: center;
-}
-
-.badge-status.open {
-  background: rgba(16, 185, 129, 0.08);
-  color: #059669;
-}
-
-.badge-status.closed {
-  background: rgba(239, 68, 68, 0.08);
-  color: #dc2626;
-}
-
-.line {
-  width: 100%;
-  height: 1px;
-  background-color: #f1f5f9;
-  margin: 12px 0 16px;
-}
-
-/* Bottom Stats & Action */
-.d-flex2 {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.stats-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.stat-box {
+.medicine-main-image-wrap {
   background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 8px 14px;
-  text-align: center;
-  min-width: 90px;
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 18px;
+  min-height: 220px;
+  max-height: 260px;
+  overflow: hidden;
+  position: relative;
+  transition: background 0.2s ease;
 }
 
-.stat-lbl {
+[data-theme="dark"] .medicine-main-image-wrap,
+body.dark-theme .medicine-main-image-wrap {
+  background: #151f32 !important;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.medicine-featured-img {
+  max-height: 200px;
+  width: auto;
+  max-width: 90%;
+  object-fit: contain;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.medicine-hero-card:hover .medicine-featured-img {
+  transform: scale(1.05);
+}
+
+/* Floating Rx / OTC Pill */
+.badge-rx-floating {
+  position: absolute;
+  top: 12px;
+  inset-inline-end: 12px;
   font-size: 11.5px;
-  color: #64748b;
-  display: block;
-  margin-bottom: 2px;
-  font-weight: 600;
-}
-
-.stat-val {
-  font-size: 15px;
-  font-weight: 800;
-  color: #0f172a;
-  margin: 0;
-}
-
-.action-box {
-  margin-right: auto;
-}
-
-.btn-booking {
-  background: var(--primary-color, #008b5e);
-  color: #ffffff;
-  border: none;
-  border-radius: 10px;
-  padding: 11px 22px;
-  font-size: 14.5px;
   font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
+  padding: 4px 10px;
+  border-radius: 99px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.badge-rx-floating.rx-otc {
+  background: rgba(0, 139, 94, 0.92);
+  color: #ffffff;
+}
+
+.badge-rx-floating.rx-required {
+  background: rgba(239, 68, 68, 0.92);
+  color: #ffffff;
+}
+
+/* Category & Form Tag Pills */
+.badge-pill-tag {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 99px;
   display: inline-flex;
   align-items: center;
-  box-shadow: 0 2px 8px rgba(0, 139, 94, 0.25);
 }
 
-.btn-booking:hover {
-  background: var(--primary-hover, #059669);
-  color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 139, 94, 0.35);
+.badge-pill-tag.tag-primary {
+  background: rgba(0, 139, 94, 0.1);
+  color: var(--primary-color, #008b5e);
+  border: 1px solid rgba(0, 139, 94, 0.2);
 }
 
-.btn-notify {
+.badge-pill-tag.tag-secondary {
   background: #f1f5f9;
   color: #475569;
-  border: 1.5px solid #cbd5e1;
-  border-radius: 10px;
-  padding: 10px 18px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-
-.btn-notify:hover {
-  background: #e2e8f0;
-  color: #0f172a;
-}
-
-#DONE, #DONE2 {
-  margin-top: 14px;
-  background: #dcfce7;
-  border: 1px solid #bbf7d0;
-  color: #166534;
-  padding: 12px 16px;
-  border-radius: 10px;
-}
-
-#DONE .bold, #DONE2 .bold {
-  color: #15803d;
-  font-size: 14px;
-}
-
-.hide {
-  display: none !important;
-}
-
-/* ---------------- Alternatives & Medical Info Sidebar ---------------- */
-.left {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.sidebar-card {
-  background: #ffffff;
-  border-radius: 16px;
-  border: 1.5px solid #e2e8f0;
-  padding: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-  box-sizing: border-box;
-}
-
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 6px;
-}
-
-.sidebar-header .parg {
-  font-size: 17px;
-  font-weight: 800;
-  color: #0f172a;
-}
-
-.sidebar-subtitle {
-  font-size: 13px;
-  color: #64748b;
-  margin-bottom: 14px;
-}
-
-.alt-item {
-  background: #f8fafc;
   border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 12px 14px;
-  margin-bottom: 10px;
-  transition: all 0.2s ease;
 }
 
-.alt-item:hover {
-  border-color: var(--primary-color, #008b5e);
-  background: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+[data-theme="dark"] .badge-pill-tag.tag-secondary,
+body.dark-theme .badge-pill-tag.tag-secondary {
+  background: #1e293b;
+  color: #cbd5e1;
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
-.alt-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 3px;
+/* Product Titles */
+.product-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+  margin-top: 8px;
+  margin-bottom: 4px;
+  line-height: 1.35;
+  letter-spacing: -0.3px;
 }
 
-.alt-top strong {
-  font-size: 14.5px;
-  color: #0f172a;
+.product-subtitle {
+  font-size: 13.5px;
+  margin-bottom: 8px;
 }
 
-.alt-price {
+/* Product Price Box */
+.product-price-box {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  background: rgba(0, 139, 94, 0.08);
+  border: 1px solid rgba(0, 139, 94, 0.2);
+  padding: 6px 14px;
+  border-radius: 14px;
+}
+
+.product-price-box .price-val {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--primary-color, #008b5e);
+  line-height: 1;
+}
+
+.product-price-box .price-curr {
   font-size: 13px;
   font-weight: 700;
   color: var(--primary-color, #008b5e);
 }
 
-.alt-avail {
-  font-size: 12px;
-  color: #059669;
-  margin-top: 4px;
-  font-weight: 600;
-}
-
-.advice-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
+/* Clean Specs Grid */
+.specs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 10px;
 }
 
-.advice-list li {
-  font-size: 13px;
-  color: #334155;
-  line-height: 1.6;
+.spec-box {
+  background: #f8fafc;
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 12px;
+  padding: 10px 14px;
   display: flex;
-  align-items: flex-start;
-  gap: 8px;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s ease;
 }
 
-.advice-list li i {
-  margin-top: 3px;
-  font-size: 13px;
+.spec-box i {
+  font-size: 16px;
   flex-shrink: 0;
 }
 
-/* ==========================================================================
-   Responsive Breakpoints
-   ========================================================================== */
-
-@media (max-width: 991px) {
-  .d-flexMain {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
+.spec-box small {
+  display: block;
+  font-size: 11.5px;
+  color: var(--text-muted, #64748b);
+  margin-bottom: 1px;
 }
 
-@media (max-width: 576px) {
-  .container {
-    padding: 20px 12px 40px;
-  }
-
-  .top {
-    margin-bottom: 18px;
-  }
-
-  .top .font {
-    font-size: 21px;
-  }
-
-  .top .grey {
-    font-size: 13px;
-  }
-
-  .DIV {
-    padding: 16px 14px;
-    border-radius: 14px;
-  }
-
-  .d-flex1 {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .available, .limited, .unAvailable {
-    align-self: flex-start;
-  }
-
-  .d-flex2 {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-  }
-
-  .stats-row {
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
-    width: 100%;
-  }
-
-  .stat-box {
-    min-width: 0;
-    padding: 8px 4px;
-  }
-
-  .stat-val {
-    font-size: 13.5px;
-  }
-
-  .action-box {
-    width: 100%;
-  }
-
-  .btn-booking, .btn-notify {
-    width: 100%;
-    justify-content: center;
-    padding: 11px;
-    font-size: 14px;
-  }
+.spec-box strong {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* ==========================================================================
-   Dark Theme Adaptation for Medicine Detail Page
-   ========================================================================== */
-body.dark-theme,
-[data-theme="dark"] body {
+.spec-box.spec-stock strong {
+  color: var(--primary-color, #008b5e);
+}
+
+[data-theme="dark"] .spec-box,
+body.dark-theme .spec-box {
+  background: #182234 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .spec-box strong,
+body.dark-theme .spec-box strong {
+  color: #f1f5f9 !important;
+}
+
+/* Action Buttons */
+.btn-brand {
+  background: var(--primary-color, #008b5e);
+  color: #ffffff !important;
+  border: none;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.btn-brand:hover {
+  background: #00754f;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 139, 94, 0.28);
+}
+
+.btn-outline-brand {
+  background: transparent;
+  color: var(--primary-color, #008b5e) !important;
+  border: 1.5px solid var(--primary-color, #008b5e);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-outline-brand:hover {
+  background: rgba(0, 139, 94, 0.08);
+  border-color: var(--primary-color, #008b5e);
+  transform: translateY(-1px);
+}
+
+/* ---------------- 2. Available Pharmacies List ---------------- */
+.section-card {
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 20px;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+}
+
+.badge-live-dot {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted, #64748b);
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 4px 10px;
+  border-radius: 99px;
+  display: inline-flex;
+  align-items: center;
+}
+
+[data-theme="dark"] .badge-live-dot,
+body.dark-theme .badge-live-dot {
+  background: #1e293b;
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+}
+
+/* Pharmacy Item Card (Careem / Uber Eats Style) */
+.pharmacy-item-card {
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pharmacy-item-card:hover {
+  border-color: var(--primary-color, #008b5e);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+.pharmacy-header-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.pharmacy-main-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.pharmacy-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: rgba(0, 139, 94, 0.1);
+  color: var(--primary-color, #008b5e);
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.pharmacy-title-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 3px;
+}
+
+.pharmacy-name {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+  margin: 0;
+}
+
+.badge-partner {
+  font-size: 11px;
+  font-weight: 700;
+  color: #059669;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  padding: 2px 8px;
+  border-radius: 99px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.pharmacy-meta-line {
+  font-size: 13px;
+  color: var(--text-muted, #64748b);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.meta-sep {
+  color: #cbd5e1;
+}
+
+/* Pharmacy Action & Pricing */
+.pharmacy-action-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.pharmacy-price-col {
+  text-align: end;
+}
+
+.stock-pill {
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 99px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 2px;
+}
+
+.stock-pill.stock-ok {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+}
+
+.stock-pill.stock-limited {
+  background: rgba(245, 158, 11, 0.12);
+  color: #d97706;
+}
+
+.pharmacy-price {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--text-main, #0f172a);
+  line-height: 1.2;
+}
+
+.pharmacy-price .price-curr {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted, #64748b);
+}
+
+.reserve-btn {
+  padding: 8px 18px;
+  font-size: 13.5px;
+  white-space: nowrap;
+}
+
+/* ---------------- Dark Theme Overrides ---------------- */
+[data-theme="dark"] body[data-page="medicine-detail"],
+body.dark-theme[data-page="medicine-detail"] {
   background-color: #0b1120 !important;
   color: #f1f5f9 !important;
 }
 
-body.dark-theme .DIV,
-[data-theme="dark"] .DIV,
-body.dark-theme .sidebar-card,
-[data-theme="dark"] .sidebar-card {
-  background-color: #111827 !important;
+[data-theme="dark"] .medicine-hero-card,
+[data-theme="dark"] .section-card,
+body.dark-theme .medicine-hero-card,
+body.dark-theme .section-card {
+  background: #111827 !important;
   border-color: #1f2937 !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
 }
 
-body.dark-theme .stat-box,
-[data-theme="dark"] .stat-box,
-body.dark-theme .alt-item,
-[data-theme="dark"] .alt-item {
-  background-color: #1a2234 !important;
+[data-theme="dark"] .pharmacy-item-card,
+body.dark-theme .pharmacy-item-card {
+  background: #151f32 !important;
   border-color: #1f2937 !important;
 }
 
-body.dark-theme .alt-item:hover,
-[data-theme="dark"] .alt-item:hover {
-  background-color: #1e293b !important;
-  border-color: var(--primary-color) !important;
+[data-theme="dark"] .pharmacy-item-card:hover,
+body.dark-theme .pharmacy-item-card:hover {
+  border-color: var(--primary-color, #008b5e) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
 }
 
-body.dark-theme .top .font,
-body.dark-theme .parg2,
-body.dark-theme .pharmacy-name-box .parg,
-body.dark-theme .stat-val,
-body.dark-theme .sidebar-header .parg,
-body.dark-theme .alt-top strong,
-[data-theme="dark"] .top .font,
-[data-theme="dark"] .parg2,
-[data-theme="dark"] .pharmacy-name-box .parg,
-[data-theme="dark"] .stat-val,
-[data-theme="dark"] .sidebar-header .parg,
-[data-theme="dark"] .alt-top strong {
+[data-theme="dark"] .pharmacy-name,
+[data-theme="dark"] .product-title,
+[data-theme="dark"] .active-breadcrumb,
+[data-theme="dark"] .pharmacy-price,
+body.dark-theme .pharmacy-name,
+body.dark-theme .product-title,
+body.dark-theme .active-breadcrumb,
+body.dark-theme .pharmacy-price {
   color: #f1f5f9 !important;
 }
 
-body.dark-theme .badge-dist,
-[data-theme="dark"] .badge-dist {
-  background-color: #1e293b !important;
-  color: #94a3b8 !important;
-}
+/* ---------------- Responsive Tweaks ---------------- */
+@media (max-width: 768px) {
+  .product-title {
+    font-size: 20px;
+  }
 
-body.dark-theme .line,
-[data-theme="dark"] .line {
-  background-color: #1f2937 !important;
-}
+  .medicine-main-image-wrap {
+    min-height: 180px;
+  }
 
-body.dark-theme .btn-notify,
-[data-theme="dark"] .btn-notify {
-  background-color: #1e293b !important;
-  border-color: #334155 !important;
-  color: #cbd5e1 !important;
-}
+  .specs-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 
-body.dark-theme .btn-notify:hover,
-[data-theme="dark"] .btn-notify:hover {
-  background-color: #334155 !important;
-  color: #ffffff !important;
-}
+  .pharmacy-header-flex {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-body.dark-theme .advice-list li,
-[data-theme="dark"] .advice-list li {
-  color: #cbd5e1 !important;
-}
+  .pharmacy-action-group {
+    justify-content: space-between;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color, #e2e8f0);
+  }
 
-body.dark-theme #DONE,
-body.dark-theme #DONE2,
-[data-theme="dark"] #DONE,
-[data-theme="dark"] #DONE2 {
-  background: rgba(16, 185, 129, 0.15) !important;
-  border: 1px solid rgba(16, 185, 129, 0.35) !important;
-  color: #34d399 !important;
-}
-
-body.dark-theme #DONE .bold,
-body.dark-theme #DONE2 .bold,
-[data-theme="dark"] #DONE .bold,
-[data-theme="dark"] #DONE2 .bold {
-  color: #6ee7b7 !important;
+  .pharmacy-price-col {
+    text-align: start;
+  }
 }

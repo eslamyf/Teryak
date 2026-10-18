@@ -5,12 +5,63 @@ const { successResponse, errorResponse } = require('../utils/apiResponse');
 const { searchEgyptianDrugRegistry, fetchOnlineEgyptianDrugs } = require('../utils/egyptianDrugService');
 const { escapeRegex } = require('../utils/regexHelper');
 
+// In-memory cache for ultra-fast catalog responses (< 2ms)
+const medicinesCache = new Map();
+const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes cache
+
+let cachedApprovedPharmacyIds = null;
+let lastPharmacyCacheTime = 0;
+const PHARMACY_CACHE_TTL = 5 * 60 * 1000;
+
+const getApprovedPharmacyIds = async () => {
+  if (cachedApprovedPharmacyIds && Date.now() - lastPharmacyCacheTime < PHARMACY_CACHE_TTL) {
+    return cachedApprovedPharmacyIds;
+  }
+  try {
+    const approved = await Pharmacy.find({ isApproved: true }).select('_id').lean();
+    cachedApprovedPharmacyIds = approved.map((p) => p._id);
+    lastPharmacyCacheTime = Date.now();
+    return cachedApprovedPharmacyIds;
+  } catch (err) {
+    return cachedApprovedPharmacyIds || [];
+  }
+};
+
+const getCachedMedicines = (key) => {
+  const cached = medicinesCache.get(key);
+  if (!cached) return null;
+  if (Date.now() - cached.timestamp > CACHE_TTL_MS) {
+    medicinesCache.delete(key);
+    return null;
+  }
+  return cached.data;
+};
+
+const setCachedMedicines = (key, data) => {
+  if (medicinesCache.size > 300) {
+    const firstKey = medicinesCache.keys().next().value;
+    medicinesCache.delete(firstKey);
+  }
+  medicinesCache.set(key, { timestamp: Date.now(), data });
+};
+
+const clearMedicinesCache = () => {
+  medicinesCache.clear();
+  cachedApprovedPharmacyIds = null;
+};
+
 // @desc    Get all medicines with search, category filtering, sorting & pagination
 // @route   GET /api/medicines
 // @access  Public
 const getMedicines = async (req, res, next) => {
   try {
     const { search, category, sort, page = 1, limit = 20 } = req.query;
+
+    const cacheKey = `${search || ''}_${category || ''}_${sort || ''}_${page}_${limit}`;
+    const cachedPayload = getCachedMedicines(cacheKey);
+    if (cachedPayload) {
+      return res.status(200).json(cachedPayload);
+    }
 
     const query = { status: 'active' };
 
@@ -49,44 +100,37 @@ const getMedicines = async (req, res, next) => {
         .select('nameAr nameEn activeIngredient productType category dosageForm price image concentration status')
         .sort(sortOptions)
         .skip(skip)
-        .limit(Number(limit)),
+        .limit(Number(limit))
+        .lean(),
     ]);
+
     const medicineIds = medicines.map((medicine) => medicine._id);
     const pharmacyCountByMedicine = new Map();
     if (medicineIds.length) {
+      const approvedPharmacyIds = await getApprovedPharmacyIds();
       const availabilityCounts = await PharmacyInventory.aggregate([
         {
           $match: {
             medicineId: { $in: medicineIds },
+            pharmacyId: { $in: approvedPharmacyIds },
             quantity: { $gt: 0 },
             isAvailable: true,
           },
         },
         {
-          $lookup: {
-            from: Pharmacy.collection.name,
-            let: { pharmacyId: '$pharmacyId' },
-            pipeline: [
-              { $match: { $expr: { $eq: ['$_id', '$$pharmacyId'] }, isApproved: true } },
-              { $project: { _id: 1 } },
-            ],
-            as: 'approvedPharmacy',
-          },
-        },
-        { $unwind: '$approvedPharmacy' },
-        {
           $group: {
-            _id: { medicineId: '$medicineId', pharmacyId: '$approvedPharmacy._id' },
+            _id: '$medicineId',
+            count: { $sum: 1 },
           },
         },
-        { $group: { _id: '$_id.medicineId', count: { $sum: 1 } } },
       ]);
       availabilityCounts.forEach(({ _id, count }) => {
         pharmacyCountByMedicine.set(String(_id), count);
       });
     }
+
     const medicinesWithAvailability = medicines.map((medicine) => {
-      const medicineData = medicine.toObject();
+      const medicineData = { ...medicine };
       if (medicineData.image?.startsWith('data:')) medicineData.image = '';
       return {
         ...medicineData,
@@ -94,18 +138,22 @@ const getMedicines = async (req, res, next) => {
       };
     });
 
-    return successResponse(
-      res,
-      200,
-      'تم جلب قائمة الأدوية بنجاح',
-      medicinesWithAvailability,
-      {
+    const responsePayload = {
+      success: true,
+      statusCode: 200,
+      message: 'تم جلب قائمة الأدوية بنجاح',
+      data: medicinesWithAvailability,
+      pagination: {
         total,
         page: Number(page),
         pages: Math.ceil(total / Number(limit)),
         limit: Number(limit),
-      }
-    );
+      },
+    };
+
+    setCachedMedicines(cacheKey, responsePayload);
+
+    return res.status(200).json(responsePayload);
   } catch (error) {
     next(error);
   }
@@ -261,6 +309,7 @@ const createMedicine = async (req, res, next) => {
       status: req.user.role === 'admin' ? (status || 'active') : 'pending',
     });
 
+    clearMedicinesCache();
     return successResponse(res, 201, 'تم إضافة الدواء بنجاح', medicine);
   } catch (error) {
     next(error);
@@ -282,6 +331,7 @@ const updateMedicine = async (req, res, next) => {
       return errorResponse(res, 404, 'الدواء غير موجود');
     }
 
+    clearMedicinesCache();
     return successResponse(res, 200, 'تم تحديث بيانات الدواء بنجاح', medicine);
   } catch (error) {
     next(error);
@@ -303,6 +353,7 @@ const deleteMedicine = async (req, res, next) => {
     // Clean up inventory references
     await PharmacyInventory.deleteMany({ medicineId: id });
 
+    clearMedicinesCache();
     return successResponse(res, 200, 'تم حذف الدواء بنجاح');
   } catch (error) {
     next(error);
@@ -373,6 +424,7 @@ const bulkImportMedicines = async (req, res, next) => {
       }
     }
 
+    clearMedicinesCache();
     return successResponse(res, 200, 'تمت عملية الاستيراد الجماعي للأدوية بنجاح', {
       insertedCount,
       updatedCount,

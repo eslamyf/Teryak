@@ -149,31 +149,39 @@
 
 .field-icon {
   position: absolute;
-  inset-inline-start: 14px;
+  right: 14px;
   top: 50%;
   transform: translateY(-50%);
   color: var(--text-muted);
   font-size: 15px;
   pointer-events: none;
   z-index: 2;
+  transition: color var(--transition-fast);
+}
+
+.input-wrap:focus-within .field-icon {
+  color: var(--primary-color);
 }
 
 .in {
   width: 100%;
   border: 1.5px solid var(--border-color);
   border-radius: 10px;
-  padding: 10px 14px;
+  padding: 11px 16px;
   background: var(--bg-card);
-  font-size: 14px;
+  font-size: 14.5px;
   color: var(--text-main);
   box-sizing: border-box;
   outline: none;
   font-family: inherit;
+  text-align: right;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .in.has-icon {
-  padding-inline-start: 42px !important;
+  padding-right: 44px !important;
+  padding-left: 16px !important;
+  text-align: right;
 }
 
 .in:focus {
@@ -184,6 +192,7 @@
 .in::placeholder {
   color: var(--text-muted);
   opacity: 0.65;
+  text-align: right;
 }
 
 /* ==========================================================================
@@ -199,23 +208,31 @@
 .password-box .in,
 .password-box input {
   width: 100%;
-  padding-left: 44px !important; /* Space for eye toggle */
-  padding-right: 14px !important;
-  text-align: start !important;
+  padding-right: 44px !important; /* Space for lock icon on right */
+  padding-left: 46px !important;  /* Generous space for eye toggle button on left */
+  text-align: right !important;
   margin-bottom: 0 !important;
   box-sizing: border-box;
   font-family: inherit;
+  font-size: 15px;
   letter-spacing: 0.5px;
 }
 
 .password-box .in[type="password"] {
+  letter-spacing: 3px;
+}
+
+.password-box .in::placeholder {
   letter-spacing: 2px;
+  text-align: right;
+  color: var(--text-muted);
+  opacity: 0.65;
 }
 
 .password-box .eye-btn,
 .eye-btn {
   position: absolute;
-  left: 12px !important;
+  left: 10px !important;
   right: auto !important;
   top: 50%;
   transform: translateY(-50%);
@@ -223,19 +240,23 @@
   background: transparent;
   color: var(--text-muted);
   cursor: pointer;
-  padding: 4px;
-  font-size: 15px;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  font-size: 16px;
   display: grid;
   place-items: center;
   z-index: 5;
-  transition: color var(--transition-fast), transform var(--transition-fast);
+  transition: color var(--transition-fast), background-color var(--transition-fast), transform var(--transition-fast);
   line-height: 1;
 }
 
 .password-box .eye-btn:hover,
 .eye-btn:hover {
   color: var(--primary-color);
-  transform: translateY(-50%) scale(1.1);
+  background: var(--bg-muted);
+  transform: translateY(-50%) scale(1.08);
 }
 
 /* Pharmacist Smooth Animated Transition */

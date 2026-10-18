@@ -66,11 +66,17 @@
       if (existingItem) {
         existingItem.quantity = (Number(existingItem.quantity) || 1) + qtyToAdd;
         if (numericPrice) existingItem.price = numericPrice;
+        if (product.pharmacyId && !existingItem.pharmacyId) existingItem.pharmacyId = product.pharmacyId;
+        if ((product.pharmacy || product.pharmacyName) && !existingItem.pharmacy) {
+          existingItem.pharmacy = product.pharmacy || product.pharmacyName;
+        }
         if (productImg && (!existingItem.image || existingItem.image.includes('undefined'))) {
           existingItem.image = productImg;
           existingItem.img = productImg;
         }
       } else {
+        const resolvedPharmId = product.pharmacyId || pharmacyId || (product.pharmacy && product.pharmacy._id) || undefined;
+        const resolvedPharmName = product.pharmacyName || (typeof product.pharmacy === 'string' ? product.pharmacy : product.pharmacy?.name) || '';
         cart.push({
           id: product.id || `item_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
           medicineId: product.medicineId || product._id || product.id || undefined,
@@ -79,9 +85,10 @@
           image: productImg,
           img: productImg,
           quantity: qtyToAdd,
-          pharmacy: product.pharmacy || '',
-          pharmacyId: pharmacyId || undefined,
-          deliveryFee: Number(product.deliveryFee) || undefined,
+          pharmacy: resolvedPharmName,
+          pharmacyName: resolvedPharmName,
+          pharmacyId: resolvedPharmId,
+          deliveryFee: Number(product.deliveryFee) || 15,
         });
       }
 

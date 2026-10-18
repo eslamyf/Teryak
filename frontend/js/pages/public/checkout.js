@@ -3,7 +3,7 @@
  * Integrated with Auth Protection, Real-Time Validation & Dynamic Cart Synchronization
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+function initCheckoutPage() {
   const form = document.getElementById('shippingForm');
   const nameInput = document.getElementById('name');
   const phoneInput = document.getElementById('phone');
@@ -63,10 +63,32 @@ document.addEventListener('DOMContentLoaded', () => {
   // 2. Render Dynamic Order Summary from Cart
   const deliveryFee = 15.00;
 
+  function getCartData() {
+    if (window.Cart && typeof window.Cart.getItems === 'function') {
+      const items = window.Cart.getItems();
+      if (Array.isArray(items) && items.length > 0) return items;
+    }
+    try {
+      const raw = localStorage.getItem('cart');
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
   function renderOrderSummary() {
-    const cartItems = (window.Cart && typeof window.Cart.getItems === 'function') ? window.Cart.getItems() : [];
-    const subtotal = (window.Cart && typeof window.Cart.getTotal === 'function') ? window.Cart.getTotal() : 0;
-    const count = (window.Cart && typeof window.Cart.getCount === 'function') ? window.Cart.getCount() : cartItems.length;
+    const cartItems = getCartData();
+    let subtotal = 0;
+    if (window.Cart && typeof window.Cart.getTotal === 'function') {
+      subtotal = window.Cart.getTotal();
+    }
+    if (!subtotal) {
+      subtotal = cartItems.reduce((acc, item) => {
+        const p = typeof item.price === 'number' ? item.price : parseFloat(String(item.price).replace(/[^0-9.]/g, '')) || 0;
+        return acc + (p * (Number(item.quantity) || 1));
+      }, 0);
+    }
+    const count = cartItems.reduce((acc, item) => acc + (Number(item.quantity) || 1), 0);
     const finalTotal = subtotal > 0 ? subtotal + deliveryFee : 0;
 
     if (countBadge) countBadge.textContent = `${count} أدوية`;
@@ -105,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const qty = Number(item.quantity) || 1;
       const price = typeof item.price === 'number' ? item.price : parseFloat(String(item.price).replace(/[^0-9.]/g, '')) || 25;
       const itemSubtotal = (price * qty).toFixed(2);
-      const pharmacy = item.pharmacy || 'صيدلية النهضة';
+      const pharmacy = item.pharmacy || item.pharmacyName || 'صيدليه اسلام';
 
       itemsHtml += `
         <div class="summary-item-row">
@@ -129,7 +151,16 @@ document.addEventListener('DOMContentLoaded', () => {
   renderOrderSummary();
   window.addEventListener('teryak:cart-change', renderOrderSummary);
 
-  // 3. Real-time validation for Egyptian Phone Number
+  // 3. Real-time validation for Shipping Inputs
+  if (nameInput) {
+    nameInput.addEventListener('input', () => {
+      const val = nameInput.value.trim();
+      if (val.length >= 3) {
+        if (window.TeryakValidator) window.TeryakValidator.setValid(nameInput);
+      }
+    });
+  }
+
   if (phoneInput) {
     phoneInput.addEventListener('input', () => {
       const val = phoneInput.value.trim();
@@ -142,6 +173,24 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window.TeryakValidator) {
           window.TeryakValidator.setValid(phoneInput);
         }
+      }
+    });
+  }
+
+  if (addressInput) {
+    addressInput.addEventListener('input', () => {
+      const val = addressInput.value.trim();
+      if (val.length >= 4) {
+        if (window.TeryakValidator) window.TeryakValidator.setValid(addressInput);
+      }
+    });
+  }
+
+  if (cityInput) {
+    cityInput.addEventListener('input', () => {
+      const val = cityInput.value.trim();
+      if (val.length >= 2) {
+        if (window.TeryakValidator) window.TeryakValidator.setValid(cityInput);
       }
     });
   }
@@ -240,8 +289,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
       setTimeout(() => {
         window.location.href = 'payment.html';
-      }, 500);
+      }, 300);
     });
+  }
+}
+
+window.initCheckoutPage = initCheckoutPage;
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initCheckoutPage);
+} else {
+  initCheckoutPage();
+}
+
+window.addEventListener('teryak:page-mounted', (e) => {
+  if (window.location.pathname.includes('checkout.html') || (e && e.detail && e.detail.page === 'checkout')) {
+    initCheckoutPage();
+  }
+});
+
+window.addEventListener('teryak:cart-change', () => {
+  if (document.getElementById('checkoutItemsContainer')) {
+    initCheckoutPage();
   }
 });
 

@@ -4,11 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>الأدوية | تِرياق</title>
+  <!-- Favicon / Brand Logo -->
+  <link rel="icon" type="image/png" href="../../assets/images/logo.png">
+  <link rel="apple-touch-icon" href="../../assets/images/logo.png">
   <meta name="description" content="دليل الأدوية الشامل في تِرياق - دوّر على دواك، وقارن الأسعار، واحجز من أقرب صيدلية معتمدة.">
 
-  <!-- Anti-flicker Theme Script -->
+    <!-- Anti-flicker Theme Script: Executed synchronously before ANY CSS or DOM paint -->
   <script>
-    (function(){try{var t=localStorage.getItem('teryak_theme')||localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');if(t==='dark'){document.documentElement.setAttribute('data-theme','dark');if(document.body){document.body.classList.add('dark-theme');}else{document.addEventListener('DOMContentLoaded',function(){document.body.classList.add('dark-theme');});}}else{document.documentElement.removeAttribute('data-theme');}}catch(e){}})();
+    (function(){try{var saved=localStorage.getItem('teryak_theme')||localStorage.getItem('theme');var prefersDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches;var isDark=saved==='dark'||(!saved&&prefersDark);if(isDark){document.documentElement.setAttribute('data-theme','dark');document.documentElement.classList.add('dark-theme');document.documentElement.style.backgroundColor='#0b1120';document.documentElement.style.colorScheme='dark';}else{document.documentElement.setAttribute('data-theme','light');document.documentElement.classList.remove('dark-theme');document.documentElement.style.backgroundColor='#f8fafc';document.documentElement.style.colorScheme='light';}}catch(e){}})();
   </script>
 
   <!-- Typography: Cairo, Alexandria, Tajawal -->
@@ -46,9 +49,7 @@
     <!-- Search & Sort Bar -->
     <div class="bar">
       <label class="field">
-        <svg class="i" viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
-        </svg>
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
         <input type="search" id="searchInput" placeholder="اسم الدوا، المادة الفعالة، أو الاستخدام" aria-label="بحث عن دواء">
         <button type="button" id="clearSearchBtn" class="clear-search-btn hide" aria-label="مسح البحث" style="border:none;background:none;font-size:18px;color:var(--text-muted);cursor:pointer;padding:0 4px;">&times;</button>
       </label>
@@ -119,16 +120,137 @@
 
     <!-- Medicines Grid (3 Columns Desktop, 2 Tablet, 1 Mobile) -->
     <div class="grid3" id="medicinesGrid">
-      <div style="grid-column:1/-1;text-align:center;padding:48px 0;">
-        <i class="fa-solid fa-circle-notch fa-spin text-success fs-1 mb-3"></i>
-        <p style="color:var(--text-muted);font-weight:700;">جاري تحميل الأدوية...</p>
-      </div>
+      <article class="card hov med medicine-item" data-category="مسكنات" data-status="available" data-price="35" data-rating="4.9" data-availability="48" data-name="بانادول إكسترا" data-name-en="Panadol Extra" data-active-ing="باراسيتامول + كافيين">
+        <div class="med-img">
+          <span class="tag">متوفر</span>
+          <span class="rate"><i class="fa-solid fa-star text-warning"></i> 4.9</span>
+          <a href="medicine-detail.html?med=panadol" class="med-img-link" title="بانادول إكسترا">
+            <i class="fa-solid fa-pills" style="font-size:42px;color:var(--primary-color);"></i>
+          </a>
+        </div>
+        <div class="med-b">
+          <span class="med-cat">مسكنات · باراسيتامول + كافيين</span>
+          <h3 class="med-title"><a href="medicine-detail.html?med=panadol" title="بانادول إكسترا">بانادول إكسترا</a></h3>
+          <div class="med-p">
+            <span class="med-avail"><i class="fa-solid fa-store me-1"></i>متوفر في 48 صيدلية</span>
+            <div class="price">35<span>ج.م</span></div>
+          </div>
+          <a href="medicine-detail.html?med=panadol" class="btn btn-brand btn-block addCart" data-id="panadol" data-name="بانادول إكسترا">
+            <i class="fa-solid fa-bag-shopping me-1"></i> اختار صيدلية للطلب
+          </a>
+        </div>
+      </article>
+
+      <article class="card hov med medicine-item" data-category="مسكنات" data-status="available" data-price="18" data-rating="4.7" data-availability="32" data-name="بارامول 500 مجم" data-name-en="Paramol 500mg" data-active-ing="باراسيتامول">
+        <div class="med-img">
+          <span class="tag">متوفر</span>
+          <span class="rate"><i class="fa-solid fa-star text-warning"></i> 4.7</span>
+          <a href="medicine-detail.html?med=paramol" class="med-img-link" title="بارامول 500 مجم">
+            <i class="fa-solid fa-pills" style="font-size:42px;color:var(--primary-color);"></i>
+          </a>
+        </div>
+        <div class="med-b">
+          <span class="med-cat">مسكنات · باراسيتامول</span>
+          <h3 class="med-title"><a href="medicine-detail.html?med=paramol" title="بارامول 500 مجم">بارامول 500 مجم</a></h3>
+          <div class="med-p">
+            <span class="med-avail"><i class="fa-solid fa-store me-1"></i>متوفر في 32 صيدلية</span>
+            <div class="price">18<span>ج.م</span></div>
+          </div>
+          <a href="medicine-detail.html?med=paramol" class="btn btn-brand btn-block addCart" data-id="paramol" data-name="بارامول 500 مجم">
+            <i class="fa-solid fa-bag-shopping me-1"></i> اختار صيدلية للطلب
+          </a>
+        </div>
+      </article>
+
+      <article class="card hov med medicine-item" data-category="مسكنات" data-status="available" data-price="45" data-rating="4.8" data-availability="26" data-name="كاتافلام 50 مجم" data-name-en="Cataflam 50mg" data-active-ing="ديكلوفيناك بوتاسيوم">
+        <div class="med-img">
+          <span class="tag">متوفر</span>
+          <span class="rate"><i class="fa-solid fa-star text-warning"></i> 4.8</span>
+          <a href="medicine-detail.html?med=cataflam" class="med-img-link" title="كاتافلام 50 مجم">
+            <i class="fa-solid fa-pills" style="font-size:42px;color:var(--primary-color);"></i>
+          </a>
+        </div>
+        <div class="med-b">
+          <span class="med-cat">مسكنات · ديكلوفيناك بوتاسيوم</span>
+          <h3 class="med-title"><a href="medicine-detail.html?med=cataflam" title="كاتافلام 50 مجم">كاتافلام 50 مجم</a></h3>
+          <div class="med-p">
+            <span class="med-avail"><i class="fa-solid fa-store me-1"></i>متوفر في 26 صيدلية</span>
+            <div class="price">45<span>ج.م</span></div>
+          </div>
+          <a href="medicine-detail.html?med=cataflam" class="btn btn-brand btn-block addCart" data-id="cataflam" data-name="كاتافلام 50 مجم">
+            <i class="fa-solid fa-bag-shopping me-1"></i> اختار صيدلية للطلب
+          </a>
+        </div>
+      </article>
+
+      <article class="card hov med medicine-item" data-category="مضادات حيوية" data-status="available" data-price="130" data-rating="4.9" data-availability="30" data-name="أوجمنتين 1 جم أقراص" data-name-en="Augmentin 1g" data-active-ing="أموكسيسيلين + كلافولانات">
+        <div class="med-img">
+          <span class="tag">متوفر</span>
+          <span class="rate"><i class="fa-solid fa-star text-warning"></i> 4.9</span>
+          <a href="medicine-detail.html?med=augmentin" class="med-img-link" title="أوجمنتين 1 جم أقراص">
+            <i class="fa-solid fa-pills" style="font-size:42px;color:var(--primary-color);"></i>
+          </a>
+        </div>
+        <div class="med-b">
+          <span class="med-cat">مضادات حيوية · أموكسيسيلين + كلافولانات</span>
+          <h3 class="med-title"><a href="medicine-detail.html?med=augmentin" title="أوجمنتين 1 جم أقراص">أوجمنتين 1 جم أقراص</a></h3>
+          <div class="med-p">
+            <span class="med-avail"><i class="fa-solid fa-store me-1"></i>متوفر في 30 صيدلية</span>
+            <div class="price">130<span>ج.م</span></div>
+          </div>
+          <a href="medicine-detail.html?med=augmentin" class="btn btn-brand btn-block addCart" data-id="augmentin" data-name="أوجمنتين 1 جم أقراص">
+            <i class="fa-solid fa-bag-shopping me-1"></i> اختار صيدلية للطلب
+          </a>
+        </div>
+      </article>
+
+      <article class="card hov med medicine-item" data-category="مضادات حيوية" data-status="limited" data-price="45" data-rating="4.5" data-availability="12" data-name="أموكسيل 500 مجم" data-name-en="Amoxil 500mg" data-active-ing="أموكسيسيلين">
+        <div class="med-img">
+          <span class="tag" style="background:#eab308;">كمية محدودة</span>
+          <span class="rate"><i class="fa-solid fa-star text-warning"></i> 4.5</span>
+          <a href="medicine-detail.html?med=amoxil" class="med-img-link" title="أموكسيل 500 مجم">
+            <i class="fa-solid fa-pills" style="font-size:42px;color:var(--primary-color);"></i>
+          </a>
+        </div>
+        <div class="med-b">
+          <span class="med-cat">مضادات حيوية · أموكسيسيلين</span>
+          <h3 class="med-title"><a href="medicine-detail.html?med=amoxil" title="أموكسيل 500 مجم">أموكسيل 500 مجم</a></h3>
+          <div class="med-p">
+            <span class="med-avail"><i class="fa-solid fa-store me-1"></i>متوفر في 12 صيدلية</span>
+            <div class="price">45<span>ج.م</span></div>
+          </div>
+          <a href="medicine-detail.html?med=amoxil" class="btn btn-brand btn-block addCart" data-id="amoxil" data-name="أموكسيل 500 مجم">
+            <i class="fa-solid fa-bag-shopping me-1"></i> اختار صيدلية للطلب
+          </a>
+        </div>
+      </article>
+
+      <article class="card hov med medicine-item" data-category="مضادات حيوية" data-status="available" data-price="115" data-rating="4.8" data-availability="28" data-name="كيورام 1 جم" data-name-en="Curam 1g" data-active-ing="أموكسيسيلين + كلافولانات">
+        <div class="med-img">
+          <span class="tag">متوفر</span>
+          <span class="rate"><i class="fa-solid fa-star text-warning"></i> 4.8</span>
+          <a href="medicine-detail.html?med=curam" class="med-img-link" title="كيورام 1 جم">
+            <i class="fa-solid fa-pills" style="font-size:42px;color:var(--primary-color);"></i>
+          </a>
+        </div>
+        <div class="med-b">
+          <span class="med-cat">مضادات حيوية · أموكسيسيلين + كلافولانات</span>
+          <h3 class="med-title"><a href="medicine-detail.html?med=curam" title="كيورام 1 جم">كيورام 1 جم</a></h3>
+          <div class="med-p">
+            <span class="med-avail"><i class="fa-solid fa-store me-1"></i>متوفر في 28 صيدلية</span>
+            <div class="price">115<span>ج.م</span></div>
+          </div>
+          <a href="medicine-detail.html?med=curam" class="btn btn-brand btn-block addCart" data-id="curam" data-name="كيورام 1 جم">
+            <i class="fa-solid fa-bag-shopping me-1"></i> اختار صيدلية للطلب
+          </a>
+        </div>
+      </article>
     </div>
 
     <!-- Square Pagination Navigation -->
     <div class="pager hide" id="paginationNav">
       <button type="button" id="prevPageBtn" aria-label="السابق">السابق</button>
-      <div id="pageNumbersContainer" style="display:inline-flex;gap:8px;"></div>
+      <div id="pageNumbersContainer"></div>
       <button type="button" id="nextPageBtn" aria-label="التالي">التالي</button>
     </div>
     <div id="paginationInfo" class="pagination-info hide" style="text-align:center;margin-top:12px;color:var(--text-muted);font-size:14px;"></div>

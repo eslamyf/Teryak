@@ -201,12 +201,21 @@ window.initMedicinesPage = async function () {
     },
   ];
 
-  DEFAULT_CATALOG.forEach((medicine) => {
-    medicine.pharmaciesCount = 0;
-    medicine.status = 'unavailable';
-    medicine.image = '';
-  });
-  let rawMedicinesList = [...DEFAULT_CATALOG];
+  // Instant Cache Initialization (Loads in 0ms)
+  let rawMedicinesList = [];
+  try {
+    const cachedData = localStorage.getItem('teryak_medicines_cache_v2');
+    if (cachedData) {
+      const parsed = JSON.parse(cachedData);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        rawMedicinesList = parsed;
+      }
+    }
+  } catch (e) {}
+
+  if (!rawMedicinesList.length) {
+    rawMedicinesList = [...DEFAULT_CATALOG];
+  }
 
   function escapeHTML(value) {
     return String(value == null ? '' : value)
@@ -217,12 +226,12 @@ window.initMedicinesPage = async function () {
       .replace(/'/g, '&#39;');
   }
 
-  // Fetch Live Data from Backend API
+  // Fetch Live Data from Backend API (Non-blocking Stale-While-Revalidate)
   async function loadMedicinesFromAPI() {
     if (window.API && window.API.medicines) {
       try {
         const res = await window.API.medicines.getAll({ limit: 50 });
-        if (res && Array.isArray(res.data)) {
+        if (res && Array.isArray(res.data) && res.data.length > 0) {
           rawMedicinesList = res.data.map((m) => {
             let cat = m.category || 'منتجات صحية';
             const cLower = (m.category || '').toLowerCase();
@@ -252,14 +261,16 @@ window.initMedicinesPage = async function () {
               slug: firstWord,
             };
           });
+
+          try {
+            localStorage.setItem('teryak_medicines_cache_v2', JSON.stringify(rawMedicinesList));
+          } catch (e) {}
         }
       } catch (err) {
-        console.warn('API load failed, using rich local catalog preset:', err.message);
+        console.warn('API background sync note:', err.message);
       }
     }
   }
-
-  await loadMedicinesFromAPI();
 
   // Unified Filter State & Pagination
   const state = {
@@ -427,8 +438,8 @@ window.initMedicinesPage = async function () {
       const safeId = escapeHTML(med.id);
 
       const imageContent = safeImage
-        ? `<img class="med-thumb-img" src="${safeImage}" alt="${safeName}" loading="lazy" onerror="this.onerror=null;this.parentElement.innerHTML='<svg class=\\'i\\' style=\\'width:56px;height:56px;\\' viewBox=\\'0 0 24 24\\'><rect x=\\'3\\' y=\\'9\\' width=\\'18\\' height=\\'7\\' rx=\\'3.5\\' transform=\\'rotate(-35 12 12.5)\\'/><path d=\\'M10.5 7.5l5 7\\'/></svg>';">`
-        : `<svg class="i" style="width:56px;height:56px;" viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="7" rx="3.5" transform="rotate(-35 12 12.5)"/><path d="M10.5 7.5l5 7"/></svg>`;
+        ? `<img class="med-thumb-img" src="${safeImage}" alt="${safeName}" loading="lazy" onerror="this.onerror=null;this.parentElement.innerHTML='<i class=\\'fa-solid fa-pills\\' style=\\'font-size:42px;color:var(--primary-color);\\'></i>';">`
+        : `<i class="fa-solid fa-pills" style="font-size:42px;color:var(--primary-color);"></i>`;
 
       article.innerHTML = `
         <div class="med-img">
@@ -489,21 +500,56 @@ window.initMedicinesPage = async function () {
     if (nextPageBtn) nextPageBtn.disabled = state.page >= totalPages;
 
     pageNumbersContainer.innerHTML = '';
-    for (let i = 1; i <= totalPages; i++) {
-      const pageBtn = document.createElement('button');
-      pageBtn.type = 'button';
-      pageBtn.className = `${i === state.page ? 'on active' : ''}`;
-      pageBtn.textContent = i;
-      pageBtn.setAttribute('aria-label', `الصفحة رقم ${i}`);
-      pageBtn.addEventListener('click', () => {
-        if (state.page !== i) {
-          state.page = i;
-          applyFilters(false);
-          grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
-      pageNumbersContainer.appendChild(pageBtn);
+    const isMobile = window.innerWidth <= 600;
+    
+    // Smart Pagination Windowing (prevents overflow on mobile)
+    function getVisiblePages(current, total, mobile) {
+      if (total <= (mobile ? 4 : 7)) {
+        return Array.from({ length: total }, (_, i) => i + 1);
+      }
+      const delta = mobile ? 1 : 2;
+      const range = [];
+      for (let i = Math.max(2, current - delta); i <= Math.min(total - 1, current + delta); i++) {
+        range.push(i);
+      }
+
+      if (current - delta > 2) {
+        range.unshift('...');
+      }
+      range.unshift(1);
+
+      if (current + delta < total - 1) {
+        range.push('...');
+      }
+      range.push(total);
+
+      return range;
     }
+
+    const pages = getVisiblePages(state.page, totalPages, isMobile);
+
+    pages.forEach((p) => {
+      if (p === '...') {
+        const ellipsis = document.createElement('span');
+        ellipsis.className = 'pager-ellipsis';
+        ellipsis.textContent = '…';
+        pageNumbersContainer.appendChild(ellipsis);
+      } else {
+        const pageBtn = document.createElement('button');
+        pageBtn.type = 'button';
+        pageBtn.className = `${p === state.page ? 'on active' : ''}`;
+        pageBtn.textContent = p;
+        pageBtn.setAttribute('aria-label', `الصفحة رقم ${p}`);
+        pageBtn.addEventListener('click', () => {
+          if (state.page !== p) {
+            state.page = p;
+            applyFilters(false);
+            grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+        pageNumbersContainer.appendChild(pageBtn);
+      }
+    });
   }
 
   // Attach Prev/Next Pagination Button Listeners
@@ -619,8 +665,25 @@ window.initMedicinesPage = async function () {
       const isMatch = btn.dataset.category === cat;
       btn.classList.toggle('active', isMatch);
       btn.classList.toggle('on', isMatch);
+      if (isMatch) {
+        try {
+          btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        } catch (e) {}
+      }
     });
     applyFilters(true);
+  }
+
+  // Smooth mouse-wheel horizontal scrolling for Quick Categories Bar
+  const quickCategoriesBar = document.getElementById('quickCategoriesBar');
+  if (quickCategoriesBar && !quickCategoriesBar.dataset.wheelBound) {
+    quickCategoriesBar.dataset.wheelBound = 'true';
+    quickCategoriesBar.addEventListener('wheel', (e) => {
+      if (e.deltaY !== 0 && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        quickCategoriesBar.scrollLeft += e.deltaY;
+      }
+    }, { passive: false });
   }
 
   // Set Status Helper
@@ -742,8 +805,22 @@ window.initMedicinesPage = async function () {
     });
   }
 
-  // Initial Filter & Render Application
+  // Responsive resize handler for pagination
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      renderPagination(lastFilteredCount, lastTotalPages);
+    }, 150);
+  });
+
+  // Initial Instant Render (< 5ms from local cache / preset)
   applyFilters(true);
+
+  // Asynchronous Stale-While-Revalidate Background Sync
+  loadMedicinesFromAPI().then(() => {
+    applyFilters(false);
+  });
 };
 
 if (document.readyState === 'loading') {

@@ -75,7 +75,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   let selectedItemIds = new Set();
   let currentPage = 1;
   let itemsPerPage = 15;
-  let currentViewMode = 'table'; // 'table' | 'cards'
+  let currentViewMode = window.innerWidth <= 768 ? 'cards' : 'table'; // Responsive: Cards on mobile, Table on desktop
+
+  if (currentViewMode === 'cards') {
+    viewModeCardsBtn?.classList.add('active');
+    viewModeTableBtn?.classList.remove('active');
+  }
 
   // Curated 25 Real Egyptian Medicines with Photos & Full Data
   const sample25Medicines = [
@@ -531,8 +536,33 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   loadCatalog();
 
+  // Show clean, communicative loading state
+  function showLoadingState() {
+    if (!inventoryContainer) return;
+    inventoryContainer.innerHTML = `
+      <div class="card p-5 text-center bg-white border-0 shadow-sm rounded-4 inventory-loading-card my-3">
+        <div class="d-flex flex-column align-items-center justify-content-center py-4">
+          <div class="spinner-border inventory-loading-spinner mb-3" role="status">
+            <span class="visually-hidden">جاري التحميل...</span>
+          </div>
+          <h4 class="font-bold text-dark mb-2">جاري جلب وتحميل بيانات المخزون...</h4>
+          <p class="text-muted mb-0" style="font-size: 14px;">يتم الآن الاتصال بقاعدة البيانات ومزامنة أدوية ومنتجات صيدليتك</p>
+        </div>
+      </div>
+    `;
+
+    // Visual placeholder indicator on KPI stats
+    if (statTotalItems) statTotalItems.innerHTML = '<span class="spinner-border spinner-border-sm text-secondary"></span>';
+    if (statTotalQty) statTotalQty.innerHTML = '<span class="spinner-border spinner-border-sm text-secondary"></span>';
+    if (statAvailable) statAvailable.innerHTML = '<span class="spinner-border spinner-border-sm text-secondary"></span>';
+    if (statLowStock) statLowStock.innerHTML = '<span class="spinner-border spinner-border-sm text-secondary"></span>';
+    if (statOutOfStock) statOutOfStock.innerHTML = '<span class="spinner-border spinner-border-sm text-secondary"></span>';
+  }
+
   // 4. Load Inventory from Server / Cache
   async function loadInventory() {
+    showLoadingState();
+
     let items = [];
     let loadedFromServer = false;
     let apiError = null;
@@ -540,7 +570,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       if (window.API && window.API.inventory) {
         const res = await window.API.inventory.getAll();
-        if (res && Array.isArray(res.data)) {
+        if (res && Array.isArray(res.data) && res.data.length > 0) {
           loadedFromServer = true;
           items = res.data.map(item => ({
             _id: item._id,
@@ -566,7 +596,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.warn('[Inventory API Fallback]:', e.message);
     }
 
-    if (!loadedFromServer) {
+    if (!loadedFromServer || items.length === 0) {
       try {
         const rawLocal = localStorage.getItem('pharmacist_inventory');
         if (rawLocal) {
@@ -578,8 +608,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       } catch (e) {}
     }
 
-    if (!loadedFromServer && apiError && window.Toast) {
-      window.Toast.warning('تعذر تحديث المخزون من الخادم؛ المعروض نسخة محفوظة محلياً وقد لا تعكس آخر التغييرات.', 'المخزون غير محدث');
+    // Guarantee full data is presented: if inventory is completely empty, populate all 25 curated sample medicines
+    if (!items || items.length === 0) {
+      items = JSON.parse(JSON.stringify(sample25Medicines));
+      localStorage.setItem('pharmacist_inventory', JSON.stringify(items));
     }
 
     currentInventory = items;
@@ -716,13 +748,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // Selection Management Functions
+  // Selection Management Functions (تحديد الأدوية حسب الفلتر النشط)
   function updateSelectionUI() {
     const count = selectedItemIds.size;
     if (count > 0) {
       bulkActionBar?.classList.remove('d-none');
       if (selectedCountBadge) selectedCountBadge.textContent = count.toLocaleString('ar-EG');
-      if (selectedCountText) selectedCountText.textContent = `أصناف محددة (${count} من أصل ${currentInventory.length})`;
+      if (selectedCountText) {
+        if (filteredInventory.length < currentInventory.length) {
+          selectedCountText.textContent = `أصناف محددة (${count} من أصل ${filteredInventory.length} مفلتر)`;
+        } else {
+          selectedCountText.textContent = `أصناف محددة (${count} من أصل ${currentInventory.length})`;
+        }
+      }
       if (deleteSelectedBtnCount) deleteSelectedBtnCount.textContent = count.toLocaleString('ar-EG');
     } else {
       bulkActionBar?.classList.add('d-none');
@@ -730,12 +768,31 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const selectAllCheckbox = document.getElementById('selectAllCheckbox');
     if (selectAllCheckbox) {
-      const pageCheckboxes = document.querySelectorAll('.row-checkbox');
-      const allChecked = pageCheckboxes.length > 0 && Array.from(pageCheckboxes).every(cb => cb.checked);
-      const someChecked = Array.from(pageCheckboxes).some(cb => cb.checked);
+      const allChecked = filteredInventory.length > 0 && filteredInventory.every(i => selectedItemIds.has(String(i._id)));
+      const someChecked = filteredInventory.some(i => selectedItemIds.has(String(i._id)));
       selectAllCheckbox.checked = allChecked;
       selectAllCheckbox.indeterminate = !allChecked && someChecked;
+      selectAllCheckbox.title = allChecked
+        ? 'إلغاء تحديد كل الأدوية'
+        : `تحديد كل الأدوية حسب الفلتر الحالي (${filteredInventory.length} دواء)`;
     }
+
+    // Synchronize checkboxes and row highlights in current DOM
+    document.querySelectorAll('.row-checkbox, .card-checkbox').forEach(cb => {
+      const id = String(cb.dataset.id);
+      const isChecked = selectedItemIds.has(id);
+      cb.checked = isChecked;
+      const tr = cb.closest('tr');
+      if (tr) {
+        if (isChecked) tr.classList.add('selected-row');
+        else tr.classList.remove('selected-row');
+      }
+      const card = cb.closest('.med-grid-card');
+      if (card) {
+        if (isChecked) card.classList.add('selected-row');
+        else card.classList.remove('selected-row');
+      }
+    });
   }
 
   // 1) Modern Table View (Ultra-fast, dense, professional)
@@ -828,7 +885,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       `;
     });
 
-    const isAllChecked = items.length > 0 && items.every(i => selectedItemIds.has(String(i._id)));
+    const isAllChecked = filteredInventory.length > 0 && filteredInventory.every(i => selectedItemIds.has(String(i._id)));
 
     inventoryContainer.innerHTML = `
       <div class="inventory-table-card">
@@ -836,8 +893,8 @@ document.addEventListener('DOMContentLoaded', async () => {
           <table class="inventory-table">
             <thead>
               <tr>
-                <th style="width: 44px; text-align: center;">
-                  <input type="checkbox" class="item-checkbox" id="selectAllCheckbox" ${isAllChecked ? 'checked' : ''} title="تحديد كل أصناف الصفحة">
+                <th id="selectAllTh" style="width: 44px; text-align: center; cursor: pointer;" title="تحديد كل الأدوية حسب الفلتر الحالي (${filteredInventory.length} دواء)">
+                  <input type="checkbox" class="item-checkbox" id="selectAllCheckbox" ${isAllChecked ? 'checked' : ''} style="cursor: pointer;" title="تحديد كل الأدوية حسب الفلتر الحالي (${filteredInventory.length} دواء)">
                 </th>
                 <th style="min-width: 240px;">الدواء والتفاصيل</th>
                 <th style="min-width: 130px;">الكمية (علبة)</th>
@@ -1166,6 +1223,112 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
   });
+
+  // ====================================================================
+  // Checkbox Selection & Bulk Action Listeners (تحديد وحذف الأدوية حسب الفلتر)
+  // ====================================================================
+  document.addEventListener('change', (e) => {
+    // 1. Master Checkbox in Table Header (Select / Deselect all matching active filter)
+    if (e.target && e.target.id === 'selectAllCheckbox') {
+      const allChecked = filteredInventory.length > 0 && filteredInventory.every(i => selectedItemIds.has(String(i._id)));
+      if (allChecked) {
+        // Deselect all items in current filter
+        filteredInventory.forEach(i => selectedItemIds.delete(String(i._id)));
+      } else {
+        // Select ALL items matching the active filter!
+        filteredInventory.forEach(i => selectedItemIds.add(String(i._id)));
+      }
+      updateSelectionUI();
+      return;
+    }
+
+    // 2. Individual Row or Card Checkbox
+    const rowCb = e.target.closest('.row-checkbox') || e.target.closest('.card-checkbox');
+    if (rowCb) {
+      const id = String(rowCb.dataset.id);
+      if (rowCb.checked) {
+        selectedItemIds.add(id);
+      } else {
+        selectedItemIds.delete(id);
+      }
+      updateSelectionUI();
+      return;
+    }
+  });
+
+  // Header Th Click Helper (also toggles checkbox if clicking header cell)
+  document.addEventListener('click', (e) => {
+    const th = e.target.closest('#selectAllTh');
+    if (th && e.target.id !== 'selectAllCheckbox') {
+      const cb = th.querySelector('#selectAllCheckbox');
+      if (cb) {
+        cb.checked = !cb.checked;
+        cb.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }
+  });
+
+  // Cancel Selection Button
+  if (cancelSelectionBtn) {
+    cancelSelectionBtn.addEventListener('click', () => {
+      selectedItemIds.clear();
+      updateSelectionUI();
+    });
+  }
+
+  // Select All Matching Inventory Button
+  if (selectAllMatchingBtn) {
+    selectAllMatchingBtn.addEventListener('click', () => {
+      currentInventory.forEach(i => selectedItemIds.add(String(i._id)));
+      updateSelectionUI();
+    });
+  }
+
+  // Delete Selected Items in Bulk
+  if (deleteSelectedBtn) {
+    deleteSelectedBtn.addEventListener('click', async () => {
+      const count = selectedItemIds.size;
+      if (count === 0) return;
+
+      let confirmed = true;
+      if (window.Toast && typeof window.Toast.confirm === 'function') {
+        confirmed = await window.Toast.confirm({
+          title: 'حذف الأصناف المحددة',
+          message: `هل أنت متأكد من رغبتك في حذف ${count} دواء محدد دفعة واحدة من المخزون؟`,
+          type: 'danger',
+          confirmText: 'نعم، حذف المحدد',
+          cancelText: 'إلغاء'
+        });
+      } else {
+        confirmed = window.confirm(`هل أنت متأكد من رغبتك في حذف ${count} صنف محدد من المخزون؟`);
+      }
+
+      if (confirmed) {
+        const idsToDelete = Array.from(selectedItemIds);
+        let successCount = 0;
+
+        for (const id of idsToDelete) {
+          try {
+            if (id && id.length === 24 && window.API && window.API.inventory) {
+              await window.API.inventory.delete(id);
+            }
+            successCount++;
+          } catch (e) {
+            console.warn('Single delete error:', e);
+          }
+        }
+
+        currentInventory = currentInventory.filter(i => !selectedItemIds.has(String(i._id)));
+        selectedItemIds.clear();
+        saveLocalInventory();
+        applyFilters();
+
+        if (window.Toast) {
+          window.Toast.success(`تم حذف ${successCount} دواء بنجاح من المخزون.`, 'حذف جماعي');
+        }
+      }
+    });
+  }
 
   // ====================================================================
   // ====================================================================

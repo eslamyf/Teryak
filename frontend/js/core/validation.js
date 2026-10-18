@@ -74,7 +74,7 @@
     inputEl.classList.add('is-invalid');
     inputEl.classList.remove('is-valid');
 
-    const wrapper = inputEl.closest('.input-wrap, .password-box, .input-box');
+    const wrapper = inputEl.closest('.input-group-custom, .input-group, .input-wrap, .password-box, .input-box, .form-floating');
     if (wrapper) {
       wrapper.classList.add('is-invalid');
       wrapper.classList.remove('is-valid');
@@ -85,7 +85,13 @@
 
     const errorDiv = document.createElement('div');
     errorDiv.className = 'teryak-error-message';
-    errorDiv.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> <span>${message}</span>`;
+    errorDiv.setAttribute('role', 'alert');
+    errorDiv.innerHTML = `
+      <div class="teryak-error-icon-box">
+        <i class="fa-solid fa-circle-exclamation"></i>
+      </div>
+      <span class="teryak-error-text">${message}</span>
+    `;
 
     // Always place error message directly below the input/wrapper (never inside flex)
     const targetEl = wrapper || inputEl;
@@ -101,12 +107,12 @@
     if (!inputEl) return;
     inputEl.classList.remove('is-invalid');
 
-    const wrapper = inputEl.closest('.input-wrap, .password-box, .input-box');
+    const wrapper = inputEl.closest('.input-group-custom, .input-group, .input-wrap, .password-box, .input-box, .form-floating');
     if (wrapper) {
       wrapper.classList.remove('is-invalid');
     }
 
-    const container = inputEl.closest('.form-group') || (wrapper ? wrapper.parentNode : inputEl.parentNode);
+    const container = inputEl.closest('.col-12, .col-md-6, .col-md-4, .col-lg-6, .form-group, .mb-3, .mb-4') || (wrapper ? wrapper.parentNode : inputEl.parentNode);
     if (container) {
       const existingMsgs = container.querySelectorAll('.teryak-error-message');
       existingMsgs.forEach(msg => msg.remove());
@@ -121,7 +127,7 @@
     clearError(inputEl);
     inputEl.classList.add('is-valid');
 
-    const wrapper = inputEl.closest('.input-wrap, .password-box, .input-box');
+    const wrapper = inputEl.closest('.input-group-custom, .input-group, .input-wrap, .password-box, .input-box, .form-floating');
     if (wrapper) {
       wrapper.classList.remove('is-invalid');
       wrapper.classList.add('is-valid');

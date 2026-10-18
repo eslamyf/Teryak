@@ -20,7 +20,8 @@
 
 body {
   background-color: var(--bg-page);
-  padding-top: 75px;
+  padding-top: 0;
+  margin-top: 0;
   direction: rtl;
   font-family: var(--font-arabic, 'Tajawal', sans-serif);
   color: var(--text-dark);
@@ -33,7 +34,7 @@ body {
   max-width: 1140px;
   margin-left: auto;
   margin-right: auto;
-  padding: 0 16px;
+  padding: 24px 16px 40px;
 }
 
 /* Step Progress Indicator */

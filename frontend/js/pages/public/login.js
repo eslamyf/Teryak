@@ -136,7 +136,7 @@ window.initLoginPage = function () {
         // Fallback for offline demo mode
         const currentUsers = JSON.parse(localStorage.getItem('users')) || [
           { id: 1, name: 'أحمد محمود', email: 'patient@teryak.com', password: '123', role: 'patient' },
-          { id: 2, name: 'د. محمد علي', email: 'pharmacist@teryak.com', password: '123', role: 'pharmacist' },
+          { id: 2, name: 'د. اسلام ياسر', email: 'pharmacist@teryak.com', password: '123', role: 'pharmacist', pharmacyName: 'صيدليه اسلام', address: { governorate: 'قنا', city: 'دشنا', street: 'دشنا - نجع عزوز' } },
           { id: 3, name: 'المدير العام', email: 'admin@teryak.com', password: '123', role: 'admin' }
         ];
 

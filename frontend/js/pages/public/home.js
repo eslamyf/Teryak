@@ -113,21 +113,13 @@ window.initHomePage = async function () {
         `;
       } else {
         authNavContainer.innerHTML = `
-          <a href="#" class="login" id="homeLoginBtn">دخول</a>
+          <a href="pages/public/login.html" class="login" id="homeLoginBtn">دخول</a>
         `;
         const loginBtn = authNavContainer.querySelector('#homeLoginBtn');
         if (loginBtn) {
           loginBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            const isRegistered = localStorage.getItem('haveAcount') === 'true' || 
-                                 Boolean(localStorage.getItem('currentUser')) || 
-                                 Boolean(localStorage.getItem('user')) || 
-                                 Boolean(localStorage.getItem('token'));
-            if (!isRegistered) {
-              window.location.href = 'pages/public/register.html';
-            } else {
-              window.location.href = 'pages/public/login.html';
-            }
+            window.location.href = 'pages/public/login.html';
           });
         }
       }
@@ -208,7 +200,7 @@ window.initHomePage = async function () {
           const detailUrl = `pages/public/medicine-detail.html?med=${encodeURIComponent(medId)}`;
           const imgContent = med.image 
             ? `<img src="${med.image}" alt="${name}" loading="lazy">` 
-            : `<svg><use href="#i-pill"/></svg>`;
+            : `<i class="fa-solid fa-pills" style="font-size:38px;color:var(--primary-color);"></i>`;
 
           return `
             <article class="med" data-id="${medId}" data-price="${price}">

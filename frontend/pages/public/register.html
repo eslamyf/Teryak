@@ -4,11 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>تِرياق | إنشاء حساب جديد</title>
+  <!-- Favicon / Brand Logo -->
+  <link rel="icon" type="image/png" href="../../assets/images/logo.png">
+  <link rel="apple-touch-icon" href="../../assets/images/logo.png">
   <meta name="description" content="انضم إلى منصة تِرياق الطبية كـ مريض أو صيدلي معتمد وابدأ فوراً.">
 
-  <!-- Anti-flicker Theme Script -->
+    <!-- Anti-flicker Theme Script: Executed synchronously before ANY CSS or DOM paint -->
   <script>
-    (function(){try{var t=localStorage.getItem('teryak_theme')||localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');if(t==='dark'){document.documentElement.setAttribute('data-theme','dark');if(document.body){document.body.classList.add('dark-theme');}else{document.addEventListener('DOMContentLoaded',function(){document.body.classList.add('dark-theme');});}}else{document.documentElement.removeAttribute('data-theme');}}catch(e){}})();
+    (function(){try{var saved=localStorage.getItem('teryak_theme')||localStorage.getItem('theme');var prefersDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches;var isDark=saved==='dark'||(!saved&&prefersDark);if(isDark){document.documentElement.setAttribute('data-theme','dark');document.documentElement.classList.add('dark-theme');document.documentElement.style.backgroundColor='#0b1120';document.documentElement.style.colorScheme='dark';}else{document.documentElement.setAttribute('data-theme','light');document.documentElement.classList.remove('dark-theme');document.documentElement.style.backgroundColor='#f8fafc';document.documentElement.style.colorScheme='light';}}catch(e){}})();
   </script>
 
   <!-- Typography: Cairo, Alexandria, Tajawal -->
@@ -75,7 +78,7 @@
               <label class="lbl" for="phone">رقم الهاتف</label>
               <div class="input-wrap">
                 <i class="fa-solid fa-phone field-icon"></i>
-                <input type="tel" class="in has-icon" id="phone" placeholder="01xxxxxxxxx" dir="ltr" style="text-align:start" required autocomplete="tel">
+                <input type="tel" class="in has-icon" id="phone" placeholder="01xxxxxxxxx" required autocomplete="tel">
               </div>
             </div>
           </div>
@@ -94,7 +97,7 @@
               <label class="lbl" for="licenseNumber">رقم ترخيص الصيدلية</label>
               <div class="input-wrap">
                 <i class="fa-solid fa-id-card field-icon"></i>
-                <input type="text" class="in has-icon" id="licenseNumber" placeholder="مثال: 123456" dir="ltr" style="text-align:start">
+                <input type="text" class="in has-icon" id="licenseNumber" placeholder="مثال: 123456">
               </div>
             </div>
           </div>
@@ -104,7 +107,7 @@
             <label class="lbl" for="email">البريد الإلكتروني</label>
             <div class="input-wrap">
               <i class="fa-regular fa-envelope field-icon"></i>
-              <input type="email" class="in has-icon" id="email" placeholder="name@example.com" dir="ltr" style="text-align:start" required autocomplete="email">
+              <input type="email" class="in has-icon" id="email" placeholder="name@example.com" required autocomplete="email">
             </div>
           </div>
 
@@ -112,8 +115,9 @@
           <div class="form-row">
             <div class="form-group">
               <label class="lbl" for="password">كلمة المرور</label>
-              <div class="password-box">
-                <input id="password" type="password" class="in" placeholder="••••••••" dir="ltr" required autocomplete="new-password">
+              <div class="password-box input-wrap">
+                <i class="fa-solid fa-lock field-icon"></i>
+                <input id="password" type="password" class="in has-icon" placeholder="••••••••" required autocomplete="new-password">
                 <button type="button" class="eye-btn" aria-label="عرض / إخفاء كلمة المرور" tabindex="-1">
                   <i class="fa-solid fa-eye"></i>
                 </button>
@@ -122,8 +126,9 @@
 
             <div class="form-group">
               <label class="lbl" for="confirmPassword">تأكيد كلمة المرور</label>
-              <div class="password-box">
-                <input id="confirmPassword" type="password" class="in" placeholder="••••••••" dir="ltr" required autocomplete="new-password">
+              <div class="password-box input-wrap">
+                <i class="fa-solid fa-lock field-icon"></i>
+                <input id="confirmPassword" type="password" class="in has-icon" placeholder="••••••••" required autocomplete="new-password">
                 <button type="button" class="eye-btn" aria-label="عرض / إخفاء كلمة المرور" tabindex="-1">
                   <i class="fa-solid fa-eye"></i>
                 </button>

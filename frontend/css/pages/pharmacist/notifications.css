@@ -39,6 +39,13 @@ body.dark-theme .notif-card,
   color: #f1f5f9 !important;
 }
 
+body.dark-theme .notif-card:hover,
+[data-theme="dark"] .notif-card:hover {
+  transform: translateY(-3px) !important;
+  border-color: rgba(16, 185, 129, 0.45) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45), 0 0 16px rgba(16, 185, 129, 0.12) !important;
+}
+
 body.dark-theme .notif-card.unread,
 [data-theme="dark"] .notif-card.unread {
   background: #161f30 !important;
