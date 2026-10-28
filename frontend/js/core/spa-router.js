@@ -343,6 +343,12 @@ class SPARouter {
         if (typeof navbar.updateCartCount === 'function') navbar.updateCartCount();
       }
 
+      // Re-trigger App Footer if present
+      const footer = document.querySelector('app-footer');
+      if (footer && typeof footer.render === 'function') {
+        footer.render();
+      }
+
       // Load & execute page scripts dynamically and await their completion
       await this.executePageScripts(pageData.pageScripts, pageData.bodyPage);
 

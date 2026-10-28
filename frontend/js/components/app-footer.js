@@ -25,10 +25,11 @@ class AppFooter extends HTMLElement {
     const homeUrl = base + 'index.html';
     const medicinesUrl = base + 'pages/public/medicines.html';
     const pharmaciesUrl = base + 'pages/public/pharmacies.html';
+    const pharmacistUrl = base + 'pages/pharmacist/index.html';
     const aboutUrl = base + 'pages/public/about.html';
 
     this.innerHTML = `
-      <footer class="ft">
+      <footer class="ft" role="contentinfo">
         <div class="wrap">
           <div class="ft-in">
             <div>
@@ -42,6 +43,7 @@ class AppFooter extends HTMLElement {
               <h4>روابط سريعة</h4>
               <a href="${medicinesUrl}">الأدوية</a>
               <a href="${pharmaciesUrl}">الصيدليات</a>
+              <a href="${pharmacistUrl}">للصيادلة</a>
               <a href="${aboutUrl}">من نحن</a>
             </div>
             <div class="ft-col">
