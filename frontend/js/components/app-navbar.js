@@ -57,6 +57,7 @@ class AppNavbar extends HTMLElement {
   }
 
   getBasePath() {
+    if (document.body && document.body.getAttribute('data-page') === '404') return '/';
     const path = window.location.pathname.replace(/\\/g, '/');
     if (path.includes('/pages/public/') || path.includes('/pages/pharmacist/') || path.includes('/pages/admin/')) {
       return '../../';
@@ -199,7 +200,7 @@ class AppNavbar extends HTMLElement {
           <nav aria-label="التنقل الرئيسي">
             <!-- Brand Logo & Name (Right side in RTL) -->
             <a href="${homeUrl}" class="logo">
-              <img src="${logoImg}" alt="شعار ترياق">
+              <img src="${logoImg}" alt="شعار ترياق" width="36" height="36" decoding="async">
               <span>تِرياق</span>
             </a>
 
@@ -249,7 +250,7 @@ class AppNavbar extends HTMLElement {
         <!-- Drawer Header -->
         <div class="drawer-header">
           <a href="${homeUrl}" class="logo drawer-logo drawer-close-on-click">
-            <img src="${logoImg}" alt="شعار ترياق">
+            <img src="${logoImg}" alt="شعار ترياق" width="32" height="32" loading="lazy" decoding="async">
             <span>تِرياق</span>
           </a>
           <button class="icon-btn drawer-close-btn" id="drawerCloseBtn" type="button" aria-label="إغلاق القائمة">

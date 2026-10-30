@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   function initCharts(chartsData) {
     if (typeof Chart === 'undefined') return;
 
-    Chart.defaults.font.family = "'Tajawal', sans-serif";
+    Chart.defaults.font.family = "'Cairo', sans-serif";
     Chart.defaults.color = '#6b7280';
 
     const days = chartsData?.days || ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
@@ -109,8 +109,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             legend: { display: false },
             tooltip: {
               rtl: true,
-              titleFont: { family: 'Tajawal', weight: 'bold' },
-              bodyFont: { family: 'Tajawal' },
+              titleFont: { family: 'Cairo', weight: 'bold' },
+              bodyFont: { family: 'Cairo' },
               padding: 10,
               cornerRadius: 8,
             },
@@ -118,11 +118,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           scales: {
             x: {
               grid: { display: false },
-              ticks: { font: { family: 'Tajawal', size: 12 } },
+              ticks: { font: { family: 'Cairo', size: 12 } },
             },
             y: {
               ticks: {
-                font: { family: 'Tajawal', size: 11 },
+                font: { family: 'Cairo', size: 11 },
               },
               grid: {
                 color: '#e2e8f0',
@@ -160,8 +160,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             legend: { display: false },
             tooltip: {
               rtl: true,
-              titleFont: { family: 'Tajawal', weight: 'bold' },
-              bodyFont: { family: 'Tajawal' },
+              titleFont: { family: 'Cairo', weight: 'bold' },
+              bodyFont: { family: 'Cairo' },
               padding: 10,
               cornerRadius: 8,
             },
@@ -169,11 +169,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           scales: {
             x: {
               grid: { display: false },
-              ticks: { font: { family: 'Tajawal', size: 12 } },
+              ticks: { font: { family: 'Cairo', size: 12 } },
             },
             y: {
               ticks: {
-                font: { family: 'Tajawal', size: 11 },
+                font: { family: 'Cairo', size: 11 },
               },
               grid: {
                 color: '#e2e8f0',

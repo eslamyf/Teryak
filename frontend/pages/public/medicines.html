@@ -3,36 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>الأدوية | تِرياق</title>
+  <title>الأدوية والمنتجات الطبية | تِرياق</title>
   <!-- Favicon / Brand Logo -->
   <link rel="icon" type="image/png" href="../../assets/images/logo.png">
   <link rel="apple-touch-icon" href="../../assets/images/logo.png">
   <meta name="description" content="دليل الأدوية الشامل في تِرياق - دوّر على دواك، وقارن الأسعار، واحجز من أقرب صيدلية معتمدة.">
 
-    <!-- Anti-flicker Theme Script: Executed synchronously before ANY CSS or DOM paint -->
+  <!-- Anti-flicker Theme Script: Executed synchronously before ANY CSS or DOM paint -->
   <script>
     (function(){try{var saved=localStorage.getItem('teryak_theme')||localStorage.getItem('theme');var prefersDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches;var isDark=saved==='dark'||(!saved&&prefersDark);if(isDark){document.documentElement.setAttribute('data-theme','dark');document.documentElement.classList.add('dark-theme');document.documentElement.style.backgroundColor='#0b1120';document.documentElement.style.colorScheme='dark';}else{document.documentElement.setAttribute('data-theme','light');document.documentElement.classList.remove('dark-theme');document.documentElement.style.backgroundColor='#f8fafc';document.documentElement.style.colorScheme='light';}}catch(e){}})();
   </script>
 
-  <!-- Typography: Cairo, Alexandria, Tajawal -->
+  <!-- Typography: Cairo Exclusively -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Alexandria:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
   <!-- Base & Component CSS -->
-  <link rel="stylesheet" href="../../css/base/variables.css">
-  <link rel="stylesheet" href="../../css/base/global.css">
-  <link rel="stylesheet" href="../../css/components/navbar.css">
-  <link rel="stylesheet" href="../../css/components/components.css">
-  <link rel="stylesheet" href="../../css/components/footer.css">
-  <link rel="stylesheet" href="../../css/components/modal.css">
+  <link rel="stylesheet" href="../../css/base/variables.css?v=20261030_7">
+  <link rel="stylesheet" href="../../css/base/global.css?v=20261030_7">
+  <link rel="stylesheet" href="../../css/components/navbar.css?v=20261030_7">
+  <link rel="stylesheet" href="../../css/components/components.css?v=20261030_7">
+  <link rel="stylesheet" href="../../css/components/footer.css?v=20261030_7">
+  <link rel="stylesheet" href="../../css/components/modal.css?v=20261030_7">
 
   <!-- Page Custom CSS -->
-  <link rel="stylesheet" href="../../css/pages/public/medicines.css">
+  <link rel="stylesheet" href="../../css/pages/public/medicines.css?v=20261030_7">
 </head>
 <body data-page="medicines">
 
@@ -40,233 +40,489 @@
   <app-navbar></app-navbar>
 
   <div id="spa-content">
+    <style>
+      /* Embedded Critical Filter Hub CSS (Guarantees 0ms layout & overrides any stale browser cache on all devices) */
+      .catalog-filter-hub {
+        background: var(--bg-card, #ffffff);
+        border: 1.5px solid var(--border-color, #e2e8f0);
+        border-radius: 22px;
+        padding: 20px 22px;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+        margin-bottom: 18px;
+      }
+      [data-theme="dark"] .catalog-filter-hub,
+      body.dark-theme .catalog-filter-hub {
+        background: #111827 !important;
+        border-color: #1f2937 !important;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.35);
+      }
+      .catalog-filter-hub .bar {
+        display: flex !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+        flex-wrap: wrap !important;
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+      }
+      .catalog-filter-hub .field {
+        flex: 1 1 320px !important;
+        min-height: 52px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        background: var(--bg-muted, #f1f5f9) !important;
+        border: 1.5px solid transparent !important;
+        border-radius: 15px !important;
+        padding: 0 16px !important;
+        transition: all 0.2s ease !important;
+      }
+      [data-theme="dark"] .catalog-filter-hub .field,
+      body.dark-theme .catalog-filter-hub .field {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+      }
+      .catalog-filter-hub .field:focus-within {
+        background: var(--bg-card, #ffffff) !important;
+        border-color: var(--primary-color, #008b5e) !important;
+        box-shadow: 0 0 0 4px rgba(0, 139, 94, 0.1) !important;
+      }
+      [data-theme="dark"] .catalog-filter-hub .field:focus-within,
+      body.dark-theme .catalog-filter-hub .field:focus-within {
+        background: #0f172a !important;
+      }
+      .catalog-filter-hub .field i {
+        color: var(--primary-color, #008b5e);
+        font-size: 16px;
+      }
+      .catalog-filter-hub .field input {
+        flex: 1 !important;
+        border: none !important;
+        background: transparent !important;
+        font-size: 15.5px !important;
+        font-weight: 600 !important;
+        color: var(--text-main) !important;
+        padding: 10px 0 !important;
+      }
+      .filter-actions-group {
+        display: flex !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+        flex: 0 0 auto !important;
+      }
+      .sort-select-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .sort-select-wrap i {
+        position: absolute;
+        inset-inline-start: 14px;
+        color: var(--primary-color, #008b5e);
+        pointer-events: none;
+        font-size: 14px;
+      }
+      .catalog-filter-hub .sel {
+        min-height: 52px !important;
+        border: 1.5px solid var(--border-color, #e2e8f0) !important;
+        border-radius: 15px !important;
+        padding: 0 18px !important;
+        background: var(--bg-card, #ffffff) !important;
+        font-weight: 700 !important;
+        font-size: 14.5px !important;
+        color: var(--text-main) !important;
+        cursor: pointer !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        transition: all 0.2s ease !important;
+        white-space: nowrap !important;
+      }
+      [data-theme="dark"] .catalog-filter-hub .sel,
+      body.dark-theme .catalog-filter-hub .sel {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+        color: #f1f5f9 !important;
+      }
+      .sort-select-wrap .sel {
+        padding-inline-start: 38px !important;
+        padding-inline-end: 32px !important;
+      }
+      .catalog-filter-hub .sel:hover,
+      .catalog-filter-hub .sel.active {
+        border-color: var(--primary-color, #008b5e) !important;
+        color: var(--primary-color, #008b5e) !important;
+      }
+      .categories-bar-divider {
+        height: 1px;
+        background: var(--border-color, #e2e8f0);
+        margin: 16px 0 14px;
+        opacity: 0.7;
+      }
+      #quickCategoriesBar {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: flex-start !important;
+        align-items: center !important;
+        gap: 9px !important;
+        width: 100% !important;
+        padding: 2px 0 !important;
+        margin: 0 !important;
+        overflow: visible !important;
+      }
+      #quickCategoriesBar .chip {
+        flex: 0 0 auto !important;
+        width: auto !important;
+        min-width: max-content !important;
+        max-width: none !important;
+        height: auto !important;
+        white-space: nowrap !important;
+        padding: 9px 15px !important;
+        border-radius: 13px !important;
+        font-size: 13.5px !important;
+        font-weight: 700 !important;
+        border: 1.5px solid var(--border-color, #e2e8f0) !important;
+        background: var(--bg-muted, #f8fafc) !important;
+        color: var(--text-main, #0f172a) !important;
+        cursor: pointer !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        line-height: 1.3 !important;
+        overflow: visible !important;
+      }
+      [data-theme="dark"] #quickCategoriesBar .chip,
+      body.dark-theme #quickCategoriesBar .chip {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+        color: #f1f5f9 !important;
+      }
+      #quickCategoriesBar .chip i {
+        font-size: 13.5px;
+        color: var(--primary-color, #008b5e);
+        transition: color 0.2s ease;
+      }
+      #quickCategoriesBar .chip .cat-count {
+        font-size: 11.5px;
+        font-weight: 800;
+        padding: 1px 7px;
+        border-radius: 999px;
+        background: rgba(0, 139, 94, 0.1);
+        color: var(--primary-color, #008b5e);
+        line-height: 1.4;
+      }
+      #quickCategoriesBar .chip:hover {
+        border-color: var(--primary-color, #008b5e) !important;
+        background: rgba(0, 139, 94, 0.05) !important;
+        color: var(--primary-color, #008b5e) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 139, 94, 0.1);
+      }
+      #quickCategoriesBar .chip.on,
+      #quickCategoriesBar .chip.active {
+        background: linear-gradient(135deg, #008b5e 0%, #059669 100%) !important;
+        border-color: #008b5e !important;
+        color: #ffffff !important;
+        box-shadow: 0 6px 16px rgba(0, 139, 94, 0.28) !important;
+        transform: translateY(-1px);
+      }
+      #quickCategoriesBar .chip.on i,
+      #quickCategoriesBar .chip.active i {
+        color: #ffffff !important;
+      }
+      #quickCategoriesBar .chip.on .cat-count,
+      #quickCategoriesBar .chip.active .cat-count {
+        background: rgba(255, 255, 255, 0.24) !important;
+        color: #ffffff !important;
+      }
+      /* Advanced Drawer */
+      .advanced-filter-drawer {
+        border-top: 1px dashed var(--border-color, #e2e8f0);
+        margin-top: 16px;
+        padding-top: 16px;
+      }
+      .adv-filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 18px;
+      }
+      .filter-section-title {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        font-size: 14px;
+        color: var(--text-main);
+      }
+      .filter-section-title i {
+        color: var(--primary-color, #008b5e);
+      }
+      .filter-pills-group {
+        display: flex !important;
+        gap: 8px !important;
+        flex-wrap: wrap !important;
+      }
+      .filter-pills-group .filter-pill {
+        flex: 0 0 auto !important;
+        width: auto !important;
+        padding: 7px 14px !important;
+        border-radius: 10px !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        border: 1.5px solid var(--border-color, #e2e8f0) !important;
+        background: var(--bg-card, #ffffff) !important;
+        color: var(--text-main) !important;
+        cursor: pointer;
+        transition: all 0.18s ease;
+      }
+      [data-theme="dark"] .filter-pills-group .filter-pill,
+      body.dark-theme .filter-pills-group .filter-pill {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+        color: #f1f5f9 !important;
+      }
+      .filter-pills-group .filter-pill.on,
+      .filter-pills-group .filter-pill.active {
+        background: var(--primary-color, #008b5e) !important;
+        border-color: var(--primary-color, #008b5e) !important;
+        color: #ffffff !important;
+      }
+      .results-meta-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 14px 4px 18px;
+      }
+      .results-meta-row .count {
+        margin: 0 !important;
+        font-size: 15px;
+      }
+      /* Mobile & Tablet Responsive Design */
+      @media (max-width: 768px) {
+        .catalog-filter-hub {
+          padding: 14px;
+          border-radius: 18px;
+        }
+        .catalog-filter-hub .bar {
+          flex-direction: column !important;
+          gap: 10px !important;
+        }
+        .catalog-filter-hub .field {
+          flex: 1 1 auto !important;
+          width: 100% !important;
+          min-height: 46px !important;
+        }
+        .filter-actions-group {
+          width: 100% !important;
+          display: grid !important;
+          grid-template-columns: 1fr auto !important;
+          gap: 8px !important;
+        }
+        .sort-select-wrap,
+        .sort-select-wrap .sel {
+          width: 100% !important;
+          min-height: 44px !important;
+          font-size: 13.5px !important;
+        }
+        #filterBtn {
+          min-height: 44px !important;
+          padding: 0 14px !important;
+          font-size: 13.5px !important;
+        }
+        #quickCategoriesBar {
+          flex-wrap: nowrap !important;
+          overflow-x: auto !important;
+          overflow-y: hidden !important;
+          -webkit-overflow-scrolling: touch !important;
+          scroll-snap-type: x proximity;
+          padding-bottom: 4px !important;
+          gap: 8px !important;
+        }
+        #quickCategoriesBar .chip {
+          scroll-snap-align: start;
+          padding: 8px 13px !important;
+          font-size: 13px !important;
+        }
+      }
+    </style>
+
     <main class="wrap">
-    <!-- Right-Aligned Page Header Pitch -->
-    <div class="ph">
-      <h1>دليل الأدوية</h1>
-      <p>دوّر على دواك، وقارن الأسعار، واحجز من أقرب صيدلية.</p>
-    </div>
-
-    <!-- Search & Sort Bar -->
-    <div class="bar">
-      <label class="field">
-        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-        <input type="search" id="searchInput" placeholder="اسم الدوا، المادة الفعالة، أو الاستخدام" aria-label="بحث عن دواء">
-        <button type="button" id="clearSearchBtn" class="clear-search-btn hide" aria-label="مسح البحث" style="border:none;background:none;font-size:18px;color:var(--text-muted);cursor:pointer;padding:0 4px;">&times;</button>
-      </label>
-
-      <select class="sel" id="sortSelect" aria-label="الترتيب">
-        <option value="default">الترتيب الافتراضي</option>
-        <option value="priceLow">الأرخص</option>
-        <option value="priceHigh">الأعلى سعراً</option>
-        <option value="rating">الأعلى تقييماً</option>
-        <option value="availability">الأكثر توفراً</option>
-        <option value="name">الاسم أبجدياً (أ - ي)</option>
-      </select>
-
-      <button class="sel" id="filterBtn" type="button">
-        فلاتر
-        <span id="activeFilterBadge" class="filter-badge hide" style="background:var(--primary-color);color:#fff;border-radius:99px;font-size:11px;padding:1px 6px;margin-inline-start:4px;">0</span>
-      </button>
-    </div>
-
-    <!-- Quick Category Chips (Scrollable with hidden scrollbar) -->
-    <div class="chips" role="tablist" id="quickCategoriesBar">
-      <button type="button" class="chip on active" data-category="all">كل الأدوية</button>
-      <button type="button" class="chip" data-category="مسكنات">مسكنات وخافض حرارة</button>
-      <button type="button" class="chip" data-category="مراهم وكريمات">مراهم وكريمات</button>
-      <button type="button" class="chip" data-category="عناية بالبشرة">عناية وتجميل</button>
-      <button type="button" class="chip" data-category="مضادات حيوية">مضادات حيوية</button>
-      <button type="button" class="chip" data-category="قلب وضغط">قلب وضغط</button>
-      <button type="button" class="chip" data-category="فيتامينات">فيتامينات</button>
-      <button type="button" class="chip" data-category="مكملات غذائية">مكملات غذائية</button>
-      <button type="button" class="chip" data-category="نزلات برد">نزلات البرد</button>
-      <button type="button" class="chip" data-category="هضمي">جهاز هضمي</button>
-      <button type="button" class="chip" data-category="عناية شخصية">عناية شخصية</button>
-      <button type="button" class="chip" data-category="مستلزمات طبية">مستلزمات طبية</button>
-    </div>
-
-    <!-- Advanced Collapsible Filter Drawer -->
-    <div id="filter" class="advanced-filter-drawer hide" style="display:none;background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--border-radius-lg);padding:20px;margin-top:16px;">
-      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:20px;">
-        <div class="filter-section">
-          <label style="display:block;font-weight:700;margin-bottom:10px;font-size:15px;color:var(--text-main);">حالة التوفر في الصيدليات</label>
-          <div class="filter-pills-group" id="statusFilterGroup" style="display:flex;gap:8px;flex-wrap:wrap;">
-            <button type="button" class="chip filter-pill on active" data-filter="all">الكل</button>
-            <button type="button" class="chip filter-pill" data-filter="available">متوفر فوراً</button>
-            <button type="button" class="chip filter-pill" data-filter="limited">كمية محدودة</button>
-            <button type="button" class="chip filter-pill" data-filter="unavailable">غير متوفر</button>
-          </div>
-        </div>
-
-        <div class="filter-section">
-          <label style="display:block;font-weight:700;margin-bottom:10px;font-size:15px;color:var(--text-main);">نطاق السعر (ج.م)</label>
-          <div class="filter-pills-group" id="priceFilterGroup" style="display:flex;gap:8px;flex-wrap:wrap;">
-            <button type="button" class="chip filter-pill on active" data-price-range="all">جميع الأسعار</button>
-            <button type="button" class="chip filter-pill" data-price-range="under30">أقل من 30 ج.م</button>
-            <button type="button" class="chip filter-pill" data-price-range="30to60">30 - 60 ج.م</button>
-            <button type="button" class="chip filter-pill" data-price-range="over60">أكثر من 60 ج.م</button>
-          </div>
-        </div>
+      <!-- Right-Aligned Page Header Pitch -->
+      <div class="ph">
+        <h1>دليل الأدوية والمنتجات الطبية</h1>
+        <p>دوّر على دواك أو مستحضرات العناية، وقارن الأسعار، واطلبها فوراً من أقرب صيدلية.</p>
       </div>
 
-      <div style="margin-top:16px;text-align:start;">
-        <button type="button" id="resetFiltersBtn" class="btn btn-line" style="font-size:14px;padding:6px 18px;">
-          إعادة تعيين كافة الفلاتر
+      <!-- Unified Modern Search, Sort & Category Filter Hub -->
+      <section class="catalog-filter-hub" aria-label="أدوات البحث والتصفية">
+        <!-- Row 1: Search Input + Sort Select + Advanced Filter Button -->
+        <div class="bar">
+          <label class="field">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input type="search" id="searchInput" placeholder="ابحث باسم الدواء، المادة الفعالة، أو الاستخدام (مثل: بانادول، ميبو، برد)..." aria-label="بحث عن دواء أو منتج">
+            <button type="button" id="clearSearchBtn" class="clear-search-btn hide" aria-label="مسح البحث" style="border:none;background:none;font-size:20px;color:var(--text-muted);cursor:pointer;padding:0 6px;line-height:1;">&times;</button>
+          </label>
+
+          <div class="filter-actions-group">
+            <div class="sort-select-wrap">
+              <i class="fa-solid fa-arrow-down-wide-short" aria-hidden="true"></i>
+              <select class="sel" id="sortSelect" aria-label="ترتيب النتائج">
+                <option value="default">الترتيب الافتراضي</option>
+                <option value="priceLow">الأقل سعراً أولاً</option>
+                <option value="priceHigh">الأعلى سعراً أولاً</option>
+                <option value="rating">الأعلى تقييماً</option>
+                <option value="availability">الأكثر توفراً بالصيدليات</option>
+                <option value="name">الاسم أبجدياً (أ - ي)</option>
+              </select>
+            </div>
+
+            <button class="sel" id="filterBtn" type="button" aria-expanded="false">
+              <i class="fa-solid fa-sliders" style="color:var(--primary-color);"></i>
+              <span>الفلاتر</span>
+              <span id="activeFilterBadge" class="filter-badge hide" style="background:var(--primary-color);color:#fff;border-radius:99px;font-size:11px;padding:1px 7px;">0</span>
+              <i id="arrow" class="fa-solid fa-chevron-down" style="font-size:11px;opacity:0.7;"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="categories-bar-divider"></div>
+
+        <!-- Row 2: Quick Category Filter Chips (Wrapped on Desktop/Laptop, Touch-Scrollable on Mobile) -->
+        <div class="chips" role="tablist" id="quickCategoriesBar">
+          <button type="button" class="chip on active" data-category="all">
+            <i class="fa-solid fa-border-all"></i>
+            <span>كل الأدوية</span>
+            <small class="cat-count" data-count-for="all">84</small>
+          </button>
+          <button type="button" class="chip" data-category="مسكنات">
+            <i class="fa-solid fa-tablets"></i>
+            <span>مسكنات وخافض حرارة</span>
+            <small class="cat-count" data-count-for="مسكنات">9</small>
+          </button>
+          <button type="button" class="chip" data-category="مراهم وكريمات">
+            <i class="fa-solid fa-pump-medical"></i>
+            <span>مراهم وكريمات</span>
+            <small class="cat-count" data-count-for="مراهم وكريمات">18</small>
+          </button>
+          <button type="button" class="chip" data-category="عناية بالبشرة">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>عناية بالبشرة</span>
+            <small class="cat-count" data-count-for="عناية بالبشرة">15</small>
+          </button>
+          <button type="button" class="chip" data-category="مضادات حيوية">
+            <i class="fa-solid fa-capsules"></i>
+            <span>مضادات حيوية</span>
+            <small class="cat-count" data-count-for="مضادات حيوية">6</small>
+          </button>
+          <button type="button" class="chip" data-category="قلب وضغط">
+            <i class="fa-solid fa-heart-pulse"></i>
+            <span>قلب وضغط وسكر</span>
+            <small class="cat-count" data-count-for="قلب وضغط">8</small>
+          </button>
+          <button type="button" class="chip" data-category="فيتامينات">
+            <i class="fa-solid fa-shield-heart"></i>
+            <span>فيتامينات ومناعة</span>
+            <small class="cat-count" data-count-for="فيتامينات">5</small>
+          </button>
+          <button type="button" class="chip" data-category="مكملات غذائية">
+            <i class="fa-solid fa-apple-whole"></i>
+            <span>مكملات غذائية</span>
+            <small class="cat-count" data-count-for="مكملات غذائية">2</small>
+          </button>
+          <button type="button" class="chip" data-category="نزلات برد">
+            <i class="fa-solid fa-head-side-cough"></i>
+            <span>نزلات البرد</span>
+            <small class="cat-count" data-count-for="نزلات برد">6</small>
+          </button>
+          <button type="button" class="chip" data-category="هضمي">
+            <i class="fa-solid fa-prescription-bottle-medical"></i>
+            <span>جهاز هضمي</span>
+            <small class="cat-count" data-count-for="هضمي">4</small>
+          </button>
+          <button type="button" class="chip" data-category="عناية شخصية">
+            <i class="fa-solid fa-soap"></i>
+            <span>عناية شخصية</span>
+            <small class="cat-count" data-count-for="عناية شخصية">8</small>
+          </button>
+          <button type="button" class="chip" data-category="مستلزمات طبية">
+            <i class="fa-solid fa-kit-medical"></i>
+            <span>مستلزمات طبية</span>
+            <small class="cat-count" data-count-for="مستلزمات طبية">3</small>
+          </button>
+        </div>
+
+        <!-- Row 3: Advanced Collapsible Filter Drawer -->
+        <div id="filter" class="advanced-filter-drawer hide" style="display:none;">
+          <div class="adv-filter-grid">
+            <div class="filter-section">
+              <label class="filter-section-title">
+                <i class="fa-solid fa-store"></i>
+                <span>حالة التوفر في الصيدليات</span>
+              </label>
+              <div class="filter-pills-group" id="statusFilterGroup">
+                <button type="button" class="chip filter-pill on active" data-filter="all">الكل</button>
+                <button type="button" class="chip filter-pill" data-filter="available">متوفر فوراً</button>
+                <button type="button" class="chip filter-pill" data-filter="limited">كمية محدودة</button>
+                <button type="button" class="chip filter-pill" data-filter="unavailable">غير متوفر</button>
+              </div>
+            </div>
+
+            <div class="filter-section">
+              <label class="filter-section-title">
+                <i class="fa-solid fa-tags"></i>
+                <span>نطاق السعر (ج.م)</span>
+              </label>
+              <div class="filter-pills-group" id="priceFilterGroup">
+                <button type="button" class="chip filter-pill on active" data-price-range="all">جميع الأسعار</button>
+                <button type="button" class="chip filter-pill" data-price-range="under30">أقل من 50 ج.م</button>
+                <button type="button" class="chip filter-pill" data-price-range="30to60">50 - 120 ج.م</button>
+                <button type="button" class="chip filter-pill" data-price-range="over60">أكثر من 120 ج.م</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;display:flex;justify-content:flex-end;">
+            <button type="button" id="resetFiltersBtn" class="btn btn-line" style="font-size:13.5px;padding:7px 16px;border-radius:10px;">
+              <i class="fa-solid fa-rotate-left me-1"></i> إعادة تعيين كافة الفلاتر
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results Count Line & Active Filter Chips -->
+      <div class="results-meta-row">
+        <p class="count" id="countLine">عرض <b id="resultsCount">1 - 9</b> من <b id="totalCount">84</b> دواء ومنتج طبي</p>
+        <div class="active-chips-container" id="activeChipsContainer" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+      </div>
+
+      <!-- Medicines Grid (3 Columns Desktop, 2 Tablet, 1 Mobile) -->
+      <div class="grid3" id="medicinesGrid"></div>
+
+      <!-- Square Pagination Navigation -->
+      <div class="pager hide" id="paginationNav">
+        <button type="button" id="prevPageBtn" aria-label="السابق">السابق</button>
+        <div id="pageNumbersContainer"></div>
+        <button type="button" id="nextPageBtn" aria-label="التالي">التالي</button>
+      </div>
+      <div id="paginationInfo" class="pagination-info hide" style="text-align:center;margin-top:12px;color:var(--text-muted);font-size:14px;"></div>
+
+      <!-- Empty State -->
+      <div id="noResultsState" class="card hide" style="display:none;padding:50px 24px;text-align:center;margin-top:24px;">
+        <h3 style="margin-bottom:8px;font-size:22px;">لم نجد أدوية مطابقة للبحث</h3>
+        <p style="color:var(--text-muted);margin-bottom:20px;">جرّب تعديل مصطلحات البحث أو مسح الفلاتر المحددة لعرض أدوية تانية.</p>
+        <button type="button" class="btn btn-brand" id="emptyResetBtn" style="margin-inline:auto;">
+          عرض كل الأدوية
         </button>
       </div>
-    </div>
-
-    <!-- Results Count Line & Active Filter Chips -->
-    <p class="count" id="countLine">عرض <b id="resultsCount">1 - 6</b> من <b id="totalCount">13</b> دوا</p>
-    <div class="active-chips-container" id="activeChipsContainer" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;"></div>
-
-    <!-- Medicines Grid (3 Columns Desktop, 2 Tablet, 1 Mobile) -->
-    <div class="grid3" id="medicinesGrid">
-      <article class="card hov med medicine-item" data-category="مسكنات" data-status="available" data-price="35" data-rating="4.9" data-availability="48" data-name="بانادول إكسترا" data-name-en="Panadol Extra" data-active-ing="باراسيتامول + كافيين">
-        <div class="med-img">
-          <span class="tag">متوفر</span>
-          <span class="rate"><i class="fa-solid fa-star text-warning"></i> 4.9</span>
-          <a href="medicine-detail.html?med=panadol" class="med-img-link" title="بانادول إكسترا">
-            <i class="fa-solid fa-pills" style="font-size:42px;color:var(--primary-color);"></i>
-          </a>
-        </div>
-        <div class="med-b">
-          <span class="med-cat">مسكنات · باراسيتامول + كافيين</span>
-          <h3 class="med-title"><a href="medicine-detail.html?med=panadol" title="بانادول إكسترا">بانادول إكسترا</a></h3>
-          <div class="med-p">
-            <span class="med-avail"><i class="fa-solid fa-store me-1"></i>متوفر في 48 صيدلية</span>
-            <div class="price">35<span>ج.م</span></div>
-          </div>
-          <a href="medicine-detail.html?med=panadol" class="btn btn-brand btn-block addCart" data-id="panadol" data-name="بانادول إكسترا">
-            <i class="fa-solid fa-bag-shopping me-1"></i> اختار صيدلية للطلب
-          </a>
-        </div>
-      </article>
-
-      <article class="card hov med medicine-item" data-category="مسكنات" data-status="available" data-price="18" data-rating="4.7" data-availability="32" data-name="بارامول 500 مجم" data-name-en="Paramol 500mg" data-active-ing="باراسيتامول">
-        <div class="med-img">
-          <span class="tag">متوفر</span>
-          <span class="rate"><i class="fa-solid fa-star text-warning"></i> 4.7</span>
-          <a href="medicine-detail.html?med=paramol" class="med-img-link" title="بارامول 500 مجم">
-            <i class="fa-solid fa-pills" style="font-size:42px;color:var(--primary-color);"></i>
-          </a>
-        </div>
-        <div class="med-b">
-          <span class="med-cat">مسكنات · باراسيتامول</span>
-          <h3 class="med-title"><a href="medicine-detail.html?med=paramol" title="بارامول 500 مجم">بارامول 500 مجم</a></h3>
-          <div class="med-p">
-            <span class="med-avail"><i class="fa-solid fa-store me-1"></i>متوفر في 32 صيدلية</span>
-            <div class="price">18<span>ج.م</span></div>
-          </div>
-          <a href="medicine-detail.html?med=paramol" class="btn btn-brand btn-block addCart" data-id="paramol" data-name="بارامول 500 مجم">
-            <i class="fa-solid fa-bag-shopping me-1"></i> اختار صيدلية للطلب
-          </a>
-        </div>
-      </article>
-
-      <article class="card hov med medicine-item" data-category="مسكنات" data-status="available" data-price="45" data-rating="4.8" data-availability="26" data-name="كاتافلام 50 مجم" data-name-en="Cataflam 50mg" data-active-ing="ديكلوفيناك بوتاسيوم">
-        <div class="med-img">
-          <span class="tag">متوفر</span>
-          <span class="rate"><i class="fa-solid fa-star text-warning"></i> 4.8</span>
-          <a href="medicine-detail.html?med=cataflam" class="med-img-link" title="كاتافلام 50 مجم">
-            <i class="fa-solid fa-pills" style="font-size:42px;color:var(--primary-color);"></i>
-          </a>
-        </div>
-        <div class="med-b">
-          <span class="med-cat">مسكنات · ديكلوفيناك بوتاسيوم</span>
-          <h3 class="med-title"><a href="medicine-detail.html?med=cataflam" title="كاتافلام 50 مجم">كاتافلام 50 مجم</a></h3>
-          <div class="med-p">
-            <span class="med-avail"><i class="fa-solid fa-store me-1"></i>متوفر في 26 صيدلية</span>
-            <div class="price">45<span>ج.م</span></div>
-          </div>
-          <a href="medicine-detail.html?med=cataflam" class="btn btn-brand btn-block addCart" data-id="cataflam" data-name="كاتافلام 50 مجم">
-            <i class="fa-solid fa-bag-shopping me-1"></i> اختار صيدلية للطلب
-          </a>
-        </div>
-      </article>
-
-      <article class="card hov med medicine-item" data-category="مضادات حيوية" data-status="available" data-price="130" data-rating="4.9" data-availability="30" data-name="أوجمنتين 1 جم أقراص" data-name-en="Augmentin 1g" data-active-ing="أموكسيسيلين + كلافولانات">
-        <div class="med-img">
-          <span class="tag">متوفر</span>
-          <span class="rate"><i class="fa-solid fa-star text-warning"></i> 4.9</span>
-          <a href="medicine-detail.html?med=augmentin" class="med-img-link" title="أوجمنتين 1 جم أقراص">
-            <i class="fa-solid fa-pills" style="font-size:42px;color:var(--primary-color);"></i>
-          </a>
-        </div>
-        <div class="med-b">
-          <span class="med-cat">مضادات حيوية · أموكسيسيلين + كلافولانات</span>
-          <h3 class="med-title"><a href="medicine-detail.html?med=augmentin" title="أوجمنتين 1 جم أقراص">أوجمنتين 1 جم أقراص</a></h3>
-          <div class="med-p">
-            <span class="med-avail"><i class="fa-solid fa-store me-1"></i>متوفر في 30 صيدلية</span>
-            <div class="price">130<span>ج.م</span></div>
-          </div>
-          <a href="medicine-detail.html?med=augmentin" class="btn btn-brand btn-block addCart" data-id="augmentin" data-name="أوجمنتين 1 جم أقراص">
-            <i class="fa-solid fa-bag-shopping me-1"></i> اختار صيدلية للطلب
-          </a>
-        </div>
-      </article>
-
-      <article class="card hov med medicine-item" data-category="مضادات حيوية" data-status="limited" data-price="45" data-rating="4.5" data-availability="12" data-name="أموكسيل 500 مجم" data-name-en="Amoxil 500mg" data-active-ing="أموكسيسيلين">
-        <div class="med-img">
-          <span class="tag" style="background:#eab308;">كمية محدودة</span>
-          <span class="rate"><i class="fa-solid fa-star text-warning"></i> 4.5</span>
-          <a href="medicine-detail.html?med=amoxil" class="med-img-link" title="أموكسيل 500 مجم">
-            <i class="fa-solid fa-pills" style="font-size:42px;color:var(--primary-color);"></i>
-          </a>
-        </div>
-        <div class="med-b">
-          <span class="med-cat">مضادات حيوية · أموكسيسيلين</span>
-          <h3 class="med-title"><a href="medicine-detail.html?med=amoxil" title="أموكسيل 500 مجم">أموكسيل 500 مجم</a></h3>
-          <div class="med-p">
-            <span class="med-avail"><i class="fa-solid fa-store me-1"></i>متوفر في 12 صيدلية</span>
-            <div class="price">45<span>ج.م</span></div>
-          </div>
-          <a href="medicine-detail.html?med=amoxil" class="btn btn-brand btn-block addCart" data-id="amoxil" data-name="أموكسيل 500 مجم">
-            <i class="fa-solid fa-bag-shopping me-1"></i> اختار صيدلية للطلب
-          </a>
-        </div>
-      </article>
-
-      <article class="card hov med medicine-item" data-category="مضادات حيوية" data-status="available" data-price="115" data-rating="4.8" data-availability="28" data-name="كيورام 1 جم" data-name-en="Curam 1g" data-active-ing="أموكسيسيلين + كلافولانات">
-        <div class="med-img">
-          <span class="tag">متوفر</span>
-          <span class="rate"><i class="fa-solid fa-star text-warning"></i> 4.8</span>
-          <a href="medicine-detail.html?med=curam" class="med-img-link" title="كيورام 1 جم">
-            <i class="fa-solid fa-pills" style="font-size:42px;color:var(--primary-color);"></i>
-          </a>
-        </div>
-        <div class="med-b">
-          <span class="med-cat">مضادات حيوية · أموكسيسيلين + كلافولانات</span>
-          <h3 class="med-title"><a href="medicine-detail.html?med=curam" title="كيورام 1 جم">كيورام 1 جم</a></h3>
-          <div class="med-p">
-            <span class="med-avail"><i class="fa-solid fa-store me-1"></i>متوفر في 28 صيدلية</span>
-            <div class="price">115<span>ج.م</span></div>
-          </div>
-          <a href="medicine-detail.html?med=curam" class="btn btn-brand btn-block addCart" data-id="curam" data-name="كيورام 1 جم">
-            <i class="fa-solid fa-bag-shopping me-1"></i> اختار صيدلية للطلب
-          </a>
-        </div>
-      </article>
-    </div>
-
-    <!-- Square Pagination Navigation -->
-    <div class="pager hide" id="paginationNav">
-      <button type="button" id="prevPageBtn" aria-label="السابق">السابق</button>
-      <div id="pageNumbersContainer"></div>
-      <button type="button" id="nextPageBtn" aria-label="التالي">التالي</button>
-    </div>
-    <div id="paginationInfo" class="pagination-info hide" style="text-align:center;margin-top:12px;color:var(--text-muted);font-size:14px;"></div>
-
-    <!-- Empty State -->
-    <div id="noResultsState" class="card hide" style="display:none;padding:50px 24px;text-align:center;margin-top:24px;">
-      <h3 style="margin-bottom:8px;font-size:22px;">لم نجد أدوية مطابقة للبحث</h3>
-      <p style="color:var(--text-muted);margin-bottom:20px;">جرّب تعديل مصطلحات البحث أو مسح الفلاتر المحددة لعرض أدوية تانية.</p>
-      <button type="button" class="btn btn-brand" id="emptyResetBtn" style="margin-inline:auto;">
-        عرض كل الأدوية
-      </button>
-    </div>
-  </main>
+    </main>
 
     <!-- Reusable App Footer -->
     <app-footer></app-footer>
@@ -279,18 +535,18 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <!-- Core & Component Scripts -->
-  <script src="../../js/config.js"></script>
-  <script src="../../js/core/toast.js"></script>
-  <script src="../../js/core/validation.js"></script>
-  <script src="../../js/core/api.js"></script>
-  <script src="../../js/core/auth.js"></script>
-  <script src="../../js/core/cart.js"></script>
-  <script src="../../js/components/app-navbar.js"></script>
-  <script src="../../js/components/app-footer.js"></script>
-  <script src="../../js/components/app-cart-modal.js"></script>
-  <script src="../../js/core/spa-router.js"></script>
+  <script src="../../js/config.js?v=20261030_7"></script>
+  <script src="../../js/core/toast.js?v=20261030_7"></script>
+  <script src="../../js/core/validation.js?v=20261030_7"></script>
+  <script src="../../js/core/api.js?v=20261030_7"></script>
+  <script src="../../js/core/auth.js?v=20261030_7"></script>
+  <script src="../../js/core/cart.js?v=20261030_7"></script>
+  <script src="../../js/components/app-navbar.js?v=20261030_7"></script>
+  <script src="../../js/components/app-footer.js?v=20261030_7"></script>
+  <script src="../../js/components/app-cart-modal.js?v=20261030_7"></script>
+  <script src="../../js/core/spa-router.js?v=20261030_7"></script>
 
   <!-- Page Script -->
-  <script src="../../js/pages/public/medicines.js"></script>
+  <script src="../../js/pages/public/medicines.js?v=20261030_7"></script>
 </body>
 </html>

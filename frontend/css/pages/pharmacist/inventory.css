@@ -7,7 +7,7 @@
 }
 
 body, button, input, select, textarea {
-    font-family: var(--font-arabic, 'Tajawal', sans-serif);
+    font-family: var(--font-arabic, 'Cairo', sans-serif);
 }
 
 html {

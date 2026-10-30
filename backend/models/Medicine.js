@@ -34,11 +34,11 @@ const medicineSchema = new mongoose.Schema(
     },
     dosageForm: {
       type: String,
-      default: 'أقراص', // أقراص، كبسولات، شراب، حقن، فوار، مرهم
+      default: 'أقراص', // أقراص، كبسولات، شراب، حقن، فوار، مرهم، كريم
     },
     concentration: {
       type: String,
-      default: '500 mg',
+      default: '500 مجم',
     },
     description: {
       type: String,

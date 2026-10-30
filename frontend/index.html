@@ -9,30 +9,63 @@
   <link rel="apple-touch-icon" href="assets/images/logo.png">
   <meta name="description" content="اكتب اسم الدوا، وشوف مين عنده دلوقتي وبكام، واحجز قبل ما تروح من أقرب صيدلية معتمدة.">
 
-    <!-- Anti-flicker Theme Script: Executed synchronously before ANY CSS or DOM paint -->
+  <!-- Anti-flicker Theme Script: Executed synchronously before ANY CSS or DOM paint -->
   <script>
     (function(){try{var saved=localStorage.getItem('teryak_theme')||localStorage.getItem('theme');var prefersDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches;var isDark=saved==='dark'||(!saved&&prefersDark);if(isDark){document.documentElement.setAttribute('data-theme','dark');document.documentElement.classList.add('dark-theme');document.documentElement.style.backgroundColor='#0b1120';document.documentElement.style.colorScheme='dark';}else{document.documentElement.setAttribute('data-theme','light');document.documentElement.classList.remove('dark-theme');document.documentElement.style.backgroundColor='#f8fafc';document.documentElement.style.colorScheme='light';}}catch(e){}})();
   </script>
 
-  <!-- Typography: Cairo, Alexandria, Tajawal -->
+  <!-- Early DNS & TLS Preconnects for Critical Origins -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Alexandria:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
+  <!-- Inline Critical Above-the-Fold CSS for Instant First Contentful Paint (<0.5s) -->
+  <style>
+    :root{--primary-color:#007a52;--primary-hover:#006644;--secondary-color:#10c38c;--bg-main:#f8fafc;--bg-card:#ffffff;--bg-muted:#f1f5f9;--text-main:#0f172a;--text-muted:#475569;--text-light:#ffffff;--border-color:#cbd5e1;--border-radius-md:10px;--border-radius-lg:16px;--font-arabic:'Cairo',system-ui,-apple-system,sans-serif;--font-heading:'Cairo',system-ui,sans-serif;--bs-body-font-family:'Cairo',system-ui,sans-serif;--bs-font-sans-serif:'Cairo',system-ui,sans-serif}
+    html[data-theme="dark"],body.dark-theme{--primary-color:#10b981;--primary-hover:#059669;--bg-main:#0b1120;--bg-card:#1e293b;--bg-muted:#1e293b;--text-main:#f8fafc;--text-muted:#cbd5e1;--border-color:#334155}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body,button,input,select,textarea,h1,h2,h3,h4,h5,h6,p,a,span,small,b,strong,label{font-family:'Cairo',system-ui,-apple-system,sans-serif !important}
+    body{font-family:'Cairo',system-ui,-apple-system,sans-serif !important;background:var(--bg-main);color:var(--text-main);line-height:1.75;font-size:17px;-webkit-font-smoothing:antialiased;overflow-x:clip}
+    .wrap{max-width:1160px;margin-inline:auto;padding-inline:24px}
+    app-navbar{display:block;min-height:68px}
+    body[data-page="home"] .hero{position:relative;isolation:isolate;min-height:100svh;display:flex;flex-direction:column;overflow:hidden;background:var(--bg-main)}
+    .hero-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding-block:32px}
+    .hero h1{font-size:clamp(34px,6vw,68px);font-weight:800;line-height:1.25;max-width:15em;color:var(--text-main)}
+    .hero .lead{margin-top:18px;font-size:clamp(16px,1.6vw,20px);line-height:1.6;color:var(--text-muted);max-width:34em}
+    .search{margin-top:32px;display:flex;width:min(680px,100%);background:var(--bg-card);border:1.5px solid var(--border-color);border-radius:var(--border-radius-lg);padding:7px}
+    .search input{flex:1;min-width:0;border:0;background:none;font:inherit;font-size:17px;padding:10px 16px;color:var(--text-main)}
+    .btn-brand{background:var(--primary-color);color:#fff;border:0;border-radius:12px;padding:10px 22px;font-weight:700;cursor:pointer}
+    .meds-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    .med-img{height:135px !important;background:#f8fafc !important}
+    .med-img img{width:100%;height:100%;object-fit:contain !important;padding:4px}
+    @media(max-width:900px){.meds-grid{grid-template-columns:repeat(2,1fr)}}
+  </style>
+
+  <!-- Google Font Cairo -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap">
+
+  <!-- Core Local Stylesheets -->
+  <link rel="stylesheet" href="css/base/variables.css?v=20261030_7">
+  <link rel="stylesheet" href="css/base/global.css?v=20261030_7">
+  <link rel="stylesheet" href="css/components/navbar.css?v=20261030_7">
+  <link rel="stylesheet" href="css/components/components.css?v=20261030_7">
+  <link rel="stylesheet" href="css/pages/public/home.css?v=20261030_7">
+
+  <!-- Non-Critical Local Stylesheets (Deferred) -->
+  <link rel="stylesheet" href="css/components/footer.css?v=20261030_7" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="css/components/modal.css?v=20261030_7" media="print" onload="this.media='all'">
 
   <!-- Vendor CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-  <!-- Base & Component CSS -->
-  <link rel="stylesheet" href="css/base/variables.css">
-  <link rel="stylesheet" href="css/base/global.css">
-  <link rel="stylesheet" href="css/components/navbar.css">
-  <link rel="stylesheet" href="css/components/components.css">
-  <link rel="stylesheet" href="css/components/footer.css">
-  <link rel="stylesheet" href="css/components/modal.css">
-
-  <!-- Home Page Custom CSS (Reference Design) -->
-  <link rel="stylesheet" href="css/pages/public/home.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="css/components/footer.css">
+    <link rel="stylesheet" href="css/components/modal.css">
+  </noscript>
 </head>
 <body data-page="home">
 
@@ -41,7 +74,6 @@
 
   <!-- Single Page Application Content Container -->
   <div id="spa-content">
-
 
     <!-- Back to top floating button -->
     <a href="#" id="arow" aria-label="العودة لأعلى الصفحة" title="العودة للأعلى" style="display:none;">
@@ -53,281 +85,277 @@
          ========================================================================= -->
     <header class="hero">
       <!-- Center Hero Pitch & Search Box -->
-    <div class="hero-main wrap">
-      <h1>مش لاقي دواك؟ خلّي البحث علينا</h1>
-      <p class="lead">اعرف الصيدليات اللي ممكن تلاقي فيها دواءك، ووفّر وقتك ومجهودك في البحث.</p>
+      <div class="hero-main wrap">
+        <h1>مش لاقي دواك؟ خلّي البحث علينا</h1>
+        <p class="lead">اعرف الصيدليات اللي ممكن تلاقي فيها دواءك، ووفّر وقتك ومجهودك في البحث.</p>
 
-      <form class="search" id="searchForm" role="search">
-        <input id="q" type="text" placeholder="اسم الدوا، مثلاً أوجمنتين 1 جم" aria-label="اسم الدوا" autocomplete="off">
-        <button class="btn btn-brand" type="submit">دوّر على دواك</button>
-      </form>
+        <form class="search" id="searchForm" role="search">
+          <input id="q" type="text" placeholder="اسم الدوا، مثلاً أوجمنتين 1 جم" aria-label="اسم الدوا" autocomplete="off">
+          <button class="btn btn-brand" type="submit">دوّر على دواك</button>
+        </form>
 
-      <div class="chips">
-        <span>الأكتر بحثاً:</span>
-        <button type="button" data-q="أوجمنتين 1 جم">أوجمنتين</button>
-        <button type="button" data-q="كونكور 5 مجم">كونكور</button>
-        <button type="button" data-q="كتافلام 50 مجم">كتافلام</button>
-      </div>
-
-      <p class="rx-link">معاك روشتة؟ <a href="pages/public/prescription.html">صوّرها وهنوفرهالك من أقرب صيدلية</a></p>
-    </div>
-
-    <!-- Featured Medicine Cards at Bottom of Hero -->
-    <div class="wrap meds" style="width:100%">
-      <div class="meds-head">
-        <h2>الأكتر طلباً دلوقتي</h2>
-        <a href="pages/public/medicines.html" class="btn btn-line">كل الأدوية</a>
-      </div>
-
-      <div class="meds-grid">
-        <!-- Card 1 -->
-        <article class="med" data-id="panadol" data-price="34">
-          <a href="pages/public/medicine-detail.html?med=panadol" class="med-link">
-            <div class="med-img"><i class="fa-solid fa-pills" style="font-size:38px;color:var(--primary-color);"></i></div>
-            <h3>باندول إكسترا</h3>
-            <small>500 مجم، 24 قرص</small>
-          </a>
-          <div class="med-foot">
-            <b>34<span>ج.م</span></b>
-            <button class="add" type="button" aria-label="أضف باندول إكسترا للسلة" data-id="panadol" data-name="باندول إكسترا" data-price="34">+</button>
-          </div>
-        </article>
-
-        <!-- Card 2 -->
-        <article class="med" data-id="augmentin" data-price="99">
-          <a href="pages/public/medicine-detail.html?med=augmentin" class="med-link">
-            <div class="med-img"><i class="fa-solid fa-pills" style="font-size:38px;color:var(--primary-color);"></i></div>
-            <h3>أوجمنتين</h3>
-            <small>1 جم، 14 قرص</small>
-          </a>
-          <div class="med-foot">
-            <b>99<span>ج.م</span></b>
-            <button class="add" type="button" aria-label="أضف أوجمنتين للسلة" data-id="augmentin" data-name="أوجمنتين" data-price="99">+</button>
-          </div>
-        </article>
-
-        <!-- Card 3 -->
-        <article class="med" data-id="aspirin" data-price="28">
-          <a href="pages/public/medicine-detail.html?med=aspirin" class="med-link">
-            <div class="med-img"><i class="fa-solid fa-pills" style="font-size:38px;color:var(--primary-color);"></i></div>
-            <h3>أسبرين بروتكت</h3>
-            <small>100 مجم، 30 قرص</small>
-          </a>
-          <div class="med-foot">
-            <b>28<span>ج.م</span></b>
-            <button class="add" type="button" aria-label="أضف أسبرين بروتكت للسلة" data-id="aspirin" data-name="أسبرين بروتكت" data-price="28">+</button>
-          </div>
-        </article>
-
-        <!-- Card 4 -->
-        <article class="med" data-id="vitamind" data-price="85">
-          <a href="pages/public/medicine-detail.html?med=vitamind" class="med-link">
-            <div class="med-img"><i class="fa-solid fa-bottle-droplet" style="font-size:38px;color:var(--primary-color);"></i></div>
-            <h3>فيتامين د3</h3>
-            <small>10,000 وحدة، 30 كبسولة</small>
-          </a>
-          <div class="med-foot">
-            <b>85<span>ج.م</span></b>
-            <button class="add" type="button" aria-label="أضف فيتامين د3 للسلة" data-id="vitamind" data-name="فيتامين د3" data-price="85">+</button>
-          </div>
-        </article>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <!-- =========================================================================
-         2. PROOF NUMBERS BAR
-         ========================================================================= -->
-    <section class="proof" aria-label="أرقام وإحصائيات">
-      <div class="wrap">
-        <span><b>290+</b> صيدلية معتمدة</span>
-        <span><b>50,000+</b> دوا في قاعدة البيانات</span>
-        <span><b>15 دقيقة</b> متوسط وقت التجهيز</span>
-        <span><b>كل الصيدليات</b> مرخّصة ومراجَعة</span>
-      </div>
-    </section>
-
-    <!-- =========================================================================
-         3. PRESCRIPTION SECTION (Rx)
-         ========================================================================= -->
-    <section class="rx" id="rx">
-      <div class="wrap">
-        <div class="rx-head">
-          <h2>الروشتة بخط الدكتور؟ سيبها علينا.</h2>
-          <p>صوّر الروشتة، وصيدلي حقيقي بيقراها ويجهّزلك الأدوية المتاحة من أقرب صيدلية.</p>
+        <div class="chips">
+          <span>الأكتر بحثاً:</span>
+          <button type="button" data-q="أوجمنتين 1 جم">أوجمنتين</button>
+          <button type="button" data-q="كونكور 5 مجم">كونكور</button>
+          <button type="button" data-q="كتافلام 50 مجم">كتافلام</button>
         </div>
 
-        <div class="flow">
-          <div class="step">
-            <div class="dot">1</div>
-            <h3>صوّر الروشتة</h3>
-            <p>صورة واحدة من موبايلك تكفي.</p>
-          </div>
-          <div class="step">
-            <div class="dot">2</div>
-            <h3>تجهيز الأدوية</h3>
-            <p>بتشوف كل دوا متوفر في الصيدلية وبدائله الرسمية.</p>
-          </div>
-          <div class="step">
-            <div class="dot">3</div>
-            <h3>استلم أو استنى الدليفري</h3>
-            <p>الصيدلية بتجهزها، وانت اللي بتختار.</p>
-          </div>
-        </div>
-
-        <div class="rx-cta" style="text-align:center;">
-          <a href="pages/public/prescription.html" class="btn btn-brand" style="padding:14px 34px;font-size:16px;font-weight:800;border-radius:14px;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,139,94,0.32);">
-            <i class="fa-solid fa-file-prescription"></i>
-            <span>ارفع روشتتك الآن</span>
-          </a>
-        </div>
+        <p class="rx-link">معاك روشتة؟ <a href="pages/public/prescription.html">صوّرها وهنوفرهالك من أقرب صيدلية</a></p>
       </div>
-    </section>
 
-    <!-- =========================================================================
-         4. FREQUENTLY ASKED QUESTIONS (FAQ)
-         ========================================================================= -->
-    <section class="faq-section" id="faq" aria-label="الأسئلة الشائعة">
-      <div class="wrap">
-        <div class="faq-grid">
-          <!-- FAQ Sidebar Pitch & Support Helper Box -->
-          <div class="faq-aside">
-            <div class="faq-badge">
-              <i class="fa-solid fa-circle-question"></i>
-              <span>الأسئلة الشائعة</span>
+      <!-- Featured Medicine Cards at Bottom of Hero -->
+      <div class="wrap meds" style="width:100%">
+        <div class="meds-head">
+          <h2>الأكتر طلباً دلوقتي</h2>
+          <a href="pages/public/medicines.html" class="btn btn-line">كل الأدوية</a>
+        </div>
+
+        <div class="meds-grid">
+          <!-- Card 1 -->
+          <article class="med" data-id="panadol" data-price="45">
+            <a href="pages/public/medicine-detail.html?med=panadol" class="med-link">
+              <div class="med-img"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Tylenol_paracetamol_sustained_release_tablets%2C_Chinese_version_%2820221212120513%29.jpg/500px-Tylenol_paracetamol_sustained_release_tablets%2C_Chinese_version_%2820221212120513%29.jpg" alt="بانادول إكسترا 500 مجم" width="190" height="130" style="width:100%;height:100%;object-fit:contain;padding:4px;"></div>
+              <h3>بانادول إكسترا 500 مجم أقراص</h3>
+              <small>500 مجم، 24 قرص</small>
+            </a>
+            <div class="med-foot">
+              <b>45<span>ج.م</span></b>
+              <button class="add" type="button" aria-label="أضف بانادول إكسترا للسلة" data-id="panadol" data-name="بانادول إكسترا 500 مجم أقراص" data-price="45" data-image="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Tylenol_paracetamol_sustained_release_tablets%2C_Chinese_version_%2820221212120513%29.jpg/500px-Tylenol_paracetamol_sustained_release_tablets%2C_Chinese_version_%2820221212120513%29.jpg">+</button>
             </div>
-            <h2 class="faq-title">اللي بيسألوه قبل ما يبدأوا</h2>
-            <p class="faq-subtitle">
-              إجابات مباشرة وواضحة على أكثر الاستفسارات اللي بتهم مستخدمي تِرياق الجدد لمساعدتك في الحصول على دوائك بأمان وشفافية وبدون أي رسوم خفية.
-            </p>
+          </article>
 
-            <!-- Support Helper Box -->
-            <div class="faq-help-box">
-              <div class="help-box-icon">
-                <i class="fa-solid fa-headset"></i>
-              </div>
-              <div class="help-box-body">
-                <h4>عندك استفسار مختلف؟</h4>
-                <p>فريق الدعم الفني والصيادلة متاحين لمساعدتك والإجابة على أي سؤال بخصوص الأدوية والطلبات.</p>
-                <a href="https://wa.me/201000000000" target="_blank" rel="noopener" class="help-action-btn">
-                  <i class="fa-brands fa-whatsapp"></i>
-                  <span>تواصل معانا واتساب</span>
-                </a>
-              </div>
+          <!-- Card 2 -->
+          <article class="med" data-id="augmentin" data-price="130">
+            <a href="pages/public/medicine-detail.html?med=augmentin" class="med-link">
+              <div class="med-img"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Augmentin_1_g_tbl.jpg/500px-Augmentin_1_g_tbl.jpg" alt="أوجمنتين 1 جم أقراص مضاد حيوي" width="190" height="130" style="width:100%;height:100%;object-fit:contain;padding:4px;"></div>
+              <h3>أوجمنتين 1 جم أقراص مضاد حيوي</h3>
+              <small>1 جم، 14 قرص</small>
+            </a>
+            <div class="med-foot">
+              <b>130<span>ج.م</span></b>
+              <button class="add" type="button" aria-label="أضف أوجمنتين 1 جم للسلة" data-id="augmentin" data-name="أوجمنتين 1 جم أقراص مضاد حيوي" data-price="130" data-image="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Augmentin_1_g_tbl.jpg/500px-Augmentin_1_g_tbl.jpg">+</button>
+            </div>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="med" data-id="cataflam" data-price="52">
+            <a href="pages/public/medicine-detail.html?med=cataflam" class="med-link">
+              <div class="med-img"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Diclofenac_Natrium_50mg_Aurobindo.jpg/500px-Diclofenac_Natrium_50mg_Aurobindo.jpg" alt="كاتافلام 50 مجم أقراص مسكن سريع" width="190" height="130" style="width:100%;height:100%;object-fit:contain;padding:4px;"></div>
+              <h3>كاتافلام 50 مجم أقراص مسكن سريع</h3>
+              <small>50 مجم، 20 قرص</small>
+            </a>
+            <div class="med-foot">
+              <b>52<span>ج.م</span></b>
+              <button class="add" type="button" aria-label="أضف كاتافلام 50 مجم للسلة" data-id="cataflam" data-name="كاتافلام 50 مجم أقراص مسكن سريع" data-price="52" data-image="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Diclofenac_Natrium_50mg_Aurobindo.jpg/500px-Diclofenac_Natrium_50mg_Aurobindo.jpg">+</button>
+            </div>
+          </article>
+
+          <!-- Card 4 -->
+          <article class="med" data-id="concor" data-price="68">
+            <a href="pages/public/medicine-detail.html?med=concor" class="med-link">
+              <div class="med-img"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Concor_%28bisoprolol%29_made_by_Nanolek%2C_Russia_with_Merck_branding%2C_Aug_2025_02.jpg/500px-Concor_%28bisoprolol%29_made_by_Nanolek%2C_Russia_with_Merck_branding%2C_Aug_2025_02.jpg" alt="كونكور 5 مجم أقراص لتنظيم ضغط الدم" width="190" height="130" style="width:100%;height:100%;object-fit:contain;padding:4px;"></div>
+              <h3>كونكور 5 مجم أقراص لتنظيم ضغط الدم</h3>
+              <small>5 مجم، 30 قرص</small>
+            </a>
+            <div class="med-foot">
+              <b>68<span>ج.م</span></b>
+              <button class="add" type="button" aria-label="أضف كونكور 5 مجم للسلة" data-id="concor" data-name="كونكور 5 مجم أقراص لتنظيم ضغط الدم" data-price="68" data-image="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Concor_%28bisoprolol%29_made_by_Nanolek%2C_Russia_with_Merck_branding%2C_Aug_2025_02.jpg/500px-Concor_%28bisoprolol%29_made_by_Nanolek%2C_Russia_with_Merck_branding%2C_Aug_2025_02.jpg">+</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- =========================================================================
+           2. PROOF NUMBERS BAR
+           ========================================================================= -->
+      <section class="proof" aria-label="أرقام وإحصائيات">
+        <div class="wrap">
+          <span><b>290+</b> صيدلية معتمدة</span>
+          <span><b>50,000+</b> دوا في قاعدة البيانات</span>
+          <span><b>15 دقيقة</b> متوسط وقت التجهيز</span>
+          <span><b>كل الصيدليات</b> مرخّصة ومراجَعة</span>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           3. PRESCRIPTION SECTION (Rx)
+           ========================================================================= -->
+      <section class="rx" id="rx">
+        <div class="wrap">
+          <div class="rx-head">
+            <h2>الروشتة بخط الدكتور؟ سيبها علينا.</h2>
+            <p>صوّر الروشتة، وصيدلي حقيقي بيقراها ويجهّزلك الأدوية المتاحة من أقرب صيدلية.</p>
+          </div>
+
+          <div class="flow">
+            <div class="step">
+              <div class="dot">1</div>
+              <h3>صوّر الروشتة</h3>
+              <p>صورة واحدة من موبايلك تكفي.</p>
+            </div>
+            <div class="step">
+              <div class="dot">2</div>
+              <h3>تجهيز الأدوية</h3>
+              <p>بتشوف كل دوا متوفر في الصيدلية وبدائله الرسمية.</p>
+            </div>
+            <div class="step">
+              <div class="dot">3</div>
+              <h3>استلم أو استنى الدليفري</h3>
+              <p>الصيدلية بتجهزها، وانت اللي بتختار.</p>
             </div>
           </div>
 
-          <!-- FAQ Accordion Cards List -->
-          <div class="faq-list">
-            <!-- Item 1 -->
-            <details class="faq-item" open>
-              <summary class="faq-summary">
-                <div class="faq-q-text">
-                  <span class="faq-num">01</span>
-                  <span class="faq-question">السعر اللي بشوفه هو سعر الصيدلية فعلاً؟</span>
-                </div>
-                <div class="faq-icon-pill">
-                  <i class="fa-solid fa-chevron-down"></i>
-                </div>
-              </summary>
-              <div class="faq-body">
-                <p>أيوه، السعر بييجي مباشرة من نظام الصيدلية وبيتحدث باستمرار مع أي تغيير رسمي في التسعيرة الجبرية. تِرياق لا يضيف أي رسوم خفية أو عمولات على البحث أو الحجز—السعر اللي بتشوفه هنا هو نفس السعر اللي هتدفعه في الصيدلية تماماً.</p>
-                <div class="faq-highlight">
-                  <i class="fa-solid fa-shield-halved text-success"></i>
-                  <span>ضمان شفافية الأسعار 100% وبدون أي مصاريف إضافية.</span>
-                </div>
-              </div>
-            </details>
-
-            <!-- Item 2 -->
-            <details class="faq-item">
-              <summary class="faq-summary">
-                <div class="faq-q-text">
-                  <span class="faq-num">02</span>
-                  <span class="faq-question">البديل بيكون زي الدوا الأصلي؟</span>
-                </div>
-                <div class="faq-icon-pill">
-                  <i class="fa-solid fa-chevron-down"></i>
-                </div>
-              </summary>
-              <div class="faq-body">
-                <p>بنقترح فقط البدائل المتطابقة علمياً (Generics) التي تحتوي على نفس المادة الفعالة تماماً بنفس التركيز والشكل الدوائي والمصرح بها من هيئة الدواء المصرية. ولو عندك أي استفسار، الصيدلي المختص بيراجع الروشتة معاك ويأكد لك البديل قبل الاستلام.</p>
-              </div>
-            </details>
-
-            <!-- Item 3 -->
-            <details class="faq-item">
-              <summary class="faq-summary">
-                <div class="faq-q-text">
-                  <span class="faq-num">03</span>
-                  <span class="faq-question">ينفع أطلب دليفري؟</span>
-                </div>
-                <div class="faq-icon-pill">
-                  <i class="fa-solid fa-chevron-down"></i>
-                </div>
-              </summary>
-              <div class="faq-body">
-                <p>نعم، في الصيدليات المعتمدة التي توفر خدمة التوصيل المنزلي. بيظهر لك رمز "توصيل متوفر" ووقت التوصيل التقديري عند كل صيدلية قبل إتمام طلبك، أو تقدر تختار الاستلام المباشر من الصيدلية بنفسك مجاناً.</p>
-              </div>
-            </details>
-
-            <!-- Item 4 -->
-            <details class="faq-item">
-              <summary class="faq-summary">
-                <div class="faq-q-text">
-                  <span class="faq-num">04</span>
-                  <span class="faq-question">الأدوية الحساسة محتاجة روشتة؟</span>
-                </div>
-                <div class="faq-icon-pill">
-                  <i class="fa-solid fa-chevron-down"></i>
-                </div>
-              </summary>
-              <div class="faq-body">
-                <p>بالتأكيد. التزاماً بقوانين وزارة الصحة وهيئة الدواء، الأدوية المقيّدة والمضادات الحيوية وبعض الأدوية التخصصية لا يتم صرفها إلا بوجود روشتة طبية سارية ومختومة من طبيب معتمد، ويتم فحصها من قبل صيدلي الصيدلية قبل التسليم.</p>
-              </div>
-            </details>
+          <div class="rx-cta" style="text-align:center;">
+            <a href="pages/public/prescription.html" class="btn btn-brand" style="padding:14px 34px;font-size:16px;font-weight:800;border-radius:14px;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,122,82,0.32);">
+              <i class="fa-solid fa-file-prescription" aria-hidden="true"></i>
+              <span>ارفع روشتتك الآن</span>
+            </a>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <!-- =========================================================================
+           4. FREQUENTLY ASKED QUESTIONS (FAQ)
+           ========================================================================= -->
+      <section class="faq-section" id="faq" aria-label="الأسئلة الشائعة">
+        <div class="wrap">
+          <div class="faq-grid">
+            <!-- FAQ Sidebar Pitch & Support Helper Box -->
+            <div class="faq-aside">
+              <div class="faq-badge">
+                <i class="fa-solid fa-circle-question" aria-hidden="true"></i>
+                <span>الأسئلة الشائعة</span>
+              </div>
+              <h2 class="faq-title">اللي بيسألوه قبل ما يبدأوا</h2>
+              <p class="faq-subtitle">
+                إجابات مباشرة وواضحة على أكثر الاستفسارات اللي بتهم مستخدمي تِرياق الجدد لمساعدتك في الحصول على دوائك بأمان وشفافية وبدون أي رسوم خفية.
+              </p>
+
+              <!-- Support Helper Box -->
+              <div class="faq-help-box">
+                <div class="help-box-icon">
+                  <i class="fa-solid fa-headset" aria-hidden="true"></i>
+                </div>
+                <div class="help-box-body">
+                  <h3 style="font-size:18px;font-weight:700;margin-bottom:6px;">عندك استفسار مختلف؟</h3>
+                  <p>فريق الدعم الفني والصيادلة متاحين لمساعدتك والإجابة على أي سؤال بخصوص الأدوية والطلبات.</p>
+                  <a href="https://wa.me/201000000000" target="_blank" rel="noopener" class="help-action-btn">
+                    <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                    <span>تواصل معانا واتساب</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ Accordion Cards List -->
+            <div class="faq-list">
+              <!-- Item 1 -->
+              <details class="faq-item" open>
+                <summary class="faq-summary">
+                  <div class="faq-q-text">
+                    <span class="faq-num">01</span>
+                    <span class="faq-question">السعر اللي بشوفه هو سعر الصيدلية فعلاً؟</span>
+                  </div>
+                  <div class="faq-icon-pill">
+                    <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                  </div>
+                </summary>
+                <div class="faq-body">
+                  <p>أيوه، السعر بييجي مباشرة من نظام الصيدلية وبيتحدث باستمرار مع أي تغيير رسمي في التسعيرة الجبرية. تِرياق لا يضيف أي رسوم خفية أو عمولات على البحث أو الحجز—السعر اللي بتشوفه هنا هو نفس السعر اللي هتدفعه في الصيدلية تماماً.</p>
+                  <div class="faq-highlight">
+                    <i class="fa-solid fa-shield-halved text-success" aria-hidden="true"></i>
+                    <span>ضمان شفافية الأسعار 100% وبدون أي مصاريف إضافية.</span>
+                  </div>
+                </div>
+              </details>
+
+              <!-- Item 2 -->
+              <details class="faq-item">
+                <summary class="faq-summary">
+                  <div class="faq-q-text">
+                    <span class="faq-num">02</span>
+                    <span class="faq-question">البديل بيكون زي الدوا الأصلي؟</span>
+                  </div>
+                  <div class="faq-icon-pill">
+                    <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                  </div>
+                </summary>
+                <div class="faq-body">
+                  <p>بنقترح فقط البدائل المتطابقة علمياً (Generics) التي تحتوي على نفس المادة الفعالة تماماً بنفس التركيز والشكل الدوائي والمصرح بها من هيئة الدواء المصرية. ولو عندك أي استفسار، الصيدلي المختص بيراجع الروشتة معاك ويأكد لك البديل قبل الاستلام.</p>
+                </div>
+              </details>
+
+              <!-- Item 3 -->
+              <details class="faq-item">
+                <summary class="faq-summary">
+                  <div class="faq-q-text">
+                    <span class="faq-num">03</span>
+                    <span class="faq-question">ينفع أطلب دليفري؟</span>
+                  </div>
+                  <div class="faq-icon-pill">
+                    <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                  </div>
+                </summary>
+                <div class="faq-body">
+                  <p>نعم، في الصيدليات المعتمدة التي توفر خدمة التوصيل المنزلي. بيظهر لك رمز "توصيل متوفر" ووقت التوصيل التقديري عند كل صيدلية قبل إتمام طلبك، أو تقدر تختار الاستلام المباشر من الصيدلية بنفسك مجاناً.</p>
+                </div>
+              </details>
+
+              <!-- Item 4 -->
+              <details class="faq-item">
+                <summary class="faq-summary">
+                  <div class="faq-q-text">
+                    <span class="faq-num">04</span>
+                    <span class="faq-question">الأدوية الحساسة محتاجة روشتة؟</span>
+                  </div>
+                  <div class="faq-icon-pill">
+                    <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                  </div>
+                </summary>
+                <div class="faq-body">
+                  <p>بالتأكيد. التزاماً بقوانين وزارة الصحة وهيئة الدواء، الأدوية المقيّدة والمضادات الحيوية وبعض الأدوية التخصصية لا يتم صرفها إلا بوجود روشتة طبية سارية ومختومة من طبيب معتمد، ويتم فحصها من قبل صيدلي الصيدلية قبل التسليم.</p>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           5. FINAL CTA BAR
+           ========================================================================= -->
+      <section class="final" aria-label="بدء البحث">
+        <div class="wrap">
+          <h2>ابدأ بدور على دواءك دلوقتي.</h2>
+          <a href="#q" class="btn btn-white" id="again">دوّر على دوا</a>
+        </div>
+      </section>
+    </main>
 
     <!-- =========================================================================
-         5. FINAL CTA BAR
+         6. UNIFIED APP FOOTER
          ========================================================================= -->
-    <section class="final" aria-label="بدء البحث">
-      <div class="wrap">
-        <h2>ابدأ بدور على دواءك دلوقتي.</h2>
-        <a href="#q" class="btn btn-white" id="again">دوّر على دوا</a>
-      </div>
-    </section>
-  </main>
-
-  <!-- =========================================================================
-       6. UNIFIED APP FOOTER
-       ========================================================================= -->
-  <app-footer></app-footer>
+    <app-footer></app-footer>
   </div>
 
   <!-- Reusable Cart Modal -->
   <app-cart-modal></app-cart-modal>
 
-  <!-- Vendor Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-  <!-- Core & Component Scripts -->
-  <script src="js/config.js"></script>
-  <script src="js/core/toast.js"></script>
-  <script src="js/core/validation.js"></script>
-  <script src="js/core/api.js"></script>
-  <script src="js/core/auth.js"></script>
-  <script src="js/core/cart.js"></script>
-  <script src="js/components/app-navbar.js"></script>
-  <script src="js/components/app-footer.js"></script>
-  <script src="js/components/app-cart-modal.js"></script>
-  <script src="js/core/spa-router.js"></script>
-
-  <!-- Page Script -->
-  <script src="js/pages/public/home.js"></script>
+  <!-- Deferred Vendor & Application Scripts for Zero Render-Blocking -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+  <script src="js/config.js?v=20261030_7" defer></script>
+  <script src="js/core/toast.js?v=20261030_7" defer></script>
+  <script src="js/core/validation.js?v=20261030_7" defer></script>
+  <script src="js/core/api.js?v=20261030_7" defer></script>
+  <script src="js/core/auth.js?v=20261030_7" defer></script>
+  <script src="js/core/cart.js?v=20261030_7" defer></script>
+  <script src="js/components/app-navbar.js?v=20261030_7" defer></script>
+  <script src="js/components/app-footer.js?v=20261030_7" defer></script>
+  <script src="js/components/app-cart-modal.js?v=20261030_7" defer></script>
+  <script src="js/core/spa-router.js?v=20261030_7" defer></script>
+  <script src="js/pages/public/home.js?v=20261030_7" defer></script>
 </body>
 </html>

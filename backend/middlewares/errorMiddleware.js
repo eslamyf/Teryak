@@ -1,7 +1,23 @@
+const path = require('path');
 const { errorResponse } = require('../utils/apiResponse');
 
 const notFound = (req, res, next) => {
-  return errorResponse(res, 404, `Route not found: ${req.originalUrl}`);
+  const url = req.originalUrl || req.url || '';
+  const acceptsHtml = req.headers.accept && req.headers.accept.includes('text/html');
+  const isSpaRequest = req.headers['x-requested-with'] === 'Teryak-SPA-Router';
+
+  // Return JSON 404 only for /api/* routes or explicit non-HTML API requests
+  if (url.startsWith('/api/') || url === '/api' || (!acceptsHtml && !isSpaRequest && /\.(js|css|json|png|jpg|jpeg|svg|ico|webp|woff2?)$/i.test(url))) {
+    return errorResponse(res, 404, `Route not found: ${url}`);
+  }
+
+  // Serve the branded 404 HTML page (with Navbar & Footer) for all invalid browser routes
+  const notFoundPagePath = path.join(__dirname, '../../frontend/404.html');
+  return res.status(404).sendFile(notFoundPagePath, (err) => {
+    if (err) {
+      return errorResponse(res, 404, `Route not found: ${url}`);
+    }
+  });
 };
 
 const errorHandler = (err, req, res, next) => {

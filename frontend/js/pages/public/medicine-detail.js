@@ -1,12 +1,29 @@
 /**
  * Teryak Platform - Dynamic Medicine Details & Pharmacy Stock Engine
  * Features:
- * - Real-time Database Hydration (No Mock or Stale Data)
+ * - Real-time Database Hydration (100% Arabic Localization & Authentic Product Packaging Images)
  * - Automatic Fallback if Query String is Empty
  * - Live Alternatives Retrieval based on Active Ingredient & Category
  * - Seamless Shopping Cart & Booking Integration
  * - Instant SPA Lifecycle Support
  */
+
+function resolveDetailImageUrl(rawUrl = '') {
+  const url = String(rawUrl || '').trim();
+  if (!url || url.startsWith('data:')) return '../../assets/images/parst.jpg';
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/')) return url;
+  if (url.startsWith('../../')) return url;
+  return '../../' + url.replace(/^(\.\/|\.\.\/)+/, '');
+}
+
+function cleanArabicField(text = '') {
+  return String(text || '')
+    .replace(/\b(\d+(?:\.\d+)?)\s*mg\b/gi, '$1 مجم')
+    .replace(/\b(\d+(?:\.\d+)?)\s*ml\b/gi, '$1 مل')
+    .replace(/\b(\d+(?:\.\d+)?)\s*(?:g|gm)\b/gi, '$1 جم')
+    .replace(/\([A-Za-z0-9\s\-+%.,/]+\)/g, '')
+    .trim();
+}
 
 async function initMedicineDetailPage() {
   const params = new URLSearchParams(window.location.search);
@@ -86,28 +103,22 @@ async function initMedicineDetailPage() {
       return;
     }
 
-    // 1. Populate Main Medicine Hero
-    const medNameAr = medicine.nameAr || medicine.name || 'دواء ترياق';
-    const medNameEn = medicine.nameEn || '';
+    // 1. Populate Main Medicine Hero (100% Arabic)
+    const medNameAr = cleanArabicField(medicine.nameAr || medicine.name || 'دواء ترياق');
     const medPrice = Number(medicine.price || 0).toFixed(2);
-    const medActive = medicine.activeIngredient || medicine.concentration || 'تركيبة صيدلانية معتمدة';
-    const medCategory = medicine.category || 'أدوية عامة';
-    const medForm = medicine.dosageForm || 'أقراص / علاج';
+    const medActive = cleanArabicField(medicine.activeIngredient || medicine.concentration || 'تركيبة صيدلانية معتمدة');
+    const medCategory = cleanArabicField(medicine.category || 'أدوية عامة');
+    const medForm = cleanArabicField(medicine.dosageForm || 'أقراص / علاج');
     const isRxRequired = Boolean(medicine.requiresPrescription);
 
     if (breadcrumbName) breadcrumbName.textContent = medNameAr;
     if (titleEl) titleEl.textContent = medNameAr;
     if (titleEnEl) {
-      if (medNameEn && medNameEn.trim().toLowerCase() !== medNameAr.trim().toLowerCase()) {
-        titleEnEl.textContent = medNameEn;
-        titleEnEl.style.display = 'block';
-      } else {
-        titleEnEl.style.display = 'none';
-      }
+      titleEnEl.style.display = 'none';
     }
     if (priceEl) priceEl.textContent = medPrice;
     if (activeIngredientEl) activeIngredientEl.textContent = medActive;
-    if (concentrationEl) concentrationEl.textContent = medicine.concentration || 'حسب الإرشادات';
+    if (concentrationEl) concentrationEl.textContent = cleanArabicField(medicine.concentration || 'حسب الإرشادات');
     if (categoryBadge) categoryBadge.textContent = medCategory;
     if (formBadge) formBadge.textContent = medForm;
 
@@ -116,14 +127,18 @@ async function initMedicineDetailPage() {
         rxBadge.textContent = 'يلزم روشتة';
         rxBadge.className = 'badge-rx-floating rx-required';
       } else {
-        rxBadge.textContent = 'بدون روشتة (OTC)';
+        rxBadge.textContent = 'متاح بدون روشتة';
         rxBadge.className = 'badge-rx-floating rx-otc';
       }
     }
 
+    const resolvedImg = resolveDetailImageUrl(medicine.image);
     if (imageEl) {
       const defaultImg = '../../assets/images/parst.jpg';
-      imageEl.src = (medicine.image && !medicine.image.startsWith('data:')) ? medicine.image : defaultImg;
+      imageEl.src = resolvedImg;
+      imageEl.style.objectFit = 'contain';
+      imageEl.style.background = '#fff';
+      imageEl.style.padding = '8px';
       imageEl.onerror = () => { imageEl.src = defaultImg; };
     }
 
@@ -141,13 +156,13 @@ async function initMedicineDetailPage() {
             id: medicine._id || medicineId,
             medicineId: medicine._id || medicineId,
             name: medNameAr,
-            nameEn: medNameEn,
+            nameEn: medNameAr,
             price: Number(firstPharm?.price || medicine.price || 0),
-            image: medicine.image || '../../assets/images/parst.jpg',
+            image: resolvedImg,
             quantity: 1,
             category: medCategory,
-            pharmacy: firstPharm?.name || 'صيدليه اسلام',
-            pharmacyName: firstPharm?.name || 'صيدليه اسلام',
+            pharmacy: firstPharm?.name || 'صيدلية ترياق الشريكة',
+            pharmacyName: firstPharm?.name || 'صيدلية ترياق الشريكة',
             pharmacyId: firstPharm?._id || '6abbe34be18dba66a4a64112',
             deliveryFee: Number(firstPharm?.deliveryFee) || 15
           });
@@ -246,7 +261,7 @@ async function initMedicineDetailPage() {
 
       pharmaciesList.querySelectorAll('.reserve-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          const pharmacyName = btn.dataset.pharmacyName || 'صيدليه اسلام';
+          const pharmacyName = btn.dataset.pharmacyName || 'صيدلية ترياق الشريكة';
           const pharmacyId = btn.dataset.pharmacyId || '6abbe34be18dba66a4a64112';
           const pharmacyPrice = Number(btn.dataset.price);
           if (window.Cart) {
@@ -254,9 +269,9 @@ async function initMedicineDetailPage() {
               id: medicine._id || medicineId,
               medicineId: medicine._id || medicineId,
               name: medNameAr,
-              nameEn: medNameEn,
+              nameEn: medNameAr,
               price: pharmacyPrice,
-              image: medicine.image || '../../assets/images/parst.jpg',
+              image: resolvedImg,
               quantity: 1,
               category: medCategory,
               pharmacy: pharmacyName,

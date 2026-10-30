@@ -7,7 +7,7 @@ body {
   padding-top: 0;
   margin-top: 0;
   direction: rtl;
-  font-family: var(--font-arabic, 'Tajawal', sans-serif);
+  font-family: var(--font-arabic, 'Cairo', sans-serif);
   color: #1e293b;
   display: flex;
   flex-direction: column;

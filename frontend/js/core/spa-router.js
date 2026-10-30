@@ -205,7 +205,7 @@ class SPARouter {
       }
     });
 
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!res.ok && res.status !== 404) throw new Error(`HTTP ${res.status}`);
 
     const html = await res.text();
     const parser = new DOMParser();

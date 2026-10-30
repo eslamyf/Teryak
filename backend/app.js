@@ -51,7 +51,13 @@ app.use(
 );
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(
+  '/uploads',
+  express.static(path.join(__dirname, 'uploads'), {
+    maxAge: '30d',
+    immutable: true,
+  })
+);
 
 // Apply general API rate limiting
 app.use('/api/', apiLimiter);
@@ -64,7 +70,7 @@ app.get('/api/health', (req, res) => {
     status: isConnected ? 'healthy' : 'degraded',
     message: isConnected ? 'Teryak API is running smoothly' : 'Teryak API is running with database reconnecting',
     database: isConnected ? 'connected' : 'disconnected',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -94,22 +100,37 @@ app.use('/api/upload', checkDbConnection, uploadRoutes);
 app.use('/api/notifications', checkDbConnection, notificationRoutes);
 app.use('/api/payment', checkDbConnection, paymentRoutes);
 
-// Serve Frontend Static Files in Local / Fullstack Standalone mode
+// Serve Frontend Static Files with High-Performance Cache Headers for Assets
 const frontendPath = path.join(__dirname, '../frontend');
-app.use(express.static(frontendPath));
+app.use(
+  express.static(frontendPath, {
+    etag: true,
+    lastModified: true,
+    setHeaders: (res, filePath) => {
+      if (/\.(png|jpe?g|gif|webp|svg|ico|woff2?|ttf|eot)$/i.test(filePath)) {
+        res.setHeader('Cache-Control', 'public, max-age=2592000, stale-while-revalidate=86400');
+      } else if (/\.(css|js)$/i.test(filePath)) {
+        res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+      }
+    },
+  })
+);
 
 // Serve robots.txt & sitemap.xml
 app.get('/robots.txt', (req, res) => {
+  res.setHeader('Cache-Control', 'public, max-age=86400');
   res.sendFile(path.join(frontendPath, 'robots.txt'));
 });
 
 app.get('/sitemap.xml', (req, res) => {
+  res.setHeader('Cache-Control', 'public, max-age=86400');
   res.type('application/xml');
   res.sendFile(path.join(frontendPath, 'sitemap.xml'));
 });
 
 // Serve platform favicon directly
 app.get(['/favicon.ico', '/favicon.png'], (req, res) => {
+  res.setHeader('Cache-Control', 'public, max-age=2592000');
   res.sendFile(path.join(frontendPath, 'assets', 'images', 'logo.png'));
 });
 

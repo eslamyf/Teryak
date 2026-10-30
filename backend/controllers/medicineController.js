@@ -3,7 +3,11 @@ const PharmacyInventory = require('../models/PharmacyInventory');
 const Pharmacy = require('../models/Pharmacy');
 const { successResponse, errorResponse } = require('../utils/apiResponse');
 const { searchEgyptianDrugRegistry, fetchOnlineEgyptianDrugs } = require('../utils/egyptianDrugService');
-const { searchUnifiedPharmacyApi, CURATED_PHARMACY_PRODUCTS } = require('../utils/externalPharmacyApi');
+const {
+  searchUnifiedPharmacyApi,
+  CURATED_PHARMACY_PRODUCTS,
+  localizeConcentrationAr,
+} = require('../utils/externalPharmacyApi');
 const { escapeRegex } = require('../utils/regexHelper');
 
 // In-memory cache for ultra-fast catalog responses (< 2ms)
@@ -133,6 +137,7 @@ const getMedicines = async (req, res, next) => {
     const medicinesWithAvailability = medicines.map((medicine) => {
       const medicineData = { ...medicine };
       if (medicineData.image?.startsWith('data:')) medicineData.image = '';
+      medicineData.concentration = localizeConcentrationAr(medicineData.concentration || '500 مجم');
       return {
         ...medicineData,
         pharmaciesCount: pharmacyCountByMedicine.get(String(medicine._id)) || 0,
@@ -142,7 +147,7 @@ const getMedicines = async (req, res, next) => {
     const responsePayload = {
       success: true,
       statusCode: 200,
-      message: 'تم جلب قائمة الأدوية بنجاح',
+      message: 'تم جلب قائمة الأدوية والمنتجات بنجاح',
       data: medicinesWithAvailability,
       pagination: {
         total,
@@ -184,14 +189,22 @@ const getMedicineById = async (req, res, next) => {
       const lower = cleanQuery.toLowerCase();
       if (lower.includes('aspirin')) {
         aliasQueries.push({ nameEn: /aspirin/i }, { nameAr: /أسبيرين|اسبرين|اسبوسيد/i });
-      } else if (lower.includes('paracetamol')) {
+      } else if (lower.includes('paracetamol') || lower.includes('panadol')) {
         aliasQueries.push({ nameEn: /panadol|paramol|paracetamol/i }, { nameAr: /بانادول|بارامول|باراسيتامول/i });
-      } else if (lower.includes('amox')) {
+      } else if (lower.includes('amox') || lower.includes('augmentin')) {
         aliasQueries.push({ nameEn: /amox|augmentin/i }, { nameAr: /أموكس|أوجمنتين/i });
       } else if (lower.includes('vitamin') || lower.includes('vitamind')) {
         aliasQueries.push({ nameEn: /vitamin|devarol/i }, { nameAr: /فيتامين|ديفارول/i });
       } else if (lower.includes('omega')) {
         aliasQueries.push({ nameEn: /omega/i }, { nameAr: /أوميجا|اوميجا/i });
+      } else if (lower.includes('bioderma')) {
+        aliasQueries.push({ nameEn: /bioderma/i }, { nameAr: /بيوديرما/i });
+      } else if (lower.includes('cerave')) {
+        aliasQueries.push({ nameEn: /cerave/i }, { nameAr: /سيرافي/i });
+      } else if (lower.includes('nivea')) {
+        aliasQueries.push({ nameEn: /nivea/i }, { nameAr: /نيفيا/i });
+      } else if (lower.includes('vaseline')) {
+        aliasQueries.push({ nameEn: /vaseline/i }, { nameAr: /فازلين/i });
       }
 
       medicine = await Medicine.findOne({
@@ -230,11 +243,12 @@ const getMedicineById = async (req, res, next) => {
       expiryDate: inv.expiryDate,
     }));
 
+    const medObj = medicine.toObject();
+    medObj.concentration = localizeConcentrationAr(medObj.concentration || '500 مجم');
+    if (medObj.image?.startsWith('data:')) medObj.image = '';
+
     return successResponse(res, 200, 'تم جلب تفاصيل الدواء', {
-      medicine: {
-        ...medicine.toObject(),
-        ...(medicine.image?.startsWith('data:') ? { image: '' } : {}),
-      },
+      medicine: medObj,
       availablePharmacies,
     });
   } catch (error) {
@@ -300,7 +314,7 @@ const createMedicine = async (req, res, next) => {
       activeIngredient: activeIngredient || 'مادة فعالة عامة',
       category: category || 'أدوية عامة',
       dosageForm: dosageForm || 'أقراص',
-      concentration: concentration || '',
+      concentration: localizeConcentrationAr(concentration || '500 مجم'),
       description: description || '',
       usageInstructions: usageInstructions || '',
       price: Number(price),
@@ -323,6 +337,9 @@ const createMedicine = async (req, res, next) => {
 const updateMedicine = async (req, res, next) => {
   try {
     const { id } = req.params;
+    if (req.body.concentration) {
+      req.body.concentration = localizeConcentrationAr(req.body.concentration);
+    }
     const medicine = await Medicine.findByIdAndUpdate(id, req.body, {
       new: true,
       runValidators: true,
@@ -395,7 +412,7 @@ const bulkImportMedicines = async (req, res, next) => {
         if (item.category) existing.category = item.category;
         if (item.activeIngredient) existing.activeIngredient = item.activeIngredient;
         if (item.dosageForm) existing.dosageForm = item.dosageForm;
-        if (item.concentration) existing.concentration = item.concentration;
+        if (item.concentration) existing.concentration = localizeConcentrationAr(item.concentration);
         if (item.description) existing.description = item.description;
         if (item.image || item.imageUrl) existing.image = (item.image || item.imageUrl).trim();
         if (item.productType) existing.productType = item.productType;
@@ -413,7 +430,7 @@ const bulkImportMedicines = async (req, res, next) => {
           productType: prodType,
           category: item.category || (prodType === 'product' ? 'عناية شخصية' : 'أدوية عامة'),
           dosageForm: item.dosageForm || (prodType === 'product' ? 'عبوة' : 'أقراص'),
-          concentration: item.concentration || '',
+          concentration: localizeConcentrationAr(item.concentration || (prodType === 'product' ? 'عبوة أصلية' : '500 مجم')),
           description: item.description || '',
           usageInstructions: item.usageInstructions || '',
           price: Number(item.price) || 25,
@@ -470,6 +487,7 @@ const syncEgyptianDrugCatalog = async (req, res, next) => {
           activeIngredient: d.activeIngredient,
           category: d.category,
           dosageForm: d.dosageForm,
+          concentration: localizeConcentrationAr(d.concentration || '500 مجم'),
           price: d.price,
           image: d.image,
           requiresPrescription: d.requiresPrescription,
@@ -478,6 +496,7 @@ const syncEgyptianDrugCatalog = async (req, res, next) => {
         imported++;
       }
     }
+    clearMedicinesCache();
     return successResponse(res, 200, `تمت مزامنة ${imported} دواء مصري رسمي لقاعدة البيانات بنجاح`, {
       importedCount: imported,
       totalRegistryCount: drugs.length
@@ -487,23 +506,26 @@ const syncEgyptianDrugCatalog = async (req, res, next) => {
   }
 };
 
-
-// @desc    Get live pharmacy products from OpenFDA & Skincare & Regional Registry
+// @desc    Get live pharmacy products from Open Beauty Facts & OpenFDA & Regional Registry (100% Arabic)
 // @route   GET /api/medicines/external-catalog
 // @access  Public
 const getExternalPharmacyCatalog = async (req, res, next) => {
   try {
-    const { search = '', category = 'all', limit = 25 } = req.query;
+    const { search = '', category = 'all', limit = 40 } = req.query;
     const products = await searchUnifiedPharmacyApi({
       query: search,
       category,
-      limit: Number(limit) || 25,
+      limit: Number(limit) || 40,
     });
-    return successResponse(res, 200, 'تم جلب منتجات الصيدلية من الدليل المفتوح (OpenFDA & Skincare) بنجاح', products, {
+    return successResponse(res, 200, 'تم جلب منتجات الصيدلية والأدوية باللغة العربية مع صورها الأصلية بنجاح', products, {
       count: products.length,
       search,
       category,
-      sources: ['OpenFDA (U.S. FDA)', 'Open Skincare API', 'Egyptian Pharmacy Registry']
+      externalApis: [
+        'https://world.openbeautyfacts.org/cgi/search.pl?search_terms=bioderma+cerave+laroche+nivea+vaseline&search_simple=1&action=process&json=1&page_size=50',
+        'https://dummyjson.com/products/category/skin-care'
+      ],
+      sources: ['Open Beauty Facts Pharmacy API', 'DummyJSON Skin-Care API', 'Egyptian Pharmacy Registry (Arabic)']
     });
   } catch (error) {
     next(error);
@@ -534,7 +556,7 @@ const importExternalMedicine = async (req, res, next) => {
         nameEn: (nameEn || nameAr).trim(),
         category: category || 'أدوية عامة',
         dosageForm: dosageForm || 'أقراص',
-        concentration: concentration || 'معياري',
+        concentration: localizeConcentrationAr(concentration || '500 مجم'),
         price: Number(price) || 35,
         image: image || '',
         activeIngredient: activeIngredient || 'مادة فعالة طبية',

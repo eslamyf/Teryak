@@ -6,7 +6,7 @@
 body[data-page="medicine-detail"] {
   background-color: var(--bg-main, #f8fafc);
   color: var(--text-main, #1e293b);
-  font-family: var(--font-arabic, 'Tajawal', sans-serif);
+  font-family: var(--font-arabic, 'Cairo', sans-serif);
 }
 
 .container {

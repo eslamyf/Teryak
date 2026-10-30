@@ -1,12 +1,32 @@
 /**
- * Teryak Platform - Home Page Logic (Design Migration Implementation)
+ * Teryak Platform - Home Page Logic (High-Performance Edition)
  * Connects reference UI with platform core services:
  * - Search & Chips with redirection to medicines catalog (?q=)
  * - Dual Light/Dark Theme Switching (data-theme & body.dark-theme)
  * - Shopping Cart Integration (+ button, counter badge, cart modal)
- * - Live/Fallback Featured Medicines from API (Panadol, Augmentin, Aspirin, Vitamin D)
+ * - Non-blocking Featured Medicines Hydration with 100% Arabic localization & real product packaging photos
  * - Prescription Modal with File Dropzone & Order Submission
  */
+
+function localizeUnitAr(text = '') {
+  if (!text) return '';
+  return String(text)
+    .replace(/\b(\d+(?:\.\d+)?)\s*mg\b/gi, '$1 مجم')
+    .replace(/\b(\d+(?:\.\d+)?)\s*ml\b/gi, '$1 مل')
+    .replace(/\b(\d+(?:\.\d+)?)\s*(?:g|gm)\b/gi, '$1 جم')
+    .replace(/\b(\d+(?:\.\d+)?)\s*mcg\b/gi, '$1 ميكروجرام')
+    .replace(/\b(\d+(?:,\d+)?)\s*iu\b/gi, '$1 وحدة دولية')
+    .replace(/\bmg\b/gi, 'مجم')
+    .replace(/\bml\b/gi, 'مل')
+    .replace(/\bgm\b/gi, 'جم');
+}
+
+function resolveHomeImageUrl(rawUrl = '') {
+  const url = String(rawUrl || '').trim();
+  if (!url || url.startsWith('data:')) return '';
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/')) return url;
+  return url.replace(/^(\.\.\/)+/, '');
+}
 
 window.initHomePage = async function () {
   // ---------------------------------------------------------
@@ -199,44 +219,70 @@ window.initHomePage = async function () {
   }
 
   // ---------------------------------------------------------
-  // 5. Connect Top Medicines with Live API (with graceful fallback)
+  // 5. Connect Top Medicines with Live API (100% Arabic & Real Product Images)
   // ---------------------------------------------------------
-  if (medsGrid && window.API && window.API.medicines) {
+  const hydrateFeaturedMedicines = async () => {
+    if (!medsGrid || !window.API || !window.API.medicines) return;
     try {
-      const response = await window.API.medicines.getAll({ limit: 4 });
+      const response = await window.API.medicines.getAll({ limit: 12 });
       const medicines = response?.data || response?.medicines || (Array.isArray(response) ? response : null);
 
       if (Array.isArray(medicines) && medicines.length >= 4) {
-        medsGrid.innerHTML = medicines.slice(0, 4).map((med) => {
-          const medId = med._id || med.id;
-          const name = med.nameAr || med.name || 'دواء ترياق';
-          const dosage = med.dosageForm || 'أقراص';
-          const concentration = med.concentration || '';
-          const subtitle = [concentration, dosage].filter(Boolean).join('، ') || 'متوفر في الصيدليات';
-          const price = med.price || 35;
-          const detailUrl = `pages/public/medicine-detail.html?med=${encodeURIComponent(medId)}`;
-          const imgContent = med.image 
-            ? `<img src="${med.image}" alt="${name}" loading="lazy">` 
-            : `<i class="fa-solid fa-pills" style="font-size:38px;color:var(--primary-color);"></i>`;
+        // Strictly pick items with Arabic names and valid http/https real photographs
+        const arabicMeds = medicines.filter(
+          (m) => /[\u0600-\u06FF]/.test(m.nameAr || m.name || '') && /^https?:\/\//i.test(String(m.image || ''))
+        );
+        if (arabicMeds.length >= 4) {
+          const selected = arabicMeds.slice(0, 4);
+          const existingCards = medsGrid.querySelectorAll('.med');
+          selected.forEach((med, idx) => {
+            const card = existingCards[idx];
+            if (!card) return;
+            const medId = med._id || med.id;
+            const name = localizeUnitAr(med.nameAr || med.name || 'دواء ترياق');
+            const dosage = localizeUnitAr(med.dosageForm || 'أقراص');
+            const concentration = localizeUnitAr(med.concentration || '');
+            const subtitle = [concentration, dosage].filter(Boolean).join('، ') || 'متوفر في الصيدليات';
+            const price = Math.round(Number(med.price) || 35);
+            const imgUrl = resolveHomeImageUrl(med.image);
+            const detailUrl = `pages/public/medicine-detail.html?med=${encodeURIComponent(medId)}`;
 
-          return `
-            <article class="med" data-id="${medId}" data-price="${price}">
-              <a href="${detailUrl}" class="med-link">
-                <div class="med-img">${imgContent}</div>
-                <h3>${name}</h3>
-                <small>${subtitle}</small>
-              </a>
-              <div class="med-foot">
-                <b>${price}<span>ج.م</span></b>
-                <button class="add" type="button" aria-label="أضف ${name} للسلة" data-id="${medId}" data-name="${name}" data-price="${price}">+</button>
-              </div>
-            </article>
-          `;
-        }).join('');
+            card.dataset.id = medId;
+            card.dataset.price = price;
+            const link = card.querySelector('.med-link');
+            if (link) link.href = detailUrl;
+            const titleEl = card.querySelector('h3');
+            if (titleEl) titleEl.textContent = name;
+            const subEl = card.querySelector('small');
+            if (subEl) subEl.textContent = subtitle;
+            const priceEl = card.querySelector('.med-foot b');
+            if (priceEl) priceEl.innerHTML = `${price}<span>ج.م</span>`;
+
+            const icoBox = card.querySelector('.med-img, .med-ico');
+            if (icoBox && imgUrl) {
+              icoBox.innerHTML = `<img src="${imgUrl}" alt="${name.replace(/"/g, '&quot;')}" loading="lazy" decoding="async" width="190" height="130" style="width:100%;height:100%;object-fit:contain;padding:4px;" onerror="this.onerror=null;this.parentElement.innerHTML='<i class=\\'fa-solid fa-pills\\' aria-hidden=\\'true\\'></i>';" />`;
+            }
+
+            const addBtn = card.querySelector('.add');
+            if (addBtn) {
+              addBtn.dataset.id = medId;
+              addBtn.dataset.name = name;
+              addBtn.dataset.price = price;
+              addBtn.dataset.image = imgUrl;
+              addBtn.setAttribute('aria-label', `أضف ${name} للسلة`);
+            }
+          });
+        }
       }
     } catch (err) {
-      console.log('Using reference fallback catalog for home page featured medicines:', err.message);
+      // Silent fallback to instant static hero cards
     }
+  };
+
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(hydrateFeaturedMedicines, { timeout: 2000 });
+  } else {
+    setTimeout(hydrateFeaturedMedicines, 900);
   }
 
   // ---------------------------------------------------------
