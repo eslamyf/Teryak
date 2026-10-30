@@ -42,6 +42,15 @@
     addToCart: function (product) {
       if (!product || !product.name) return this.getCart();
 
+      // Guard against rapid duplicate calls within 350ms
+      const now = Date.now();
+      const productKey = String(product.medicineId || product.id || product.name) + '_' + String(product.pharmacyId || '');
+      if (this._lastAddedKey === productKey && (now - (this._lastAddedTime || 0)) < 350) {
+        return this.getCart();
+      }
+      this._lastAddedKey = productKey;
+      this._lastAddedTime = now;
+
       let cart = this.getCart();
       const cleanName = String(product.name).trim();
       const productId = product.medicineId || product.id;

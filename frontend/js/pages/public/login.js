@@ -8,64 +8,74 @@ window.initLoginPage = function () {
   let selectedUserType = 'مريض';
 
   tabs.forEach(tab => {
-    tab.addEventListener('click', (e) => {
-      e.preventDefault();
-      tabs.forEach(t => {
-        t.classList.remove('active');
-        t.classList.remove('on');
+    if (!tab.dataset.bound) {
+      tab.dataset.bound = 'true';
+      tab.addEventListener('click', (e) => {
+        e.preventDefault();
+        tabs.forEach(t => {
+          t.classList.remove('active');
+          t.classList.remove('on');
+        });
+        tab.classList.add('active');
+        tab.classList.add('on');
+        selectedUserType = tab.textContent.trim();
       });
-      tab.classList.add('active');
-      tab.classList.add('on');
-      selectedUserType = tab.textContent.trim();
-    });
+    }
   });
 
   // Floating labels value sync & change events
   const allFloatingInputs = document.querySelectorAll(".floating-input");
   allFloatingInputs.forEach(input => {
-    const updateHasValue = () => {
-      if (input.value && input.value.trim().length > 0) {
-        input.classList.add("has-value");
-      } else {
-        input.classList.remove("has-value");
-      }
-    };
-    input.addEventListener("input", updateHasValue);
-    input.addEventListener("change", updateHasValue);
-    input.addEventListener("blur", updateHasValue);
-    updateHasValue();
-  });
-
-  // Toggle Password Visibility (Robust Delegation)
-  document.addEventListener("click", (e) => {
-    const eyeBtn = e.target.closest(".eye-btn, .eye");
-    if (!eyeBtn) return;
-    e.preventDefault();
-    e.stopPropagation();
-
-    const box = eyeBtn.closest(".password-box, .input-box");
-    if (!box) return;
-    const input = box.querySelector("input");
-    const icon = eyeBtn.querySelector("i") || (eyeBtn.tagName === "I" ? eyeBtn : null);
-    if (!input) return;
-
-    if (input.type === "password") {
-      input.type = "text";
-      if (icon) {
-        icon.classList.remove("fa-eye");
-        icon.classList.add("fa-eye-slash");
-      }
-    } else {
-      input.type = "password";
-      if (icon) {
-        icon.classList.remove("fa-eye-slash");
-        icon.classList.add("fa-eye");
-      }
+    if (!input.dataset.bound) {
+      input.dataset.bound = 'true';
+      const updateHasValue = () => {
+        if (input.value && input.value.trim().length > 0) {
+          input.classList.add("has-value");
+        } else {
+          input.classList.remove("has-value");
+        }
+      };
+      input.addEventListener("input", updateHasValue);
+      input.addEventListener("change", updateHasValue);
+      input.addEventListener("blur", updateHasValue);
+      updateHasValue();
     }
   });
 
+  // Toggle Password Visibility (Robust Delegation - bound once globally)
+  if (!window._eyeToggleBound) {
+    window._eyeToggleBound = true;
+    document.addEventListener("click", (e) => {
+      const eyeBtn = e.target.closest(".eye-btn, .eye");
+      if (!eyeBtn) return;
+      e.preventDefault();
+      e.stopPropagation();
+
+      const box = eyeBtn.closest(".password-box, .input-box");
+      if (!box) return;
+      const input = box.querySelector("input");
+      const icon = eyeBtn.querySelector("i") || (eyeBtn.tagName === "I" ? eyeBtn : null);
+      if (!input) return;
+
+      if (input.type === "password") {
+        input.type = "text";
+        if (icon) {
+          icon.classList.remove("fa-eye");
+          icon.classList.add("fa-eye-slash");
+        }
+      } else {
+        input.type = "password";
+        if (icon) {
+          icon.classList.remove("fa-eye-slash");
+          icon.classList.add("fa-eye");
+        }
+      }
+    });
+  }
+
   const loginForm = document.querySelector('#loginForm');
-  if (loginForm) {
+  if (loginForm && !loginForm.dataset.bound) {
+    loginForm.dataset.bound = 'true';
     const emailInput = loginForm.querySelector('input[type="email"], input[name="email"], input:first-of-type');
     const passwordInput = loginForm.querySelector('input[type="password"]');
 
@@ -111,7 +121,6 @@ window.initLoginPage = function () {
           }
 
           setTimeout(() => {
-            // Check for redirect param
             const urlParams = new URLSearchParams(window.location.search);
             const redirectTarget = urlParams.get('redirect');
             if (redirectTarget) {
@@ -119,7 +128,6 @@ window.initLoginPage = function () {
               return;
             }
 
-            // Redirect based on role
             if (user.role === 'pharmacist' || user.userType === 'صيدلي') {
               window.location.href = '../pharmacist/index.html';
             } else if (user.role === 'admin' || user.userType === 'إدارة') {
@@ -187,8 +195,11 @@ if (document.readyState === 'loading') {
   window.initLoginPage();
 }
 
-window.addEventListener('teryak:page-mounted', (e) => {
-  if (e.detail?.page === 'login') {
-    window.initLoginPage();
-  }
-});
+if (!window._teryakLoginMountedBound) {
+  window._teryakLoginMountedBound = true;
+  window.addEventListener('teryak:page-mounted', (e) => {
+    if (e.detail?.page === 'login') {
+      window.initLoginPage();
+    }
+  });
+}

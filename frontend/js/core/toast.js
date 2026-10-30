@@ -37,6 +37,9 @@
     info: 'معلومة',
   };
 
+  let lastToastSignature = '';
+  let lastToastTimestamp = 0;
+
   /**
    * Main Toast Show Method
    */
@@ -47,6 +50,15 @@
     duration = 4500,
     action = null, // { text: '...', onClick: () => {} }
   } = {}) {
+    // Prevent duplicate toasts with identical content within 600ms
+    const signature = `${type}|${title}|${message}`;
+    const now = Date.now();
+    if (signature === lastToastSignature && (now - lastToastTimestamp) < 600) {
+      return null;
+    }
+    lastToastSignature = signature;
+    lastToastTimestamp = now;
+
     // If DOM is not loaded yet, wait
     if (!document.body) {
       document.addEventListener('DOMContentLoaded', () => {

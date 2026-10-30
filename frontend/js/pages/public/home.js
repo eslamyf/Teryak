@@ -41,7 +41,8 @@ window.initHomePage = async function () {
     }
   };
 
-  if (searchForm) {
+  if (searchForm && !searchForm.dataset.bound) {
+    searchForm.dataset.bound = 'true';
     searchForm.addEventListener('submit', (e) => {
       e.preventDefault();
       executeSearch();
@@ -49,17 +50,21 @@ window.initHomePage = async function () {
   }
 
   document.querySelectorAll('.chips button').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const query = btn.dataset.q || btn.textContent.trim();
-      if (qInput) {
-        qInput.value = query;
-        qInput.focus();
-      }
-      executeSearch(query);
-    });
+    if (!btn.dataset.bound) {
+      btn.dataset.bound = 'true';
+      btn.addEventListener('click', () => {
+        const query = btn.dataset.q || btn.textContent.trim();
+        if (qInput) {
+          qInput.value = query;
+          qInput.focus();
+        }
+        executeSearch(query);
+      });
+    }
   });
 
-  if (againBtn) {
+  if (againBtn && !againBtn.dataset.bound) {
+    againBtn.dataset.bound = 'true';
     againBtn.addEventListener('click', (e) => {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -69,14 +74,15 @@ window.initHomePage = async function () {
 
   // Back to top floating arrow
   const arow = document.getElementById('arow');
-  if (arow) {
+  if (arow && !arow.dataset.bound) {
+    arow.dataset.bound = 'true';
     window.addEventListener('scroll', () => {
       if (window.scrollY >= 300) {
         arow.style.display = 'flex';
       } else {
         arow.style.display = 'none';
       }
-    });
+    }, { passive: true });
 
     arow.addEventListener('click', (e) => {
       e.preventDefault();
@@ -116,7 +122,8 @@ window.initHomePage = async function () {
           <a href="pages/public/login.html" class="login" id="homeLoginBtn">دخول</a>
         `;
         const loginBtn = authNavContainer.querySelector('#homeLoginBtn');
-        if (loginBtn) {
+        if (loginBtn && !loginBtn.dataset.bound) {
+          loginBtn.dataset.bound = 'true';
           loginBtn.addEventListener('click', (e) => {
             e.preventDefault();
             window.location.href = 'pages/public/login.html';
@@ -125,7 +132,10 @@ window.initHomePage = async function () {
       }
     };
     updateAuthUI();
-    window.addEventListener('teryak:auth-change', updateAuthUI);
+    if (!window._teryakHomeAuthChangeBound) {
+      window._teryakHomeAuthChangeBound = true;
+      window.addEventListener('teryak:auth-change', updateAuthUI);
+    }
   }
 
   // ---------------------------------------------------------
@@ -140,50 +150,57 @@ window.initHomePage = async function () {
   };
 
   syncCartCounter();
-  window.addEventListener('teryak:cart-change', syncCartCounter);
+  if (!window._teryakHomeCartChangeBound) {
+    window._teryakHomeCartChangeBound = true;
+    window.addEventListener('teryak:cart-change', syncCartCounter);
+  }
 
-  // Global handler for "+" Add to Cart button in medicine cards
-  const bindAddToCartButtons = () => {
-    document.querySelectorAll('.meds-grid .add').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+  // Delegated handler for "+" Add to Cart button in medicine cards (Binds once to container)
+  const medsGrid = document.querySelector('.meds-grid');
+  if (medsGrid && !medsGrid.dataset.cartBound) {
+    medsGrid.dataset.cartBound = 'true';
+    medsGrid.addEventListener('click', (e) => {
+      const btn = e.target.closest('.add');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
 
-        const card = btn.closest('.med');
-        const id = btn.dataset.id || card?.dataset.id || 'med_' + Date.now();
-        const name = btn.dataset.name || card?.querySelector('h3')?.textContent.trim() || 'دواء';
-        const price = parseFloat(btn.dataset.price || card?.dataset.price) || 35.0;
-        const image = btn.dataset.image || '';
+      // Debounce rapid multiple clicks on the same button
+      const now = Date.now();
+      if (btn._lastClickTime && (now - btn._lastClickTime) < 400) return;
+      btn._lastClickTime = now;
 
-        if (window.Cart) {
-          window.Cart.addToCart({
-            id,
-            medicineId: id,
-            name,
-            price,
-            image,
-            pharmacyName: 'صيدلية ترياق الشريكة',
-            quantity: 1,
-          });
+      const card = btn.closest('.med');
+      const id = btn.dataset.id || card?.dataset.id || 'med_' + Date.now();
+      const name = btn.dataset.name || card?.querySelector('h3')?.textContent.trim() || 'دواء';
+      const price = parseFloat(btn.dataset.price || card?.dataset.price) || 35.0;
+      const image = btn.dataset.image || '';
 
-          // Animation effect
-          btn.style.transform = 'scale(1.2)';
-          setTimeout(() => (btn.style.transform = ''), 200);
+      if (window.Cart) {
+        window.Cart.addToCart({
+          id,
+          medicineId: id,
+          name,
+          price,
+          image,
+          pharmacyName: 'صيدلية ترياق الشريكة',
+          quantity: 1,
+        });
 
-          if (window.Toast) {
-            window.Toast.success(`تمت إضافة "${name}" إلى سلتك بنجاح!`, 'سلة المشتريات', 3000);
-          }
+        // Animation effect
+        btn.style.transform = 'scale(1.2)';
+        setTimeout(() => (btn.style.transform = ''), 200);
+
+        if (window.Toast) {
+          window.Toast.success(`تمت إضافة "${name}" إلى سلتك بنجاح!`, 'سلة المشتريات', 3000);
         }
-      });
+      }
     });
-  };
-
-  bindAddToCartButtons();
+  }
 
   // ---------------------------------------------------------
   // 5. Connect Top Medicines with Live API (with graceful fallback)
   // ---------------------------------------------------------
-  const medsGrid = document.querySelector('.meds-grid');
   if (medsGrid && window.API && window.API.medicines) {
     try {
       const response = await window.API.medicines.getAll({ limit: 4 });
@@ -216,8 +233,6 @@ window.initHomePage = async function () {
             </article>
           `;
         }).join('');
-
-        bindAddToCartButtons();
       }
     } catch (err) {
       console.log('Using reference fallback catalog for home page featured medicines:', err.message);
@@ -235,7 +250,9 @@ window.initHomePage = async function () {
   const rxRemoveFileBtn = document.getElementById('rxRemoveFileBtn');
   const rxUploadForm = document.getElementById('rxUploadForm');
 
-  if (rxDropzone && rxFileInput) {
+  if (rxDropzone && rxFileInput && !rxDropzone.dataset.bound) {
+    rxDropzone.dataset.bound = 'true';
+
     rxDropzone.addEventListener('click', (e) => {
       if (e.target !== rxRemoveFileBtn && !rxRemoveFileBtn?.contains(e.target)) {
         rxFileInput.click();
@@ -285,7 +302,8 @@ window.initHomePage = async function () {
     });
   }
 
-  if (rxUploadForm) {
+  if (rxUploadForm && !rxUploadForm.dataset.bound) {
+    rxUploadForm.dataset.bound = 'true';
     rxUploadForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const patientName = document.getElementById('rxPatientName')?.value;
@@ -333,9 +351,12 @@ if (document.readyState === 'loading') {
   window.initHomePage();
 }
 
-// Re-initialize on SPA Navigation
-window.addEventListener('teryak:page-mounted', (e) => {
-  if (e.detail?.page === 'home' || window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
-    window.initHomePage();
-  }
-});
+// Re-initialize on SPA Navigation (Ensures single global listener)
+if (!window._teryakHomeMountedBound) {
+  window._teryakHomeMountedBound = true;
+  window.addEventListener('teryak:page-mounted', (e) => {
+    if (e.detail?.page === 'home' || window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) {
+      window.initHomePage();
+    }
+  });
+}
