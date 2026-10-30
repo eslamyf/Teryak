@@ -7,16 +7,19 @@ const dotenv = require('dotenv');
 dotenv.config({ path: path.join(__dirname, '../.env') });
 dotenv.config();
 
-// Configure public DNS servers for resolving MongoDB Atlas SRV records reliably
-try {
-  dns.setServers(['8.8.8.8', '1.1.1.1', '8.8.4.4']);
-} catch (e) {
-  // Ignore if unable to set DNS servers in restricted environments
+// Configure public DNS servers ONLY in local dev environment.
+// In AWS Lambda / Vercel Serverless, overriding DNS with 8.8.8.8 causes SRV lookup timeouts.
+const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+if (!isServerless && process.env.NODE_ENV !== 'production') {
+  try {
+    dns.setServers(['8.8.8.8', '1.1.1.1', '8.8.4.4']);
+  } catch (e) {
+    // Ignore in restricted local environments
+  }
 }
 
 /**
- * Global cache for Mongoose connection to reuse connection across
- * serverless lambda invocations (Vercel) and local reloads.
+ * Global cache for Mongoose connection across serverless lambda invocations (Vercel)
  */
 let cached = global.mongoose;
 
@@ -30,18 +33,26 @@ const connectDB = async () => {
     return cached.conn;
   }
 
-  const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/teryak_db';
+  // Support all common environment variable naming standards
+  const uri = process.env.MONGODB_URI || 
+              process.env.MONGO_URI || 
+              process.env.DATABASE_URL || 
+              'mongodb://127.0.0.1:27017/teryak_db';
+
+  if (isServerless && uri.includes('127.0.0.1')) {
+    console.warn('[MongoDB Critical Warning]: Running in serverless/Vercel environment but MONGODB_URI is not set in Environment Variables! Localhost 127.0.0.1 will fail.');
+  }
 
   if (!cached.promise) {
     const opts = {
-      bufferCommands: false, // Do not buffer operations if connection fails
-      serverSelectionTimeoutMS: 7000,
+      bufferCommands: false,
+      serverSelectionTimeoutMS: 8000,
       connectTimeoutMS: 10000,
-      maxPoolSize: 10,
+      maxPoolSize: isServerless ? 2 : 10, // Optimize connection pooling for serverless
     };
 
     cached.promise = mongoose.connect(uri, opts).then((mongooseInstance) => {
-      console.log(`[MongoDB] Connected successfully to: ${mongooseInstance.connection.name} (${mongooseInstance.connection.host})`);
+      console.log(`[MongoDB] Connected successfully to database: ${mongooseInstance.connection.name}`);
       return mongooseInstance;
     });
   }
@@ -52,9 +63,6 @@ const connectDB = async () => {
   } catch (error) {
     cached.promise = null;
     console.error(`[MongoDB Error] Connection failed: ${error.message}`);
-    console.log(`[MongoDB Info] If using MongoDB Atlas, verify that your IP is whitelisted (0.0.0.0/0 in Network Access)`);
-    console.log(`               Or set a free database URI in backend/.env`);
-    console.log(`               Example: MONGODB_URI=mongodb+srv://<user>:<password>@cluster0.xxx.mongodb.net/teryak_db\n`);
     throw error;
   }
 };

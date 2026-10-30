@@ -30,6 +30,137 @@ window.initMedicinesPage = async function () {
 
   // Fallback Catalog Preset
   const DEFAULT_CATALOG = [
+
+    {
+      id: 'mebo',
+      nameAr: 'ميبو مرهم حروق وجروح',
+      nameEn: 'Mebo Burn & Wound Ointment',
+      category: 'مراهم وكريمات',
+      activeIngredient: 'بيتا سيتوستيرول + زيت سمسم',
+      price: 85.0,
+      rating: 4.9,
+      status: 'available',
+      pharmaciesCount: 42,
+      image: '../../assets/images/ointment.jpg',
+      slug: 'mebo',
+    },
+    {
+      id: 'fucidin',
+      nameAr: 'فيوسيدين مرهم مضاد حيوي موضعي',
+      nameEn: 'Fucidin 2% Ointment',
+      category: 'مراهم وكريمات',
+      activeIngredient: 'حمض الفوسيديك (Sodium Fusidate)',
+      price: 45.0,
+      rating: 4.9,
+      status: 'available',
+      pharmaciesCount: 38,
+      image: '../../assets/images/ointment.jpg',
+      slug: 'fucidin',
+    },
+    {
+      id: 'fucicort',
+      nameAr: 'فيوسيكورت كريم لعلاج الالتهابات',
+      nameEn: 'Fucicort Cream',
+      category: 'مراهم وكريمات',
+      activeIngredient: 'فوسيديك + بيتاميثازون',
+      price: 58.0,
+      rating: 4.8,
+      status: 'available',
+      pharmaciesCount: 30,
+      image: '../../assets/images/ointment.jpg',
+      slug: 'fucicort',
+    },
+    {
+      id: 'panthenol',
+      nameAr: 'بانثينول كريم مرطب وملطف للجلد',
+      nameEn: 'Panthenol 2% Cream',
+      category: 'مراهم وكريمات',
+      activeIngredient: 'دي-بانثينول (Pro-Vitamin B5)',
+      price: 25.0,
+      rating: 4.9,
+      status: 'available',
+      pharmaciesCount: 55,
+      image: '../../assets/images/ointment.jpg',
+      slug: 'panthenol',
+    },
+    {
+      id: 'bepanthen',
+      nameAr: 'بيبانثين كريم مرطب ومجدد للبشرة',
+      nameEn: 'Bepanthen Moisturizing Cream',
+      category: 'مراهم وكريمات',
+      activeIngredient: 'ديكسبانثينول (Dexpanthenol)',
+      price: 95.0,
+      rating: 4.9,
+      status: 'available',
+      pharmaciesCount: 34,
+      image: '../../assets/images/ointment.jpg',
+      slug: 'bepanthen',
+    },
+    {
+      id: 'kenacomb',
+      nameAr: 'كيناكومب كريم للتسلخات والحساسية',
+      nameEn: 'Kenacomb Cream',
+      category: 'مراهم وكريمات',
+      activeIngredient: 'تريامسينولون + نيومايسين + جراميسيدين',
+      price: 36.0,
+      rating: 4.7,
+      status: 'available',
+      pharmaciesCount: 40,
+      image: '../../assets/images/ointment.jpg',
+      slug: 'kenacomb',
+    },
+    {
+      id: 'voltaren_emulgel',
+      nameAr: 'فولتارين إيمولجل مسكن لآلام المفاصل والعضلات',
+      nameEn: 'Voltaren Emulgel 1.16%',
+      category: 'مراهم وكريمات',
+      activeIngredient: 'ديكلوفيناك داي إيثيل أمين',
+      price: 65.0,
+      rating: 4.8,
+      status: 'available',
+      pharmaciesCount: 46,
+      image: '../../assets/images/ointment.jpg',
+      slug: 'voltaren',
+    },
+    {
+      id: 'brufen',
+      nameAr: 'بروفين 400 مجم مسكن ومضاد للروماتيزم',
+      nameEn: 'Brufen 400mg Tablets',
+      category: 'مسكنات',
+      activeIngredient: 'إيبوبروفين (Ibuprofen 400mg)',
+      price: 49.0,
+      rating: 4.8,
+      status: 'available',
+      pharmaciesCount: 48,
+      image: '../../assets/images/tablets.jpg',
+      slug: 'brufen',
+    },
+    {
+      id: 'cerave_cleanser',
+      nameAr: 'غسول سيرافي المنظف الرغوي للبشرة 236 مل',
+      nameEn: 'CeraVe Foaming Cleanser 236ml',
+      category: 'عناية بالبشرة',
+      activeIngredient: 'سيراميدات + هيالورونيك + نياسيناميد',
+      price: 320.0,
+      rating: 4.9,
+      status: 'available',
+      pharmaciesCount: 22,
+      image: '../../assets/images/drops.jpg',
+      slug: 'cerave',
+    },
+    {
+      id: 'laroche_effaclar',
+      nameAr: 'لاروش بوزيه إيفاكلار جل غسول منقي 200 مل',
+      nameEn: 'La Roche-Posay Effaclar Gel 200ml',
+      category: 'عناية بالبشرة',
+      activeIngredient: 'زنك بي سي إيه + مياه حرارية',
+      price: 380.0,
+      rating: 4.9,
+      status: 'available',
+      pharmaciesCount: 19,
+      image: '../../assets/images/drops.jpg',
+      slug: 'laroche',
+    },
     {
       id: 'panadol',
       nameAr: 'بانادول إكسترا',
@@ -235,13 +366,39 @@ window.initMedicinesPage = async function () {
           rawMedicinesList = res.data.map((m) => {
             let cat = m.category || 'منتجات صحية';
             const cLower = (m.category || '').toLowerCase();
-            if (m.productType !== 'product') {
-              if (cLower.includes('مضاد') || cLower.includes('antibiotic')) cat = 'مضادات حيوية';
-              else if (cLower.includes('فيتامين') || cLower.includes('vitamin')) cat = 'فيتامينات';
-              else if (cLower.includes('مكمل') || cLower.includes('omega')) cat = 'مكملات غذائية';
-              else if (cLower.includes('برد') || cLower.includes('cold')) cat = 'نزلات برد';
-              else if (cLower.includes('هضم') || cLower.includes('معدة')) cat = 'هضمي';
-              else if (cLower.includes('مسكن') || cLower.includes('سيولة') || cLower.includes('قلب')) cat = 'مسكنات';
+            const nameArLower = (m.nameAr || '').toLowerCase();
+            const nameEnLower = (m.nameEn || '').toLowerCase();
+            const combinedLower = cLower + ' ' + nameArLower + ' ' + nameEnLower;
+
+            // Category mapping – ointments/creams first (most specific)
+            if (
+              cLower.includes('مرهم') || cLower.includes('كريم') ||
+              cLower.includes('ointment') || cLower.includes('cream') ||
+              cLower.includes('lotion') || cLower.includes('gel') ||
+              nameArLower.includes('مرهم') || nameArLower.includes('كريم')
+            ) {
+              cat = 'مراهم وكريمات';
+            } else if (
+              cLower.includes('skin') || cLower.includes('بشرة') ||
+              cLower.includes('moistur') || cLower.includes('مرطب') ||
+              cLower.includes('serum') || cLower.includes('sunscreen')
+            ) {
+              cat = 'عناية بالبشرة';
+            } else if (cLower.includes('مضاد') || cLower.includes('antibiotic')) {
+              cat = 'مضادات حيوية';
+            } else if (cLower.includes('فيتامين') || cLower.includes('vitamin')) {
+              cat = 'فيتامينات';
+            } else if (cLower.includes('مكمل') || cLower.includes('omega') || cLower.includes('supplement')) {
+              cat = 'مكملات غذائية';
+            } else if (cLower.includes('برد') || cLower.includes('cold') || cLower.includes('flu')) {
+              cat = 'نزلات برد';
+            } else if (cLower.includes('هضم') || cLower.includes('معدة') || cLower.includes('digest')) {
+              cat = 'هضمي';
+            } else if (
+              cLower.includes('مسكن') || cLower.includes('painkiller') ||
+              cLower.includes('pain') || cLower.includes('سيولة') || cLower.includes('قلب')
+            ) {
+              cat = 'مسكنات';
             }
 
             const firstWord = (m.nameEn || m.nameAr || 'medicine').split(' ')[0].toLowerCase();

@@ -56,15 +56,15 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Apply general API rate limiting
 app.use('/api/', apiLimiter);
 
-// Health Check API
+// Health Check API (Clean & Standardized Status)
 app.get('/api/health', (req, res) => {
   const isConnected = mongoose.connection.readyState === 1;
-  res.status(200).json({
-    status: 'success',
-    message: 'Teryak API is running smoothly',
+  const statusCode = isConnected ? 200 : 503;
+  res.status(statusCode).json({
+    status: isConnected ? 'healthy' : 'degraded',
+    message: isConnected ? 'Teryak API is running smoothly' : 'Teryak API is running with database reconnecting',
     database: isConnected ? 'connected' : 'disconnected',
-    timestamp: new Date().toISOString(),
-    env: process.env.NODE_ENV || 'development',
+    timestamp: new Date().toISOString()
   });
 });
 
@@ -75,7 +75,7 @@ const checkDbConnection = (req, res, next) => {
     connectDB().catch(() => {});
     return res.status(503).json({
       success: false,
-      message: 'قاعدة البيانات غير متصلة. يرجى التأكد من تشغيل MongoDB أو السماح بـ IP Whitelist (0.0.0.0/0) في MongoDB Atlas.',
+      message: 'الخدمة غير متاحة مؤقتاً، جاري إعادة الاتصال بالخادم. يرجى المحاولة بعد قليل.',
       error: 'Database connection is pending or unavailable.',
     });
   }
@@ -97,6 +97,16 @@ app.use('/api/payment', checkDbConnection, paymentRoutes);
 // Serve Frontend Static Files in Local / Fullstack Standalone mode
 const frontendPath = path.join(__dirname, '../frontend');
 app.use(express.static(frontendPath));
+
+// Serve robots.txt & sitemap.xml
+app.get('/robots.txt', (req, res) => {
+  res.sendFile(path.join(frontendPath, 'robots.txt'));
+});
+
+app.get('/sitemap.xml', (req, res) => {
+  res.type('application/xml');
+  res.sendFile(path.join(frontendPath, 'sitemap.xml'));
+});
 
 // Serve platform favicon directly
 app.get(['/favicon.ico', '/favicon.png'], (req, res) => {

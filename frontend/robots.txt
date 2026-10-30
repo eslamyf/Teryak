@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /pages/admin/
+Disallow: /pages/pharmacist/
+Disallow: /api/
+
+Sitemap: https://teryak.vercel.app/sitemap.xml
+

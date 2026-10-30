@@ -22,18 +22,6 @@
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    try {
-      const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
-      if (currentUser) {
-        if (currentUser._id || currentUser.id) {
-          headers['X-User-Id'] = String(currentUser._id || currentUser.id);
-        }
-        if (currentUser.pharmacyName) {
-          headers['X-Pharmacy-Name'] = encodeURIComponent(currentUser.pharmacyName);
-        }
-      }
-    } catch (e) {}
-
     if (!isFormData && !headers['Content-Type']) {
       headers['Content-Type'] = 'application/json';
     }
@@ -126,6 +114,8 @@
       },
       getById: (id) => API.get(`/medicines/${id}`),
       getAlternatives: (id) => API.get(`/medicines/${id}/alternatives`),
+      getExternalCatalog: (params = {}) => API.get('/medicines/external-catalog', params),
+      importExternal: (data) => API.post('/medicines/import-external', data),
       create: (data) => {
         try { sessionStorage.clear(); } catch (e) {}
         return API.post('/medicines', data);
