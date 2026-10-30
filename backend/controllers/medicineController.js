@@ -205,6 +205,10 @@ const getMedicineById = async (req, res, next) => {
         aliasQueries.push({ nameEn: /nivea/i }, { nameAr: /نيفيا/i });
       } else if (lower.includes('vaseline')) {
         aliasQueries.push({ nameEn: /vaseline/i }, { nameAr: /فازلين/i });
+      } else if (lower.includes('cataflam')) {
+        aliasQueries.push({ nameEn: /cataflam|diclofenac/i }, { nameAr: /كاتافلام|كتافلام/i });
+      } else if (lower.includes('concor')) {
+        aliasQueries.push({ nameEn: /concor|bisoprolol/i }, { nameAr: /كونكور/i });
       }
 
       medicine = await Medicine.findOne({

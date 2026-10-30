@@ -1008,6 +1008,7 @@ body.dark-theme .teryak-rx-modal .upload-dropzone,
 
 /* ===== Comprehensive Responsive Breakpoints ===== */
 @media (max-width: 900px) {
+  body[data-page="home"] .hero::before { background: none !important; filter: none !important; }
   body[data-page="home"] .hero {
     min-height: auto;
     overflow: visible;
@@ -1068,7 +1069,7 @@ body.dark-theme .teryak-rx-modal .upload-dropzone,
     padding-block: 16px 18px;
   }
   .hero h1 {
-    font-size: clamp(24px, 6.8vw, 32px);
+    font-size: clamp(32px, 8vw, 40px); width: 100%;
     line-height: 1.32;
     margin-inline: auto;
   }

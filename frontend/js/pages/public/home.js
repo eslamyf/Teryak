@@ -219,10 +219,12 @@ window.initHomePage = async function () {
   }
 
   // ---------------------------------------------------------
-  // 5. Connect Top Medicines with Live API (100% Arabic & Real Product Images)
+  // 5. Connect Top Medicines with Live API (Only if static hero cards lack images)
   // ---------------------------------------------------------
   const hydrateFeaturedMedicines = async () => {
     if (!medsGrid || !window.API || !window.API.medicines) return;
+    const existingImgs = medsGrid.querySelectorAll('.med-img img');
+    if (existingImgs.length >= 4) return;
     try {
       const response = await window.API.medicines.getAll({ limit: 12 });
       const medicines = response?.data || response?.medicines || (Array.isArray(response) ? response : null);
