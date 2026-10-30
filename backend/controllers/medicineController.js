@@ -3,6 +3,7 @@ const PharmacyInventory = require('../models/PharmacyInventory');
 const Pharmacy = require('../models/Pharmacy');
 const { successResponse, errorResponse } = require('../utils/apiResponse');
 const { searchEgyptianDrugRegistry, fetchOnlineEgyptianDrugs } = require('../utils/egyptianDrugService');
+const { searchUnifiedPharmacyApi, CURATED_PHARMACY_PRODUCTS } = require('../utils/externalPharmacyApi');
 const { escapeRegex } = require('../utils/regexHelper');
 
 // In-memory cache for ultra-fast catalog responses (< 2ms)
@@ -486,7 +487,104 @@ const syncEgyptianDrugCatalog = async (req, res, next) => {
   }
 };
 
+
+// @desc    Get live pharmacy products from OpenFDA & Skincare & Regional Registry
+// @route   GET /api/medicines/external-catalog
+// @access  Public
+const getExternalPharmacyCatalog = async (req, res, next) => {
+  try {
+    const { search = '', category = 'all', limit = 25 } = req.query;
+    const products = await searchUnifiedPharmacyApi({
+      query: search,
+      category,
+      limit: Number(limit) || 25,
+    });
+    return successResponse(res, 200, 'تم جلب منتجات الصيدلية من الدليل المفتوح (OpenFDA & Skincare) بنجاح', products, {
+      count: products.length,
+      search,
+      category,
+      sources: ['OpenFDA (U.S. FDA)', 'Open Skincare API', 'Egyptian Pharmacy Registry']
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Import product from external API directly into local catalog & optional pharmacy inventory
+// @route   POST /api/medicines/import-external
+// @access  Private (Admin, Pharmacist)
+const importExternalMedicine = async (req, res, next) => {
+  try {
+    const { nameAr, nameEn, category, dosageForm, concentration, price, image, activeIngredient, description, requiresPrescription, quantity, customPrice } = req.body;
+
+    if (!nameAr) {
+      return errorResponse(res, 400, 'اسم الدواء / المنتج مطلوب');
+    }
+
+    let medicine = await Medicine.findOne({
+      $or: [
+        { nameAr: nameAr.trim() },
+        ...(nameEn ? [{ nameEn: nameEn.trim() }] : [])
+      ]
+    });
+
+    if (!medicine) {
+      medicine = await Medicine.create({
+        nameAr: nameAr.trim(),
+        nameEn: (nameEn || nameAr).trim(),
+        category: category || 'أدوية عامة',
+        dosageForm: dosageForm || 'أقراص',
+        concentration: concentration || 'معياري',
+        price: Number(price) || 35,
+        image: image || '',
+        activeIngredient: activeIngredient || 'مادة فعالة طبية',
+        description: description || 'منتج صيدلي مستورد ومسجل.',
+        requiresPrescription: Boolean(requiresPrescription),
+        status: 'active'
+      });
+    }
+
+    // If a pharmacist requested and sent inventory details, also create or update their PharmacyInventory
+    if (req.user && (req.user.role === 'pharmacist' || req.user.userType === 'صيدلي')) {
+      const pharmacy = await Pharmacy.findOne({ ownerId: req.user._id });
+      if (pharmacy) {
+        let inv = await PharmacyInventory.findOne({
+          pharmacyId: pharmacy._id,
+          medicineId: medicine._id
+        });
+
+        const stockQty = Number(quantity) || 20;
+        const sellPrice = Number(customPrice) || Number(price) || medicine.price || 35;
+
+        if (inv) {
+          inv.quantity += stockQty;
+          inv.customPrice = sellPrice;
+          inv.status = inv.quantity > 0 ? 'available' : 'out_of_stock';
+          await inv.save();
+        } else {
+          inv = await PharmacyInventory.create({
+            pharmacyId: pharmacy._id,
+            medicineId: medicine._id,
+            quantity: stockQty,
+            customPrice: sellPrice,
+            status: 'available',
+            expiryDate: new Date(Date.now() + 365 * 24 * 3600 * 1000 * 2)
+          });
+        }
+      }
+    }
+
+    clearMedicinesCache();
+
+    return successResponse(res, 201, `تم استيراد «${medicine.nameAr}» وإضافته بنجاح`, medicine);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
+  getExternalPharmacyCatalog,
+  importExternalMedicine,
   getMedicines,
   getMedicineById,
   getMedicineAlternatives,
