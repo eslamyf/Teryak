@@ -136,7 +136,7 @@ const createOrder = async (req, res, next) => {
     }
 
     if (hasPrescriptionItem && !prescriptionImage && !req.body.prescriptionId) {
-      return errorResponse(res, 400, الدواء () يتطلب روشتة طبية معتمدة من طبيب مرخص. يرجى إرفاق صورة الروشتة لإتمام حجز الدواء.);
+      return errorResponse(res, 400, `الدواء (${prescriptionItemNames.join('، ')}) يتطلب روشتة طبية معتمدة من طبيب مرخص. يرجى إرفاق صورة الروشتة لإتمام حجز الدواء.`);
     }
 
     try {

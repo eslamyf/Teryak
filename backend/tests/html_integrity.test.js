@@ -17,8 +17,17 @@ function getHtmlFiles(dir) {
 }
 
 const rootDir = path.resolve(__dirname, '../../');
-const htmlFiles = getHtmlFiles(path.join(rootDir, 'frontend'));
+const frontendRoot = path.join(rootDir, 'frontend');
+const htmlFiles = getHtmlFiles(frontendRoot);
 let totalBroken = 0;
+
+function resolveAsset(htmlFilePath, assetPath) {
+  const clean = assetPath.split('?')[0].split('#')[0];
+  if (clean.startsWith('/')) {
+    return path.join(frontendRoot, clean.replace(/^\//, ''));
+  }
+  return path.resolve(path.dirname(htmlFilePath), clean);
+}
 
 console.log('=====================================================');
 console.log('   Teryak Platform - HTML & Asset Integrity Tests   ');
@@ -26,7 +35,6 @@ console.log('=====================================================');
 
 for (const htmlFile of htmlFiles) {
   const content = fs.readFileSync(htmlFile, 'utf8');
-  const dir = path.dirname(htmlFile);
 
   // Check script src
   const scriptRegex = /<script[^>]+src=["']([^"']+)["']/gi;
@@ -34,8 +42,7 @@ for (const htmlFile of htmlFiles) {
   while ((match = scriptRegex.exec(content)) !== null) {
     const src = match[1];
     if (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('//')) continue;
-    const cleanSrc = src.split('?')[0].split('#')[0];
-    const resolved = path.resolve(dir, cleanSrc);
+    const resolved = resolveAsset(htmlFile, src);
     if (!fs.existsSync(resolved)) {
       console.error(`[FAIL] Broken script in ${path.relative(rootDir, htmlFile)}: ${src}`);
       totalBroken++;
@@ -47,8 +54,7 @@ for (const htmlFile of htmlFiles) {
   while ((match = cssRegex.exec(content)) !== null) {
     const href = match[1];
     if (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('//')) continue;
-    const cleanHref = href.split('?')[0].split('#')[0];
-    const resolved = path.resolve(dir, cleanHref);
+    const resolved = resolveAsset(htmlFile, href);
     if (!fs.existsSync(resolved)) {
       console.error(`[FAIL] Broken CSS in ${path.relative(rootDir, htmlFile)}: ${href}`);
       totalBroken++;
@@ -62,7 +68,7 @@ for (const htmlFile of htmlFiles) {
     if (href.startsWith('#') || href.startsWith('http://') || href.startsWith('https://') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript:')) continue;
     const cleanHref = href.split('?')[0].split('#')[0];
     if (!cleanHref) continue;
-    const resolved = path.resolve(dir, cleanHref);
+    const resolved = resolveAsset(htmlFile, href);
     if (!fs.existsSync(resolved)) {
       console.error(`[FAIL] Broken link in ${path.relative(rootDir, htmlFile)}: ${href}`);
       totalBroken++;
@@ -74,8 +80,7 @@ for (const htmlFile of htmlFiles) {
   while ((match = imgRegex.exec(content)) !== null) {
     const src = match[1];
     if (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('//') || src.startsWith('data:') || src === '') continue;
-    const cleanSrc = src.split('?')[0].split('#')[0];
-    const resolved = path.resolve(dir, cleanSrc);
+    const resolved = resolveAsset(htmlFile, src);
     if (!fs.existsSync(resolved)) {
       console.error(`[FAIL] Broken image in ${path.relative(rootDir, htmlFile)}: ${src}`);
       totalBroken++;
