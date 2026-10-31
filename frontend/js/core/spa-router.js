@@ -253,6 +253,9 @@ class SPARouter {
 
     // 1. Immediately dismiss any open Bootstrap modals and backdrops
     try {
+      if (document.activeElement && typeof document.activeElement.blur === 'function') {
+        document.activeElement.blur();
+      }
       document.querySelectorAll('.modal.show').forEach(m => {
         if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
           const inst = bootstrap.Modal.getInstance(m);

@@ -69,7 +69,7 @@ class AppCartModal extends HTMLElement {
                 <button type="button" class="btn btn-outline-secondary btn-sm" id="clearCartBtn">
                   <i class="fa-solid fa-trash-can me-1"></i> تفريغ السلة
                 </button>
-                <a href="${checkoutUrl}" id="proceedToCheckoutBtn" class="btn-checkout-cart" data-bs-dismiss="modal">
+                <a href="${checkoutUrl}" id="proceedToCheckoutBtn" class="btn-checkout-cart">
                   إتمام الطلب <i class="fa-solid fa-arrow-left ms-1"></i>
                 </a>
               </div>
@@ -97,6 +97,22 @@ class AppCartModal extends HTMLElement {
     const checkoutBtn = this.querySelector('#proceedToCheckoutBtn');
     if (checkoutBtn) {
       checkoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        // 1. Check if cart has items
+        const cart = window.Cart ? window.Cart.getCart() : [];
+        if (!cart || cart.length === 0) {
+          if (window.Toast) {
+            window.Toast.warning('سلة المشتريات فارغة، برجاء إضافة أدوية أولاً', 'تنبيه');
+          }
+          return;
+        }
+
+        // 2. Clear focus immediately before hiding to avoid aria-hidden focus blocking warning
+        checkoutBtn.blur();
+        if (document.activeElement && typeof document.activeElement.blur === 'function') {
+          document.activeElement.blur();
+        }
+
         const modalEl = this.querySelector('#exampleModalToggle');
         if (modalEl) {
           if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
@@ -113,6 +129,7 @@ class AppCartModal extends HTMLElement {
         document.body.style.removeProperty('overflow');
         document.body.style.removeProperty('padding-right');
 
+        const targetUrl = checkoutBtn.getAttribute('href') || this.getCheckoutUrl();
         // If already on checkout page, smooth scroll to shipping form and refresh view
         if (window.location.pathname.includes('checkout.html')) {
           e.preventDefault();
@@ -123,6 +140,14 @@ class AppCartModal extends HTMLElement {
           if (window.initCheckoutPage) {
             window.initCheckoutPage();
           }
+          return;
+        }
+
+        // Navigate via SPA Router or standard location fallback
+        if (window.SPARouterInstance && typeof window.SPARouterInstance.navigateTo === 'function') {
+          window.SPARouterInstance.navigateTo(targetUrl);
+        } else {
+          window.location.href = targetUrl;
         }
       });
     }
