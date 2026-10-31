@@ -8,6 +8,25 @@
  */
 
 window.initPrescriptionPage = function () {
+  // Dynamically load approved partner pharmacies
+  const pharmacySelect = document.getElementById('pageRxPharmacy');
+  if (pharmacySelect && window.API && window.API.pharmacies) {
+    window.API.pharmacies.getAll().then(res => {
+      const list = res?.data || (Array.isArray(res) ? res : []);
+      if (Array.isArray(list) && list.length > 0) {
+        let optionsHtml = '<option value="">أقرب صيدلية معتمدة لموقعي تلقائياً (موصى به)</option>';
+        list.forEach(p => {
+          const name = p.name || 'صيدلية معتمدة';
+          const doc = p.doctor || p.pharmacistName ? ` - ${p.doctor || p.pharmacistName}` : '';
+          const address = typeof p.address === 'string' ? p.address : (p.address?.city || '');
+          const addrText = address ? ` (${address})` : '';
+          optionsHtml += `<option value="${name}">${name}${doc}${addrText}</option>`;
+        });
+        pharmacySelect.innerHTML = optionsHtml;
+      }
+    }).catch(() => {});
+  }
+
   const dropzone = document.getElementById('pageRxDropzone');
   const fileInput = document.getElementById('pageRxFileInput');
   const dropzoneContent = document.getElementById('pageRxDropzoneContent');
@@ -103,6 +122,20 @@ window.initPrescriptionPage = function () {
   if (form) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      const consentCheck = document.getElementById('pageRxConsent');
+      if (consentCheck && !consentCheck.checked) {
+        if (window.Toast) window.Toast.error('يرجى الموافقة على سياسة الخصوصية للمتابعة', 'موافقة مطلوبة');
+        consentCheck.focus();
+        return;
+      }
+
+      const phoneVal = (document.getElementById('pageRxPhone')?.value || '').trim();
+      if (!/^01[0125][0-9]{8}$/.test(phoneVal)) {
+        if (window.Toast) window.Toast.error('يرجى إدخال رقم هاتف مصري صحيح مكون من 11 رقماً (مثال: 01012345678)', 'رقم غير صحيح');
+        document.getElementById('pageRxPhone')?.focus();
+        return;
+      }
 
       const name = document.getElementById('pageRxName')?.value?.trim();
       const phone = document.getElementById('pageRxPhone')?.value?.trim();

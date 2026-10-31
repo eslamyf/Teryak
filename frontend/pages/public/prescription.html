@@ -117,15 +117,15 @@
                 </div>
               </div>
 
-              <!-- Pharmacy Preference -->
+              <!-- Pharmacy Preference (Dynamically loaded) -->
               <div class="rx-form-group">
                 <label for="pageRxPharmacy" class="rx-form-label">الصيدلية المفضلة (اختياري)</label>
                 <select id="pageRxPharmacy" class="rx-input">
-                  <option value="">أقرب صيدلية معتمدة لموقعي تلقائياً</option>
-                  <option value="صيدلية الشفاء">صيدلية الشفاء</option>
-                  <option value="صيدلية الأمل">صيدلية الأمل</option>
-                  <option value="صيدلية الرعاية">صيدلية الرعاية</option>
-                  <option value="صيدلية السلامة">صيدلية السلامة</option>
+                  <option value="">أقرب صيدلية معتمدة لموقعي تلقائياً (موصى به)</option>
+                  <option value="صيدلية النهضة الحديثة">صيدلية النهضة الحديثة - د. محمد علي (مصر الجديدة)</option>
+                  <option value="صيدلية الشفاء التخصصية">صيدلية الشفاء التخصصية - د. سارة أحمد (الدقي)</option>
+                  <option value="صيدلية إسلام">صيدلية إسلام - د. إسلام ياسر (مدينة نصر)</option>
+                  <option value="صيدلية السلامة">صيدلية السلامة - د. نور إبراهيم (التحرير، الدقي)</option>
                 </select>
               </div>
 
@@ -133,6 +133,20 @@
               <div class="rx-form-group">
                 <label for="pageRxNotes" class="rx-form-label">ملاحظات طبية أو بدائل مقبولة</label>
                 <textarea id="pageRxNotes" class="rx-input" rows="3" placeholder="هل تعاني من حساسية لأدوية معينة؟ هل تفضل البدائل الاقتصادية الأقل سعراً؟"></textarea>
+              </div>
+
+              <!-- Consent Checkbox (Law 151/2020 Compliance) -->
+              <div class="rx-form-group mt-3">
+                <label class="d-flex align-items-start gap-2" style="cursor:pointer;font-size:13.5px;color:var(--text-main);line-height:1.6;">
+                  <input type="checkbox" id="pageRxConsent" required style="cursor:pointer;flex-shrink:0;margin-top:4px;">
+                  <span>أوافق على <a href="privacy.html" target="_blank" style="color:var(--primary-color);font-weight:700;">سياسة الخصوصية</a> وحماية البيانات الطبية وفقاً للقانون 151 لسنة 2020، وأقر بأن بيانات الروشتة تستخدم فقط لغرض الصرف والمراجعة الصيدلانية. *</span>
+                </label>
+              </div>
+
+              <!-- Medical Disclaimer -->
+              <div class="rx-disclaimer p-3 rounded-3 mt-3 mb-3" style="background:var(--bg-muted);border:1px solid var(--border-color);font-size:12.5px;color:var(--text-muted);line-height:1.6;">
+                <i class="fa-solid fa-circle-info text-success me-1"></i>
+                <strong>إخلاء مسؤولية طبي:</strong> منصة تِرياق وسيط إلكتروني يربط المرضى بالصيدليات المرخصة رسمياً من وزارة الصحة وهيئة الدواء المصرية. لا تُصرف الأدوية الخاضعة للرقابة أو المضادات الحيوية إلا بعد فحص صيدلي وتوفر روشتة طبية سارية ومختومة.
               </div>
 
               <button type="submit" class="rx-submit-btn" id="pageRxSubmitBtn">

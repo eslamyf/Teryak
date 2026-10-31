@@ -68,6 +68,8 @@ const createOrder = async (req, res, next) => {
     };
     const stockToReserve = [];
     let calculatedSubtotal = 0;
+    let hasPrescriptionItem = false;
+    const prescriptionItemNames = [];
 
     for (const item of items) {
       const qty = Math.max(1, Number(item.quantity) || 1);
@@ -75,19 +77,27 @@ const createOrder = async (req, res, next) => {
       let resolvedMedicineId = item.medicineId;
       let medicineName = item.name;
 
+      let medDoc = null;
       if (resolvedMedicineId && String(resolvedMedicineId).length === 24) {
-        const medDoc = await Medicine.findById(resolvedMedicineId);
+        medDoc = await Medicine.findById(resolvedMedicineId);
         if (medDoc) {
           realPrice = medDoc.price;
           medicineName = medDoc.nameAr || medDoc.nameEn || medicineName;
         }
       } else if (medicineName) {
-        const medDoc = await Medicine.findOne({
+        medDoc = await Medicine.findOne({
           $or: [{ nameAr: medicineName }, { nameEn: medicineName }],
         });
         if (medDoc) {
           realPrice = medDoc.price;
           resolvedMedicineId = medDoc._id;
+        }
+      }
+
+      if (medDoc && (medDoc.requiresPrescription || /مضاد حيوي|أوجمنتين|كونكور|أقراص تنظيم/i.test(medicineName))) {
+        hasPrescriptionItem = true;
+        if (!prescriptionItemNames.includes(medicineName)) {
+          prescriptionItemNames.push(medicineName);
         }
       }
 
@@ -123,6 +133,10 @@ const createOrder = async (req, res, next) => {
         quantity: qty,
         image: item.image || '',
       });
+    }
+
+    if (hasPrescriptionItem && !prescriptionImage && !req.body.prescriptionId) {
+      return errorResponse(res, 400, الدواء () يتطلب روشتة طبية معتمدة من طبيب مرخص. يرجى إرفاق صورة الروشتة لإتمام حجز الدواء.);
     }
 
     try {

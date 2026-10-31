@@ -30,6 +30,8 @@ class AppFooter extends HTMLElement {
     const pharmaciesUrl = base + 'pages/public/pharmacies.html';
     const pharmacistUrl = base + 'pages/pharmacist/index.html';
     const aboutUrl = base + 'pages/public/about.html';
+    const privacyUrl = base + 'pages/public/privacy.html';
+    const termsUrl = base + 'pages/public/terms.html';
 
     this.innerHTML = `
       <footer class="ft" role="contentinfo">
@@ -41,6 +43,9 @@ class AppFooter extends HTMLElement {
                 <span>تِرياق</span>
               </a>
               <p>بتوصلك لأقرب صيدلية فيها دواك، وتحجزه قبل ما تروح.</p>
+              <small class="text-muted d-block mt-2" style="font-size:12.5px;line-height:1.5;">
+                <i class="fa-solid fa-circle-info text-success me-1"></i> تِرياق وسيط تكنولوجي يربط مع الصيدليات المرخصة ولا يغني عن استشارة الطبيب.
+              </small>
             </div>
             <div class="ft-col">
               <h3 style="font-size:16px;font-weight:700;margin-bottom:10px;">روابط سريعة</h3>
@@ -51,13 +56,13 @@ class AppFooter extends HTMLElement {
             </div>
             <div class="ft-col">
               <h3 style="font-size:16px;font-weight:700;margin-bottom:10px;">تواصل معانا</h3>
-              <a href="tel:+201234567890" dir="ltr">+20 123 456 7890</a>
-              <a href="mailto:info@teryak.com">info@teryak.com</a>
+              <a href="tel:+201028103634" dir="ltr">+20 102 810 3634</a>
+              <a href="mailto:support@teryak.com">support@teryak.com</a>
             </div>
           </div>
           <div class="ft-base">
             <span>© 2026 تِرياق. كل الحقوق محفوظة.</span>
-            <span><a href="${aboutUrl}">الخصوصية</a> · <a href="${aboutUrl}">الشروط والأحكام</a></span>
+            <span><a href="${privacyUrl}">الخصوصية وحماية البيانات</a> · <a href="${termsUrl}">الشروط وإخلاء المسؤولية</a></span>
           </div>
         </div>
       </footer>

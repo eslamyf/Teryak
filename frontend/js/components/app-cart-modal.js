@@ -210,7 +210,10 @@ class AppCartModal extends HTMLElement {
           <div class="cart-item-info-group">
             ${imgSrc ? `<img src="${imgSrc}" alt="${item.name}" class="cart-item-thumb" loading="lazy" onerror="this.remove()">` : '<span class="cart-item-thumb med-thumb-placeholder" aria-label="لا توجد صورة"><i class="fa-solid fa-box-open"></i></span>'}
             <div>
-              <p class="NameOfMedicine">${item.name}</p>
+              <div class="d-flex align-items-center flex-wrap gap-1">
+                <p class="NameOfMedicine mb-0">${item.name}</p>
+                ${item.requiresPrescription ? '<span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle" style="font-size:10px;padding:2px 6px;"><i class="fa-solid fa-file-prescription me-1"></i>يلزم روشتة</span>' : ''}
+              </div>
               ${(item.pharmacy || item.pharmacyName) ? `<small class="text-success font-bold d-block"><i class="fa-solid fa-store me-1"></i>${item.pharmacy || item.pharmacyName}</small>` : ''}
               <div class="d-flex align-items-center gap-2 mt-1">
                 <span class="PriceOfMedicine">${numPrice.toFixed(2)} ج.م</span>
@@ -240,6 +243,15 @@ class AppCartModal extends HTMLElement {
       `;
     });
 
+    const hasRx = cart.some(i => i.requiresPrescription || /مضاد حيوي|أوجمنتين|كونكور/i.test(i.name));
+    if (hasRx) {
+      html += `
+        <div class="alert alert-warning py-2 px-3 small rounded-3 mt-3 mb-1 d-flex align-items-center gap-2" style="background:#fffbeb;border:1px solid #fde68a;color:#92400e;">
+          <i class="fa-solid fa-triangle-exclamation text-warning fs-5"></i>
+          <span>تحتوي السلة على أدوية تتطلب إبراز روشتة طبية سارية من طبيب مرخص للصيدلية قبل الاستلام.</span>
+        </div>
+      `;
+    }
     container.innerHTML = html;
 
     const total = window.Cart ? window.Cart.getTotalPrice() : 0;
